@@ -1,0 +1,295 @@
+:root {
+    --primary: #5E785A;
+    --secondary: #758074;
+    --light: #EEF9FF;
+    --dark: #091E3E;
+    --black: #2a2a2a;
+    --silver: #5a5959;
+    --gold:linear-gradient(to right, #B27D44 0%, #E8B987  51%, #B27D44  100%);
+    --gold2:#E8B987;
+    --sage:#788b75;
+    --sage-dark:#637361;
+    --blue:#0066ff;
+    --blue-dark:#02398c;
+    --blue-sky:#01a0b9;
+     --blue-sky-dark:#027c8f;
+    --green:#09b400;
+    --red:#b40000;
+    --orange:#b46300;
+    --yellow:#b4b400;
+    --purple:#5700b4;
+    --pink:#b400b1;
+  }
+
+.btn-grad {
+    background-image: linear-gradient(to right, #B27D44 0%, #E8B987  51%, #B27D44  100%);
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;            
+    box-shadow: 0 0 20px #eee;
+    border-radius: 30px;
+    display: inline-block;
+    width: 90%;
+    line-height: 26px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 20px;
+    border-bottom: #507467 solid 6px;
+    cursor: pointer;
+}
+.btn-grad1 {
+    background-image: linear-gradient(to right, #B27D44 0%, #E8B987  51%, #B27D44  100%);
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;            
+    box-shadow: 0 0 20px #eee;
+    border-radius: 30px;
+    display: block;
+    width: 95%;
+    line-height: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.btn-grad3 {
+    text-align: left;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;         
+    border-radius: 5px;
+    display: block;
+    width: 95%;
+    line-height: 16px;
+    font-weight: 500;
+    padding: 0 10px;
+    cursor: pointer;
+}
+  
+.btn-grad:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+}
+  
+.btn-grad1:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-grad4 {
+    background-image: linear-gradient(to right, #B27D44 0%, #E8B987  51%, #B27D44  100%);
+    text-align: center;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;            
+    box-shadow: 0 0 10px #eee;
+    border-radius: 30px;
+    display: inline-block;
+    width: auto;
+    line-height: 26px;
+    font-weight: 500;
+    padding: 0.2% 20%;
+    margin-left:25%;
+    border-bottom: #507467 solid 6px;
+    cursor: pointer;
+}
+
+.btn-grad4:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-page{
+    background-color: var(--sage);
+    padding: 2px;
+    border-radius: 10px;
+    color: #fff;
+    border: none;
+    width:30px;
+    margin:0px 10px;
+}
+
+.btn-sage-4{
+    background-color: var(--sage);
+    position:relative;
+
+  }
+  .btn-sage-4::before {
+    background-color:var(--sage-dark);
+    font-family: 'Font Awesome 6 Free';
+    content: '\f146';
+    
+    position:absolute;
+    color: white;
+    width:50px;
+    height:100%;
+    padding-left:22px;
+    padding-right:12px;
+    padding-top:4px;
+    right:0;
+    top:0;
+    font-size: large;
+    border-radius: 0px 10px 10px 0px;
+    box-shadow: 0px 1px 0px #fff;
+  }
+  .btn-sage-4:active::before {
+    top:-2px;
+  }
+  .btn-blue-4{
+    background-color: var(--blue);
+    position:relative;
+
+  }
+  .btn-blue-4::before {
+    background-color:var(--blue-dark);
+    font-family: 'Font Awesome 6 Free';
+    content: '\f146';
+    
+    position:absolute;
+    color: white;
+    width:50px;
+    height:100%;
+    padding-left:22px;
+    padding-right:12px;
+    padding-top:4px;
+    right:0;
+    top:0;
+    font-size: large;
+    border-radius: 0px 10px 10px 0px;
+    box-shadow: 0px 1px 0px #fff;
+  }
+  .btn-blue-4:active::before {
+    top:-2px;
+  }
+
+  .btn-overlay-white{
+    background-color: #ffffff25;
+    border-radius: 5px;
+  }
+  .btn-overlay-white:hover{
+    background-color: #c8e9ffd0;
+  }
+
+  .btn-overlay-white2{
+    background-color: #ffffff;
+    border-radius: 5px;
+  }
+  .btn-overlay-white2:hover{
+    background-color: #ffffff96;
+  }
+
+  .btn-overlay-white3{
+    background-color: #ffffff25;
+    border-radius: 5px;
+  }
+  .btn-overlay-white3:hover{
+    background-color: #ffffff96;
+  }
+
+  .btn-overlay-whiteblue{
+    background-color: #003577;
+    color: #ffffff;
+    border-radius: 5px;
+  }
+  .btn-overlay-whiteblue:hover{
+    background-color: #ffffff25;
+    border-radius: 5px;
+  }
+
+  .btn-orangeblue{
+    background-color: #f7941d;
+    color: #ffffff;
+    border-radius: 5px;
+  }
+  .btn-orangeblue:hover{
+    background-color: #003577;
+    border-radius: 5px;
+    color: #ffffff;
+  }
+
+  .btn-blueorange{
+    background-color: #0277BD;
+    color: #ffffff;
+    border-radius: 5px;
+  }
+  .btn-blueorange:hover{
+    background-color: #003577;
+    border-radius: 5px;
+    color: #ffffff;
+  }
+  
+
+  .btn-green{
+    background-color: var(--green);
+    border: 2px solid #ffffff;
+  }
+  .btn-green:hover{
+    background-color: var(--green-dark);
+    border: 2px solid #ffffff;
+  }
+
+  .btn-blue{
+    background-color: var(--blue);
+    border: 2px solid #ffffff;
+  }
+  .btn-blue:hover{
+    background-color: var(--blue-dark);
+    border: 2px solid #ffffff;
+  }
+
+  .btn-blue-sky{
+    background-color: var(--blue-sky);
+    border: 2px solid #ffffff;
+  }
+  .btn-blue-sky:hover{
+    background-color: var(--blue-sky-dark);
+    border: 2px solid #ffffff;
+  }
+
+  .btn-teal{
+    background-color: var(--teal-dark);
+    border: 2px solid #ffffff;
+  }
+  .btn-teal:hover{
+    background-color: var(--teal);
+    border: 2px solid #ffffff;
+  }
+  .btn-orange{
+    background-color: var(--orange-dark);
+    border: 2px solid #ffffff;
+  }
+  .btn-orange:hover{
+    background-color: var(--orange);
+    border: 2px solid #ffffff;
+  }
+  .btn-red{
+    background-color: var(--red-dark);
+    border: 2px solid #ffffff;
+  }
+  .btn-red:hover{
+    background-color: var(--red);
+    border: 2px solid #ffffff;
+  }
+  .btn-yellow{
+    background-color: var(--yellow-dark);
+    border: 2px solid #ffffff;
+  }
+  .btn-yellow:hover{
+    background-color: var(--yellow);
+    border: 2px solid #ffffff;
+  }
+  .btn-silver{
+    background-color: var(--silver-dark);
+    border: 2px solid #ffffff;
+  }
+  .btn-silver:hover{
+    background-color: var(--silver);
+    border: 2px solid #ffffff;
+  }

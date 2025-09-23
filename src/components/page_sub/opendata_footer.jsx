@@ -1,0 +1,218 @@
+import React, { useState, useEffect } from "react";
+import {Container, Row,Col,Table, Image} from 'react-bootstrap';
+import axios from "axios";
+import { FaCalendar, FaCalendarDay, FaCalendarWeek } from 'react-icons/fa6';
+import { Link } from "react-router-dom";
+
+const apiurl = import.meta.env.VITE_API_URL;
+const portal = "Portal Open Data";
+
+function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, visitor_all }) {
+  const [showTopBtn, setShowTopBtn] = useState(false);
+  const [alamatku, setAlamat] = useState("");
+  const [facebookku, setFacebook] = useState("");
+  const [instagramku, setInstagram] = useState("");
+  const [linkedinku, setLinkedin] = useState("");
+  const [twitterku, setTwitter] = useState("");
+
+  const [image1, setImage1] = useState("");
+  const [image2, setImage2] = useState("");
+
+  const [dataku, setData] = useState([]);
+
+  useEffect(() => {
+      window.addEventListener("scroll", () => {
+          if (window.scrollY > 400) {
+              setShowTopBtn(true);
+          } else {
+              setShowTopBtn(false);
+          }
+      });
+      getStatistik();  
+      getData();
+  }, []);
+
+  function goTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+
+  
+
+  const getStatistik = async () => {
+    try {
+      const response = await axios.get(apiurl + 'api/open-item/ekosistem-bioinfo');
+      const data = response.data;
+      
+      setAlamat(data.alamat);
+      setFacebook(data.facebook);
+      setInstagram(data.instagram);
+      setLinkedin(data.linkedin);
+      setTwitter(data.twitter);
+
+      const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+        params: {
+          portal:portal
+        }
+      });
+      const data_image = response_image.data.image_diskominfo;
+      const data_image2 = response_image.data.image_logo;
+      setImage1(data_image.presignedUrl1);
+      setImage2(data_image2.presignedUrl1);
+
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+
+  };
+
+  const getData = async () => {
+    try {
+      const response = await axios.get(apiurl + `api/open-item/komponen`);
+      const data = response.data;
+      // Cek apakah response.data itu array atau object
+      //const payload = Array.isArray(response.data) ? response.data : response.data.datas;
+
+      setData(data.resultWithUrls_satuportal_list);
+      
+      
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+  };
+
+  return (
+    <Container fluid className=" p-3 mb-0" style={{backgroundColor:bgfooterku}}>
+      <iframe className='w-100 bg-white shaddow3 p-3 rad15 ' title="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9402.474234141997!2d113.40938301209272!3d-7.762924977704708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7005af3181627%3A0x4b033c7ae3a4880e!2sKantor%20Bupati%20Probolinggo!5e0!3m2!1sid!2sid!4v1746818580876!5m2!1sid!2sid" height="450px"></iframe>
+      <Row className='px-5'>
+        <Col sm={12}>
+          
+        </Col>
+        <Col sm={12} xs={12} md={6}>
+          
+          <div className='content py-3'>
+            <div className="d-flex">
+              <img src={image2} className='img-header' alt="logo opendata"  />
+              
+             
+
+            </div>
+            <span className='designation text-white textsize14'>{alamatku}</span>
+            <p className='text-white textsize14'>Kab. Probolinggo</p>
+          </div>
+          <div className='content py-3 d-flex'>
+            <img src={image1} className='img-header' alt="logo kab"  />
+            <div className="footer-logo  text-left px-2">
+              <Link to="https://jdih.probolinggokab.go.id/" target="_blank" className='textsize14 font_weight600 text-white-a' rel="noreferrer">Dinas Komunikasi, Statistik dan Persandian Kabupaten Probolinggo</Link>
+              
+            </div>
+            
+          </div>
+        </Col>
+        <Col  sm={12} xs={12} md={3}>
+          
+          <div className='content py-3 justify-content-center'>
+            <p className='textsize14 text-white font_weight600 text-center'>Aplikasi Terhubung</p>
+            <Row className="px-3">
+              {dataku.map((datas, index) => (
+                datas.title !== "Portal Open Data" ? (
+                  <Link key={index} className="btn btn-primary float-center mb-1" to={datas.linked} target="_blank" rel="noopener noreferrer">
+                    <Image className='img-60' src={datas.presignedUrl_1} />
+                  
+                  </Link>
+                ) : ("")      
+                  
+                
+              ))}
+            </Row>
+          </div>
+        </Col>
+       
+        
+        <Col  sm={12} xs={12} md={3}>
+          
+          <div className='content py-3 justify-content-center'>
+            <p className='textsize14 text-white font_weight600 text-center'>Ikuti Kami</p>
+            <div className="socials justify-content-center">
+              <ul className="justify-content-center d-flex">
+                <li  className="justify-content-center "><Link to={facebookku} className="justify-content-center  d-flex"><i className="fab fa-facebook-f"></i></Link></li>
+                <li className="justify-content-center"><Link to={twitterku} className="justify-content-center d-flex"><i className="fab fa-twitter"></i></Link></li>
+                <li className="justify-content-center"><Link to={instagramku} className="justify-content-center d-flex"><i className="fab fa-instagram"></i></Link></li>
+                <li className="justify-content-center"><Link to={linkedinku} className="justify-content-center d-flex"><i className="fab fa-linkedin-in"></i></Link></li>
+              </ul>
+            </div>
+            <p className='mt-3 textsize14 text-white font_weight600 text-center mb-0'>Pengunjung</p>
+            <div className='content justify-content-center w-100'>
+              
+              <Table 
+                responsive 
+                className="mb-0  text-center  no-border-table w-100"
+                
+              >
+                <thead className="table-light" style={{ backgroundColor: "#003577" }}>
+                 
+                </thead>
+                <tbody style={{backgroundColor: "#ffffff00"}}>
+                  <tr style={{ height: "20px",backgroundColor: "#ffffff00" }}>
+                    <td className="text-start textsize10 text-white" style={{ height: "20px", padding: "0", lineHeight: "20px",backgroundColor: "#ffffff00" }}>
+                      <FaCalendarDay className=' text-white mt-0' style={{width:'20px',height:'20px'}} /> Hari Ini
+                    </td>
+                    <td className=" text-white" style={{ height: "20px", padding: "0", lineHeight: "20px",backgroundColor: "#ffffff00" }}>
+                      <strong style={{ fontSize: "0.75rem",backgroundColor: "#ffffff00" }}>{visitor_today}</strong>
+                    </td>
+                  </tr>
+                  <tr style={{ height: "20px",backgroundColor: "#ffffff00" }}>
+                    <td className="text-start text-white textsize10" style={{ height: "20px", padding: "0", lineHeight: "20px",backgroundColor: "#ffffff00" }}>
+                      <FaCalendarWeek className=' text-white mt-0' style={{width:'20px',height:'20px'}} /> Bulan Ini
+                    </td>
+                    <td className=" text-white" style={{ height: "20px", padding: "0", lineHeight: "20px",backgroundColor: "#ffffff00" }}>
+                      <strong style={{ fontSize: "0.75rem",backgroundColor: "#ffffff00" }}>{visitor_month}</strong>
+                    </td>
+                  </tr>
+                  <tr style={{ height: "20px",backgroundColor: "#ffffff00" }}>
+                    <td className="text-start text-white textsize10" style={{ height: "20px", padding: "0", lineHeight: "20px",backgroundColor: "#ffffff00" }}>
+                      <FaCalendar className=' text-white mt-0' style={{width:'20px',height:'20px'}} /> Tahun Ini
+                    </td>
+                    <td className=" text-white" style={{ height: "20px", padding: "0", lineHeight: "20px",backgroundColor: "#ffffff00" }}>
+                      <strong style={{ fontSize: "0.75rem",backgroundColor: "#ffffff00" }}>{visitor_year}</strong>
+                    </td>
+                  </tr>
+                  <tr style={{ height: "20px",backgroundColor: "#ffffff00" }}>
+                    <td className="text-start text-white textsize10" style={{ height: "20px", padding: "0", lineHeight: "20px",backgroundColor: "#ffffff00" }}>
+                      Total Pengunjung
+                    </td>
+                    <td className='text-white' style={{ height: "20px", padding: "0", lineHeight: "20px",backgroundColor: "#ffffff00" }}>
+                      <strong style={{ fontSize: "0.75rem",backgroundColor: "#ffffff00" }}>{visitor_all}</strong>
+                    </td>
+                  </tr>
+                  
+                </tbody>
+              </Table>
+                
+                
+            </div>
+          </div>
+        </Col>
+      </Row>  
+      <Row>
+        <Col sm={8} xs={8}  className="bg-blue-dark2">
+          <div className="copyright float-start text-white px-5 py-2">&copy; 2025 Open Data Kab. Probolinggo</div>
+        </Col>
+         <Col  sm={4} xs={4}className="bg-blue-dark2" >
+          <div className="copyright float-end  text-white px-5 italicku textsize8 py-2">V 1.0.1</div>
+        </Col>
+      </Row>
+      
+      
+      {
+        showTopBtn && (
+          <div className="go-top" onClick={goTop}></div>
+        )
+      }
+    </Container>
+  )
+}
+
+export default AppFooter;

@@ -1,0 +1,51 @@
+{
+    "menu": [
+      {
+        "title": "Home",
+        "link": "/"
+      },
+      {
+        "title": "About",
+        "link": "/about",
+        "submenu": [
+          {
+            "title": "Mission",
+            "link": "/about/mission"
+          },
+          {
+            "title": "History",
+            "link": "/about/history"
+          }
+        ]
+      },
+      {
+        "title": "Products",
+        "link": "/products",
+        "submenu": [
+          {
+            "title": "Laptops",
+            "link": "/products/laptops"
+          },
+          {
+            "title": "Smartphones",
+            "link": "/products/smartphones",
+            "submenu": [
+              {
+                "title": "Android",
+                "link": "/products/smartphones/android"
+              },
+              {
+                "title": "iOS",
+                "link": "/products/smartphones/ios"
+                
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Contact",
+        "link": "/contact"
+      }
+    ]
+  }
