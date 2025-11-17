@@ -294,13 +294,26 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
           <p className="mb-0 textsize14 text-silver font_weight600 italicku">Admin {dataku.nick_admin}  <FaMinus className="mx-2" />  </p>
           <p className="mb-0 textsize14 text-silver font_weight600 italicku">{convertDate(dataku.updated_at?.replace(/T/, ' ')?.replace(/\.\w*/, ''))}</p>
         </div>
-        <Image
-          src={dataku.presignedUrl_a}
-          className="rad10 w-100 "
-         
-          onContextMenu={(e) => e.preventDefault()}
-          draggable={false}
-        />
+        {dataku.presignedUrl_a && (
+          <motion.img
+            src={dataku.presignedUrl_a}
+            alt="[Foto]"
+            className="rad10 w-100"
+            onLoad={() => setLoading(false)} // ✅ selesai load → ubah state
+            initial={{ opacity: 0 }}
+            animate={
+              loading
+                ? { opacity: [0.1, 1, 0.1] } // 🔄 animasi berdenyut kalau loading
+                : { opacity: [0.1, 0.5, 1] }              // ✅ tampil normal setelah loaded
+            }
+            transition={
+              loading
+                ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                : { duration: 3.5 }
+            }
+          />
+        )}
+        
        
        
         {dataku && typeof dataku.content_a === 'string' ? (
@@ -310,12 +323,25 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
             ))}
           </div>
         ) : ("")}
-        <Image 
-          src={dataku.presignedUrl_b} 
-          className="rad10 w-100 mt-3 mb-3"
-          onContextMenu={(e) => e.preventDefault()}
-          draggable={false} 
-        />
+        {dataku.presignedUrl_b && (
+          <motion.img
+            src={dataku.presignedUrl_b}
+            alt="[Foto]"
+            className="rad10 w-100 mt-3 mb-3"
+            onLoad={() => setLoading(false)} // ✅ selesai load → ubah state
+            initial={{ opacity: 0 }}
+            animate={
+              loading
+                ? { opacity: [0.1, 1, 0.1] } // 🔄 animasi berdenyut kalau loading
+                : { opacity: [0.1, 0.5, 1] }              // ✅ tampil normal setelah loaded
+            }
+            transition={
+              loading
+                ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                : { duration: 3.5 }
+            }
+          />
+        )}
         {typeof dataku?.content_b === "string" && dataku.content_b ? (
           <div className="textsize12">
             {dataku.content_b.split('\n').map((line, index) => (
@@ -323,12 +349,25 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
             ))}
           </div>
         ) : ("")}
-        <Image 
-          src={dataku.presignedUrl_c} 
-          className="rad10 w-100 mt-3 mb-3"
-          onContextMenu={(e) => e.preventDefault()}
-          draggable={false} 
-        />
+        {dataku.presignedUrl_c && (
+          <motion.img
+            src={dataku.presignedUrl_c}
+            alt="[Foto]"
+            className="rad10 w-100 mt-3 mb-3"
+            onLoad={() => setLoading(false)} // ✅ selesai load → ubah state
+            initial={{ opacity: 0 }}
+            animate={
+              loading
+                ? { opacity: [0.1, 1, 0.1] } // 🔄 animasi berdenyut kalau loading
+                : { opacity: [0.1, 0.5, 1] }              // ✅ tampil normal setelah loaded
+            }
+            transition={
+              loading
+                ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                : { duration: 3.5 }
+            }
+          />
+        )}
         {dataku && typeof dataku.content_c === 'string' ? (
           <div className="textsize12">
             {dataku.content_c.split('\n').map((line, index) => (

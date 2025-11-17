@@ -20,6 +20,7 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
 
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("");
+  const [dataku, setData] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -38,6 +39,7 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
       const data_image = response_image.data.image_opendata_bio;
       setImage1(data_image.presignedUrl1);
       setImage2(data_image.presignedUrl2);
+      setData(data_image.contents);
 
     } catch (error) {
       console.error('Failed to fetch data:', error);
@@ -57,16 +59,16 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
               className='text-left textsize30 font_weight800 '
               style={{color:colortitleku}}
             >Penasaran dengan data 
-              <span 
+              <span className='px-3' 
                 style={{color:colordateku}}
               > Kabupaten Probolinggo</span> ?
             </h2>
-            <p className='text-left textsize16 text-silver font_weight600'>
-              Open Data Kabupaten Probolinggo hadir untukmu! Akses data real-time seputar Kabupaten Probolinggo, mulai dari jalanan, sekolah, layanan publik, hingga pemerintahan.
-            </p>
-             <p className='text-left textsize16 text-silver font_weight600'>
-              Semua bisa kamu eksplorasi dan manfaatkan secara gratis untuk tugas, proyek, aplikasi, atau sekadar iseng yang bermanfaat.
-            </p>
+            {dataku.split('\n').map((item, index) => (
+              <p key={index} className="text-left textsize16 text-silver font_weight600">
+                  {item.replace(/^\d+\.\s*/, '')}
+              </p>
+            ))}
+            
           </Col>
           <Col md={5} xs={7} className='mt-0'>
             <Image className="img-100 mt-2 anim-bounce" src={image1} />

@@ -67,12 +67,12 @@ function DatasetPengelolah() {
       
       <main className='p-2 margin-t8'>
         <Row className='mb-2'>
-          <Col md={12} className="d-flex justify-content-between align-items-center" style={{backgroundColor:"#ececec"}}>
+          <Col md={12} className="d-flex justify-content-between align-items-center" style={{backgroundColor:"#60728b"}}>
                           
             {/* Breadcrumb */}
             <div className="px-3 d-flex rad10" style={{ paddingTop:"5px", paddingBottom:"5px", width:"fit-content"}}>
-              <Link to="/" className="textsize12 text-silver-a d-flex"> <MdHomeFilled className='mt-1'/> <span className='px-2'> Beranda</span></Link><span className="mx-2">/</span>
-              <Link to="/Infografik" className="textsize12 text-silver-a d-flex"><MdOutlineFeaturedPlayList className='mt-1'/> <span className='px-2'> Infografik</span></Link>
+              <Link to="/" className="textsize12 text-white-a d-flex"> <MdHomeFilled className='mt-1'/> <span className='px-2'> Beranda</span></Link><span className="mx-2 text-white">/</span>
+              <Link to="/Infografik" className="textsize12 text-white-a d-flex"><MdOutlineFeaturedPlayList className='mt-1'/> <span className='px-2'> Infografik</span></Link>
             </div>
           </Col>
         </Row>

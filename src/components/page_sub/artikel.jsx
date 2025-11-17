@@ -15,10 +15,17 @@ import { FaDownload } from "react-icons/fa6";
 const apiurl = import.meta.env.VITE_API_URL;
 
 const Spinner = () => 
-    <div className="height-map">
-      <div className="loaderr2"></div>
-      <p className="margin-auto text-center text-silver">Dalam Proses...</p>
-    </div>;
+  <div className='text-center justify-content-center' style={{height:"110px"}}>
+      <div className="dot-overlay mt-5" >
+          <div className="dot-pulse">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          
+      </div>
+    <p className='text-center text-shadow-border-multicolor-smooth italicku'>Proses ...</p>
+  </div>;
 
 
 const koleksiOptions = [

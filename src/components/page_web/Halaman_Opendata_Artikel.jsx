@@ -96,7 +96,7 @@ function DatasetPengelolah() {
 
   return (
     <>
-      {loading ? (
+      {/* {loading ? (
         <div className="spinner-overlay justify-content-center">
           
           <div 
@@ -135,7 +135,7 @@ function DatasetPengelolah() {
         >
         </motion.div>
       )
-      }
+      } */}
       <div className={`App`}  style={{background:`linear-gradient(170deg, ${settings.bg_body}4D, #fff 40%, #fff 50%, #fff 65%, ${settings.bg_body})`}}>
         <Menu bgku={settings.bg_header}/>
         
