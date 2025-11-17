@@ -5,7 +5,7 @@ import {Container,Row,Col} from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import { motion } from "framer-motion";
 import { MdRemoveRedEye } from "react-icons/md";
-import api_url from "../../api/axiosConfig";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 import { Link } from "react-router-dom";
 
 const Spinner = () => 
@@ -21,7 +21,7 @@ const Spinner = () =>
     <p className='text-center text-shadow-border-multicolor-smooth italicku'>Proses ...</p>
   </div>;
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const portal = "Portal Open Data";
 
 
@@ -55,10 +55,10 @@ function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
 
   const getDatasetSearch = async () => {
     try {
-      const response = await api_url.get("dataset");
+      const response = await api_url_satudata.get("dataset");
       const datasetSearchRaw = response.data;
 
-      const response2 = await axios.get(apiurl + `api/opendata/dataset_data_top`);
+      const response2 = await api_url_satuadmin.get( `api/opendata/dataset_data_top`);
       const dataCountRaw = response2.data;
 
     // Buat map id_dataset → count_dataset (langsung dari API)
@@ -102,7 +102,7 @@ console.log("datasetSorted", datasetSorted.map(d => ({
   const getImage = async () => {
     try {
 
-      const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }
@@ -130,11 +130,10 @@ console.log("datasetSorted", datasetSorted.map(d => ({
   return (
     <Row className=' margin-t5 mx-1'>
       <Col md={12} sm={12} className='float-center margin-b10' style={{paddingLeft:"2%",paddingRight:"2%"}}>
-        <section id="teams" className="block  py-3 bg-white shaddow5 rad15">
+        <section id="teams" className="block  py-3 bg-body shaddow5 rad15">
           <div className=" rad15 mx-1 text-center">
             <h2 
-              className='text-left textsize24 font_weight700 '
-              style={{color:colortitleku}}
+              className='text-left textsize24 font_weight700 text-body'
             >Dataset <span style={{color:colordateku}}>Terpopuler</span></h2>
           </div>
           <Container fluid>

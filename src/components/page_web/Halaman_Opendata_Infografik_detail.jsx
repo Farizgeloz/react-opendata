@@ -8,7 +8,7 @@ import '../../components/styles/style_design.css';
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import AppSearchdata from '../page_sub/artikel_detail';
+import AppSearchdata from '../page_sub/infografik_detail';
 import AppFooter from '../page_sub/opendata_footer';
 import FeedbackModal from "../page_sub/FeedbackModal";
 import PopupIklan from '../page_sub/PopupIklan';
@@ -56,7 +56,7 @@ function DatasetPengelolah() {
         setLoading(false);
       }, 3000);
       return () => clearTimeout(timer);
-    //}
+   // }
   }, [imageLoaded]);
 
   const getImages = async () => {
@@ -94,13 +94,11 @@ function DatasetPengelolah() {
         <div 
           className={`spinner-content text-center p-4 flip-card-infinite`} 
         >
-         
+          
             <div className="image-placeholder shimmer rad15 img-logo-50px mb-2" />
-         
-         
+          
             <motion.img
               src="/logo.png"
-              loading="lazy"
               alt="Logo"
               className={`rad15 w-50 ${imageLoaded ? 'visible' : 'hidden'}`}
               onLoad={() => setImageLoaded(true)}

@@ -11,6 +11,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { MdAdsClick, MdClose, MdHomeFilled, MdListAlt, MdOutlineFeaturedPlayList, MdSchool } from "react-icons/md";
 import { BsBuildings } from "react-icons/bs";
 import { GiReceiveMoney } from "react-icons/gi";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
 const Spinner = () => 
   <div className='text-center justify-content-center' style={{height:"110px"}}>
@@ -25,7 +26,7 @@ const Spinner = () =>
     <p className='text-center text-shadow-border-multicolor-smooth italicku'>Proses ...</p>
   </div>;
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const theme = createTheme({
   components: {
     MuiTablePagination: {
@@ -154,7 +155,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
 
   const getDatasetUnsur = async (dimensi = "",satker = "") => {
      
-    const res3 = await axios.get("https://api.mataprabulinggih.net/api/v1/public/dataset");
+    const res3 = await api_url_satudata.get("dataset?limit=1000");
     const allDataset = res3.data || [];
 
 
@@ -186,7 +187,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
     try {
      
 
-      const res2 = await axios.get("https://api.mataprabulinggih.net/api/v1/public/dataset");
+      const res2 = await api_url_satudata.get("dataset?limit=1000");
 
       // ini respons axios lengkap (ada data, status, headers, dll)
       //console.log("Full response dataset:", res2);
@@ -231,7 +232,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
 
       setKategori(payload);
 
-      const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }
@@ -276,7 +277,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
         renderCell: (params) => {
           const row = params.row;
           return (
-            <Row className="">
+            <Row className="bg-body">
                 <Col md={2} xs={2}>
                   {/* <Image src={row.presignedUrl} className="rad15" /> */}
                   
@@ -284,37 +285,37 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                 </Col>
                 <Col md={10} xs={10}>
                 <div>
-                  <p className="font_weight600 textsize16" style={{color:"#0a367b"}}>{`${row.nama_dataset}`}</p>
-                  <p className="cursor-pointer textsize14"><FaBuildingColumns /> {`${row.opd.nama_opd}`}</p>
+                  <p className="font_weight600 textsize14 text-body">{`${row.nama_dataset}`}</p>
+                  <p className="cursor-pointer textsize12 text-body"><FaBuildingColumns /> {`${row.opd.nama_opd}`}</p>
                   <Row className="">
-                      <Col md="auto">
-                      <p className="cursor-pointer textsize10 text-white bg-green px-5 rad15 uppercaseku"> {`${row.sektor.nama_sektor}`}</p>
-                      </Col>
-                      <Col md="auto">
-                      <p className="cursor-pointer textsize10 text-white bg-red px-5 rad15 uppercaseku"> {`${row.kategori_dataset}`}</p>
-                      </Col>
-                      <Col md="auto">
-                      <p className="cursor-pointer textsize10 text-white bg-blue px-5 rad15 uppercaseku"> {`${row.periode_dataset}`}</p>
-                      </Col>
-                      {/* <Col md="auto">
-                        <p
-                          className={`cursor-pointer textsize8 text-white px-2 rad15 ${
-                            row.sifat_data === "Data Prioritas" ? "bg-orange" : "bg-silver-dark"
-                          }`}
-                        >
-                          <FaCheckToSlot /> {row.sifat_data}
-                        </p>
-                        
-                        
-                      </Col> */}
+                    <Col md="auto">
+                    <p className="cursor-pointer textsize10 text-white bg-green px-5 rad15 uppercaseku"> {`${row.sektor.nama_sektor}`}</p>
+                    </Col>
+                    <Col md="auto">
+                    <p className="cursor-pointer textsize10 text-white bg-red px-5 rad15 uppercaseku"> {`${row.kategori_dataset}`}</p>
+                    </Col>
+                    <Col md="auto">
+                    <p className="cursor-pointer textsize10 text-white bg-blue px-5 rad15 uppercaseku"> {`${row.periode_dataset}`}</p>
+                    </Col>
+                    {/* <Col md="auto">
+                      <p
+                        className={`cursor-pointer textsize8 text-white px-2 rad15 ${
+                          row.sifat_data === "Data Prioritas" ? "bg-orange" : "bg-silver-dark"
+                        }`}
+                      >
+                        <FaCheckToSlot /> {row.sifat_data}
+                      </p>
                       
-                    </Row>
-                    <p className="textsize10">
-                      <span className="font_weight600">Diperbaharui Tanggal: </span>{convertDate(row.updated_at)}
-                    </p>
-                    <Link to={ `/Dataset/Detail/${slugify(params.row.nama_dataset)}` } className="btn btn-orangeblue text-white-a">Detail Dataset</Link>
-                  </div>
-                </Col>
+                      
+                    </Col> */}
+                    
+                  </Row>
+                  <p className="textsize10  text-body">
+                    <span className="font_weight600 text-body">Diperbaharui Tanggal: </span>{convertDate(row.updated_at)}
+                  </p>
+                  <Link to={`/Dataset/Detail/${slugify(params.row.nama_dataset)}` } className="btn btn-orangeblue text-white-a">Detail Dataset</Link>
+                </div>
+              </Col>
             </Row>
             
           );
@@ -434,12 +435,12 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
               </div>
             </Col>
           </Row>
-          <Row className='p-1  bg-white rad10 mx-2'>
+          <Row className='p-1  bg-body rad10 mx-2'>
             <Col md={2} sm={3} xs={3} className='float-center'>
               <Image className="img-100" src={image1} />
             </Col>
             <Col md={10} sm={9} xs={9}>
-              <p className='textsize20 text-left font_weight700 mb-1' style={{color:colortitleku}}>Cari Dataset Berdasarkan Sektor</p>
+              <p className='textsize20 text-left font_weight700 mb-1 text-body'>Cari Dataset Berdasarkan Sektor</p>
               
               {loading ? (
                 <Spinner />
@@ -460,7 +461,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                                 className={`label text-center ${sektor_idi.nama_sektor === sektorDecoded ? 'btn-blueorange' : 'btn-orangeblue'}`}
                                 style={{backgroundColor:sektor_idi.nama_sektor === sektorDecoded ? bgcontentku : ''}}
                               >
-                                <p className="textsize14 px-2 py-1">{sektor_idi.nama_sektor}</p>
+                                <p className="textsize12 px-2 py-1">{sektor_idi.nama_sektor}</p>
                               </div>
                             </Link>
                           </div>
@@ -477,13 +478,13 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
         </div>
       </Col>
       <Col md={4} sm={12}>
-        <section id="teams" className="block  bg-white py-0 rad10 mx-1 shaddow4 mb-3 mt-3">
+        <section id="teams" className="block  bg-body py-0 rad10 mx-1 shaddow4 mb-3 mt-3">
           <div 
             className="text-center shaddow1 rad10"
             style={{backgroundColor:bgku}}
           
           >
-            <p className="text-light textsize16 font_weight600">OPD / Produsen Data</p>
+            <p className="text-light textsize14 font_weight600">OPD / Produsen Data</p>
           </div>
           <Container fluid className="pb-3">
             <input
@@ -524,8 +525,8 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                               <div
                                 className={
                                   activeItemSatker === index
-                                    ? "category textsize10 text-white cursor-true float-left  uppercaseku"
-                                    : "category textsize10 text-blue-a cursor-true float-left uppercaseku"
+                                    ? "category textsize10 text-body cursor-true float-left  uppercaseku"
+                                    : "category textsize10 text-body cursor-true float-left uppercaseku"
                                 }
                               >
                                 {satker.nama_opd.length >= 35
@@ -533,7 +534,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                                   : satker.nama_opd}
                               </div>
                               <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
-                                <p className="textsize8 text-white">
+                                <p className="textsize8 text-body">
                                   {activeItemSatker === index ? <MdClose /> : <MdAdsClick  />}
                                 </p>
                               </div>
@@ -543,7 +544,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                       ))
 
                     ) : (
-                      <p className="text-silver-light font_weight600 italicku text-center mt-3">Ups.. OPD Tidak Ditemukan</p>
+                      <p className="text-body font_weight600 italicku text-center mt-3">Ups.. OPD Tidak Ditemukan</p>
                     )}
                   </Row>
                 </Col>
@@ -551,7 +552,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
             </motion.div>
           </Container>
         </section>
-        {/* <section id="teams" className="block  bg-white py-0 rad10 mx-1 shaddow4 mb-3">
+        {/* <section id="teams" className="block  bg-body py-0 rad10 mx-1 shaddow4 mb-3">
           <div 
             className="text-center shaddow1 rad10"
             style={{backgroundColor:bgku}}
@@ -617,13 +618,13 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
             )}
           </Container>
         </section> */}
-        <section id="teams" className="block  bg-white py-0 rad10 mx-1 shaddow4 mb-3">
+        <section id="teams" className="block  bg-body py-0 rad10 mx-1 shaddow4 mb-3">
           <div 
             className="text-center shaddow1 rad10"
             style={{backgroundColor:bgku}}
           
           >
-            <p className="text-light textsize16 font_weight600">Periode</p>
+            <p className="text-light textsize14 font_weight600">Periode</p>
           </div>
           <Container fluid className="pb-3">
             <input
@@ -652,7 +653,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                             key={index}
                             className={
                               activeItemPeriode === index
-                                ? "text-white border-bottom mt-1 rad10 cursor-true"
+                                ? "text-body border-bottom mt-1 rad10 cursor-true"
                                 : "border-bottom mt-1 cursor-true"
                             }
                             style={{ backgroundColor: activeItemPeriode === index ? bgcontentku : "" }}
@@ -671,15 +672,15 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                                 <div
                                   className={
                                     activeItemPeriode === index
-                                      ? "category textsize10 text-white cursor-true float-left uppercaseku"
-                                      : "category textsize10 text-blue-a cursor-true float-left uppercaseku"
+                                      ? "category textsize10 text-body cursor-true float-left uppercaseku"
+                                      : "category textsize10 text-body cursor-true float-left uppercaseku"
                                   }
                                 >
                                   {periodeText.length >= 35 ? periodeText.substring(0, 35) + "..." : periodeText}
                                 </div>
                                 <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
                                   {/* karena array of string, ga ada count_periode_dataset */}
-                                  <p className="textsize8 text-white">
+                                  <p className="textsize8 text-body">
                                     {activeItemPeriode === index ? <MdClose /> : <MdAdsClick />}
                                   </p>
                                 </div>
@@ -689,7 +690,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                         );
                       })
                     ) : (
-                      <p className="text-silver-light font_weight600 italicku text-center mt-3">Ups.. Periode Tidak Ditemukan</p>
+                      <p className="text-body font_weight600 italicku text-center mt-3">Ups.. Periode Tidak Ditemukan</p>
                     )}
 
 
@@ -706,11 +707,11 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
         <section id="teams" className="block  py-1 ">
           
           <div className="text-center">
-            <p className="text-silver textsize10 ">Pencarian berdasarkan Judul, OPD, Dll.</p>
+            <p className="text-body textsize10 ">Pencarian berdasarkan Judul, OPD, Dll.</p>
             <div className="mb-3">
               <TextField
                 label="Masukkan Kata Kunci"
-                className="bg-input rad15 textsize16"
+                className="bg-input rad15 textsize12"
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -731,7 +732,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                 sx={{ 
                   width: "80%", 
                   "& .MuiOutlinedInput-root": {
-                    height: "7vh",
+                    height: "6vh",
                     fontSize: "100%",
                     borderRadius: "15px"
                   },
@@ -789,7 +790,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                 <Row className='portfoliolists'>
                   <Row className="mb-3 pb-2" style={{borderBottom:"1px solid #c5c3c3"}}>
                     <Col className="text-start">
-                      <p className="mb-0 text-muted textsize12 italicku">
+                      <p className="mb-0 text-muted textsize12 italicku text-body">
                         Ditemukan <strong>{sortedData.length}</strong> Dataset
                       </p>
                     </Col>
@@ -821,6 +822,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                           }}
                           disableSelectionOnClick
                           getRowHeight={() => 'auto'}
+                          getRowClassName={() => 'bg-body'}
                           autoHeight // <- ini penting biar tidak scroll
                           localeText={{
                             noRowsLabel: "📭 Data Tidak Ditemukan", // ganti teks default
@@ -855,7 +857,6 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                               paddingBottom:"10px",
                               paddingLeft:"5px",
                               paddingRight:"5px",
-                              backgroundColor: "rgba(255, 255, 255, 0.9)", // bisa dihapus kalau mau full transparan
                               borderRadius: "6px",
                               boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)"
                               

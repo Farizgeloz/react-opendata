@@ -6,8 +6,9 @@ import { useNavigate,Link, NavLink } from "react-router-dom";
 
 import Swal from 'sweetalert2';
 import { MdErrorOutline } from "react-icons/md";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const portal = "Portal Open Data";
 
 const FeedbackModal = () => {
@@ -36,7 +37,7 @@ const FeedbackModal = () => {
     const getMenu = async () => {
         try {
 
-        const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+        const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
             params: {
             portal:portal
             }
@@ -76,7 +77,7 @@ const FeedbackModal = () => {
         formData.append("feedback", feedback);
 
         try {
-            await axios.post(apiurl + 'api/open-item/opendata_feedback', formData);
+            await api_url_satuadmin.post('api/open-item/opendata_feedback', formData);
 
             setShow(false);
             sweetsuccess();

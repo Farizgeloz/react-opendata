@@ -21,7 +21,7 @@ import 'swiper/css/autoplay'; // opsional, tergantung Swiper versi
 
 
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 
 
 
@@ -46,7 +46,7 @@ function AppKategori() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(apiurl + `api/open-item/satker_code`);
+      const response = await api_url_satuadmin.get( `api/open-item/satker_code`);
       const payload = Array.isArray(response.data) ? response.data : response.data.datas;
       setData(payload.slice(0, 9)); // maksimal 9 item (3 per slide * 3 slide)
     } catch (error) {
@@ -124,7 +124,7 @@ function AppKategori() {
           className="coverflow-swiper p-2"
         >
           {dataku.map((item) => (
-            <SwiperSlide key={item.id_opd} className="coverflow-slide bg-white rad35 mt-5">
+            <SwiperSlide key={item.id_opd} className="coverflow-slide bg-body rad35 mt-5">
               <div className="portfolio-wrapper text-center">
                 <a href="#">
                   <img

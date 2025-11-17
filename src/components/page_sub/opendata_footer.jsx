@@ -3,8 +3,9 @@ import {Container, Row,Col,Table, Image} from 'react-bootstrap';
 import axios from "axios";
 import { FaCalendar, FaCalendarDay, FaCalendarWeek } from 'react-icons/fa6';
 import { Link } from "react-router-dom";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const portal = "Portal Open Data";
 
 function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, visitor_all }) {
@@ -43,7 +44,7 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
 
   const getStatistik = async () => {
     try {
-      const response = await axios.get(apiurl + 'api/open-item/ekosistem-bioinfo');
+      const response = await api_url_satuadmin.get( 'api/open-item/ekosistem-bioinfo');
       const data = response.data;
       
       setAlamat(data.alamat);
@@ -52,7 +53,7 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
       setLinkedin(data.linkedin);
       setTwitter(data.twitter);
 
-      const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }
@@ -70,7 +71,7 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
 
   const getData = async () => {
     try {
-      const response = await axios.get(apiurl + `api/open-item/komponen`);
+      const response = await api_url_satuadmin.get( `api/open-item/komponen`);
       const data = response.data;
       // Cek apakah response.data itu array atau object
       //const payload = Array.isArray(response.data) ? response.data : response.data.datas;
@@ -85,12 +86,12 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
 
   return (
     <Container fluid className=" p-3 mb-0" style={{backgroundColor:bgfooterku}}>
-      <iframe className='w-100 bg-white shaddow3 p-3 rad15 ' title="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9402.474234141997!2d113.40938301209272!3d-7.762924977704708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7005af3181627%3A0x4b033c7ae3a4880e!2sKantor%20Bupati%20Probolinggo!5e0!3m2!1sid!2sid!4v1746818580876!5m2!1sid!2sid" height="450px"></iframe>
-      <Row className='px-5'>
+      <iframe className='w-100 bg-body shaddow3 p-3 rad15 mt-3 mb-5' title="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9402.474234141997!2d113.40938301209272!3d-7.762924977704708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7005af3181627%3A0x4b033c7ae3a4880e!2sKantor%20Bupati%20Probolinggo!5e0!3m2!1sid!2sid!4v1746818580876!5m2!1sid!2sid" height="450px"></iframe>
+      <Row className='px-5 justify-content-center'>
         <Col sm={12}>
           
         </Col>
-        <Col sm={12} xs={12} md={6}>
+        <Col sm={12} xs={12} md={4}>
           
           <div className='content py-3'>
             <div className="d-flex">
@@ -118,7 +119,8 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
             <Row className="px-3">
               {dataku.map((datas, index) => (
                 datas.title !== "Portal Open Data" ? (
-                  <Link key={index} className="btn btn-primary float-center mb-1" to={datas.linked} target="_blank" rel="noopener noreferrer">
+                  <Link key={index} className="btn btn-orangeblue float-center mb-1" to={datas.linked} target="_blank" rel="noopener noreferrer">
+                   
                     <Image className='img-60' src={datas.presignedUrl_1} />
                   
                   </Link>

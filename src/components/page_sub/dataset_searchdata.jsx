@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import { DataGrid } from "@mui/x-data-grid";
 import { createTheme, IconButton, TextField, ThemeProvider } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import api_url from "../../api/axiosConfig";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
 const Spinner = () => 
   <div className='text-center justify-content-center' style={{height:"110px"}}>
@@ -27,7 +27,7 @@ const Spinner = () =>
     <p className='text-center text-shadow-border-multicolor-smooth italicku'>Proses ...</p>
   </div>;
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 
 const theme = createTheme({
   components: {
@@ -131,8 +131,14 @@ function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
   
   const [satkerku, setDatasetSatker] = useState([]);
   const [periodeku, setDatasetPeriode] = useState([]);
+  const [kategoriku, setDatasetKategori] = useState([]);
+  const [unitwilayahku, setDatasetUnitWilayah] = useState([]);
+  const [satuanku, setDatasetSatuan] = useState([]);
   const [searchtermsatker, setSearchTermSatker] = useState("");
   const [searchtermperiode_dataset, setSearchTermPeriode] = useState("");
+  const [searchtermkategori_dataset, setSearchTermKategori] = useState("");
+  const [searchtermunitwilayah_dataset, setSearchTermUnitWilayah] = useState("");
+  const [searchtermsatuan_dataset, setSearchTermSatuan] = useState("");
   //const [searchtermtag, setSearchTermTag] = useState("");
   //const [sifatdataku, setDatasetSifatdata] = useState([]);
   //const [periode_datasetku, setDatasetPeriode] = useState([]);
@@ -143,6 +149,10 @@ function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
   const [keywordsatkerName, setKeywordSatkerName] = useState("");
   //const [keywordsifatdata, setKeywordSifatdata] = useState("");
   const [keywordperiode_dataset, setKeywordPeriode] = useState("");
+  const [keywordkategori_dataset, setKeywordKategori] = useState("");
+  const [keywordunitwilayah_dataset, setKeywordUnitWilayah] = useState("");
+  const [keywordsatuan_dataset, setKeywordSatuan] = useState("");
+  const [keywordsatuanName, setKeywordSatuanName] = useState("");
   //const [keywordtag, setKeywordTag] = useState("");
 
   const location = useLocation();
@@ -158,7 +168,7 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
   
   const getDatasetUnsur = async (dimensi = "",satker = "") => {
    
-    const res3 = await api_url.get("dataset");
+    const res3 = await api_url_satudata.get("dataset?limit=1000");
     const allDataset = res3.data || [];
 
 
@@ -181,17 +191,38 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
     //console.log("Full response periode:", uniqueSatker);
     // simpan ke state
     setDatasetPeriode(uniquePeriode);
-    //setDatasetSifatdata(res.data?.resultSifatData || []);
-    //setDatasetTag(res.data?.resultTag || []);
+
+    const uniqueKategori = [
+      ...new Set(allDataset.map(item => item.kategori_dataset).filter(Boolean))
+    ];
+    setDatasetKategori(uniqueKategori);
+
+    const uniqueUnitWilayah = [
+      ...new Set(allDataset.map(item => item.unit_wilayah).filter(Boolean))
+    ];
+    setDatasetUnitWilayah(uniqueUnitWilayah);
+
+    const satuanList = allDataset
+      .map(item => ({
+        id_satuan: item.satuan?.id_satuan,
+        nama_satuan: item.satuan?.nama_satuan
+      }))
+      .filter(satuan => satuan.id_satuan && satuan.nama_satuan);
+
+    const uniqueSatuan = Array.from(
+      new Map(satuanList.map(satuan => [satuan.id_satuan, satuan])).values()
+    );
+
+    setDatasetSatuan(uniqueSatuan);
   };
 
   //const getDatasetSearch = async ({ satker = "", periode_dataset = "",  sifatdata = "", keyword = "" } = {}) => {
-  const getDatasetSearch = async ({ satker = "", periode_dataset = "", keyword = "" } = {}) => {
+  const getDatasetSearch = async ({ satker = "", periode_dataset = "", kategori_dataset = "", unitwilayah_dataset = "", satuan_dataset = "", keyword = "" } = {}) => {
     setLoading(true);
     try {
      
 
-      const res2 = await api_url.get("dataset");
+      const res2 = await api_url_satudata.get("dataset?limit=1000");
 
       // ini respons axios lengkap (ada data, status, headers, dll)
       //console.log("Full response dataset:", res2);
@@ -207,10 +238,16 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
           !keywordsatker || item.opd.id_opd === keywordsatker;
         const matchPeriode =
           !keywordperiode_dataset || item.periode_dataset === keywordperiode_dataset;
+        const matchKategori =
+          !keywordkategori_dataset || item.kategori_dataset === keywordkategori_dataset;
+        const matchUnitwilayah =
+          !keywordunitwilayah_dataset || item.unit_wilayah === keywordunitwilayah_dataset;
+        const matchSatuan =
+          !keywordsatuan_dataset || item.satuan.id_satuan === keywordsatuan_dataset;
         const matchKeyword =
           !searchKeyword ||
           item.nama_dataset.toLowerCase().includes(searchKeyword.toLowerCase());
-        return matchSatker && matchPeriode && matchKeyword;
+        return matchSatker && matchPeriode && matchKategori && matchUnitwilayah && matchSatuan && matchKeyword;
       });
 
       // Masukkan hasil filter ke state
@@ -235,13 +272,13 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
   useEffect(() => {
     
     setTimeout(() => {
-      getDatasetSearch({ satker: keywordsatker, periode_dataset: keywordperiode_dataset});
+      getDatasetSearch({ satker: keywordsatker, periode_dataset: keywordperiode_dataset, kategori_dataset: keywordkategori_dataset, unitwilayah_dataset: keywordunitwilayah_dataset, satuan_dataset: keywordsatuan_dataset});
       
     }, 2000); 
-  }, [keywordsatker, keywordperiode_dataset]);
+  }, [keywordsatker, keywordperiode_dataset, keywordkategori_dataset, keywordunitwilayah_dataset, keywordsatuan_dataset]);
 
   const handleSearch = () => {
-    getDatasetSearch({ satker: keywordsatker, periode_dataset: keywordperiode_dataset, keyword: searchKeyword });
+    getDatasetSearch({ satker: keywordsatker, periode_dataset: keywordperiode_dataset, kategori_dataset: keywordkategori_dataset, unitwilayah_dataset: keywordunitwilayah_dataset, satuan_dataset: keywordsatuan_dataset, keyword: searchKeyword });
   };
 
   
@@ -260,25 +297,25 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
         renderCell: (params) => {
           const row = params.row;
           return (
-            <Row className="">
+            <Row className="bg-body">
                 <Col md={2} xs={2}>
                 
                   
                   {getIconBySektor(row.sektor?.id_sektor)}
                 </Col>
                 <Col md={10} xs={10}>
-                <div>
-                  <p className="font_weight600 textsize16" style={{color:"#0a367b"}}>{`${row.nama_dataset}`}</p>
-                  <p className="cursor-pointer textsize14"><FaBuildingColumns /> {`${row.opd.nama_opd}`}</p>
-                  <Row className="">
+                  <div>
+                    <p className="font_weight600 textsize14 text-body">{`${row.nama_dataset}`}</p>
+                    <p className="cursor-pointer textsize12 text-body"><FaBuildingColumns /> {`${row.opd.nama_opd}`}</p>
+                    <Row className="">
                       <Col md="auto">
-                      <p className="cursor-pointer textsize11 text-white bg-green px-5 rad15 uppercaseku"> {`${row.sektor.nama_sektor}`}</p>
+                      <p className="cursor-pointer textsize10 text-white bg-green px-5 rad15 uppercaseku"> {`${row.sektor.nama_sektor}`}</p>
                       </Col>
                       <Col md="auto">
-                      <p className="cursor-pointer textsize11 text-white bg-red px-5 rad15 uppercaseku"> {`${row.kategori_dataset}`}</p>
+                      <p className="cursor-pointer textsize10 text-white bg-red px-5 rad15 uppercaseku"> {`${row.kategori_dataset}`}</p>
                       </Col>
                       <Col md="auto">
-                      <p className="cursor-pointer textsize11 text-white bg-blue px-5 rad15 uppercaseku"> {`${row.periode_dataset}`}</p>
+                      <p className="cursor-pointer textsize10 text-white bg-blue px-5 rad15 uppercaseku"> {`${row.periode_dataset}`}</p>
                       </Col>
                       {/* <Col md="auto">
                         <p
@@ -293,8 +330,8 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                       </Col> */}
                       
                     </Row>
-                    <p className="textsize10">
-                      <span className="font_weight600">Diperbaharui Tanggal: </span>{convertDate(row.updated_at)}
+                    <p className="textsize10  text-body">
+                      <span className="font_weight600 text-body">Diperbaharui Tanggal: </span>{convertDate(row.updated_at)}
                     </p>
                    <Link to={`/Dataset/Detail/${slugify(params.row.nama_dataset)}` } className="btn btn-orangeblue text-white-a">Detail Dataset</Link>
                   </div>
@@ -327,23 +364,31 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
   const [activeItemSatker, setActiveItemSatker] = useState(null);
   //const [activeItemSifatdata, setActiveItemSifatdata] = useState(null);
   const [activeItemPeriode, setActiveItemPeriode] = useState(null);
+  const [activeItemKategori, setActiveItemKategori] = useState(null);
+  const [activeItemUnitWilayah, setActiveItemUnitWilayah] = useState(null);
+  const [activeItemSatuan, setActiveItemSatuan] = useState(null);
   //const [activeItemTag, setActiveItemTag] = useState(null);
 
   const handleClicksatker = (index) => {
     setActiveItemSatker(index);
      
   };
-  /* const handleClicksifatdata = (index) => {
-    setActiveItemSifatdata(index);
-     
-  }; */
   const handleClickperiode_dataset = (index) => {
     setActiveItemPeriode(index);
      
   };
-  /* const handleClickTag = (index) => {
-    setActiveItemTag(index);
-  }; */
+  const handleClickkategori_dataset = (index) => {
+    setActiveItemKategori(index);
+     
+  };
+  const handleClickunitwilayah_dataset = (index) => {
+    setActiveItemUnitWilayah(index);
+     
+  };
+  const handleClicksatuan_dataset = (index) => {
+    setActiveItemSatuan(index);
+     
+  };
 
   const filteredSatker = satkerku.filter((satker) =>
     satker.nama_opd.toLowerCase().includes(searchtermsatker.toLowerCase())
@@ -354,6 +399,23 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
       periode.toLowerCase().includes(searchtermperiode_dataset.toLowerCase())
     )
   : periodeku;
+
+  const filteredKategori = searchtermkategori_dataset
+  ? kategoriku.filter((kategori) =>
+      kategori.toLowerCase().includes(searchtermkategori_dataset.toLowerCase())
+    )
+  : kategoriku;
+
+  const filteredunitwilayah = searchtermunitwilayah_dataset
+  ? unitwilayahku.filter((unit_wilayah) =>
+      unit_wilayah.toLowerCase().includes(searchtermunitwilayah_dataset.toLowerCase())
+    )
+  : unitwilayahku;
+
+
+  const filteredsatuan = satuanku.filter((satuan) =>
+    satuan.nama_satuan.toLowerCase().includes(searchtermsatuan_dataset.toLowerCase())
+  );
 
   // 🔥 Urutkan data sebelum render
   const sortedData = [...memoRows].sort((a, b) => {
@@ -404,13 +466,13 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
   return (
     <Row className=' margin-t5 mx-1'>
       <Col md={4} sm={12}>
-        <section id="teams" className="block  bg-white py-0 rad10 mx-1 shaddow4 mb-3">
+        <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-3">
           <div 
-            className="text-center shaddow1 rad10"
-            style={{backgroundColor:bgku}}
+            className="text-center shaddow4 rad10"
+            style={{backgroundColor:bgcontentku}}
           
           >
-            <p className="text-light textsize16 font_weight600">OPD / Produsen Data</p>
+            <p className="text-light textsize14 font_weight600">OPD / Produsen Data</p>
           </div>
           <Container fluid className="pb-3">
             <input
@@ -435,7 +497,7 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                         <Col
                           sm={12}
                           key={satker.id_opd || index}
-                          className={activeItemSatker === index ? `text-white border-bottom mt-1 rad10 cursor-true` : `border-bottom mt-1 cursor-true`}
+                          className={activeItemSatker === index ? `text-body border-bottom mt-1 rad10 cursor-true` : `border-bottom mt-1 cursor-true`}
                           style={{ backgroundColor: activeItemSatker === index ? bgcontentku : `` }}
                           onClick={() => {
                             activeItemSatker === index ? setKeywordSatker("") : setKeywordSatker(satker.id_opd);
@@ -451,8 +513,8 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                               <div
                                 className={
                                   activeItemSatker === index
-                                    ? "category textsize10 text-white cursor-true float-left  uppercaseku"
-                                    : "category textsize10 text-blue-a cursor-true float-left uppercaseku"
+                                    ? "category textsize10 text-body cursor-true float-left  uppercaseku"
+                                    : "category textsize10 text-body bg-body cursor-true float-left uppercaseku"
                                 }
                               >
                                 {satker.nama_opd.length >= 35
@@ -470,7 +532,7 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                       ))
 
                     ) : (
-                      <p className="text-silver-light font_weight600 italicku text-center mt-3">Ups.. OPD Tidak Ditemukan</p>
+                      <p className="text-body font_weight600 italicku text-center mt-3">Ups.. OPD Tidak Ditemukan</p>
                     )}
                   </Row>
                 </Col>
@@ -478,79 +540,13 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
             </motion.div>
           </Container>
         </section>
-        {/* <section id="teams" className="block  bg-white py-0 rad10 mx-1 shaddow4 mb-3">
+        <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-5">
           <div 
-            className="text-center shaddow1 rad10"
-            style={{backgroundColor:bgku}}
+            className="text-center shaddow4 rad10"
+            style={{backgroundColor:bgcontentku}}
           
           >
-            <p className="text-light textsize12 font_weight600">Prioritas Data</p>
-          </div>
-          <Container fluid className="pb-3">
-           
-            {loading ? (
-              <Spinner />
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                viewport={{ once: true }}
-              >
-                <Row className='portfoliolist'>
-                  <Col sm={12} className="max-height1">
-                    <Row>
-                      {
-                        filteredSifatdata.map((sifatdata, index) => (
-                          <Col
-                            sm={12}
-                            key={sifatdata.id || index}
-                            className={activeItemSifatdata === index ? `text-white border-bottom mt-1 rad10 cursor-true` : `border-bottom mt-1 cursor-true`}
-                            style={{ backgroundColor: activeItemSifatdata === index ? bgcontentku : `` }}
-                            onClick={() => {
-                              activeItemSifatdata === index ? setKeywordSifatdata("") : setKeywordSifatdata(sifatdata.sifat_data);
-                              //activeItemSifatdata === index ? setKeywordTag("") : setKeywordTag("");
-                              activeItemSifatdata === index ? setSearchKeyword("") : setSearchKeyword("");
-                              activeItemSifatdata === index ? handleClicksifatdata(null) : handleClicksifatdata(index);
-                              //activeItemSifatdata === index ? handleClickTag(null) : handleClickTag(null);
-                            }}
-                          >
-                            <Row>
-                              <Col key={sifatdata.id} className="col-12 clearfix py-1">
-                                <div
-                                  className={
-                                    activeItemSifatdata === index
-                                      ? "category textsize8 text-white cursor-true float-left  uppercaseku"
-                                      : "category textsize8 text-blue-a cursor-true float-left uppercaseku"
-                                  }
-                                >
-                                  {sifatdata.sifat_data.length >= 40
-                                    ? sifatdata.sifat_data.substring(0, 30) + "..."
-                                    : sifatdata.sifat_data}
-                                </div>
-                                <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
-                                  <p className="textsize8 text-white">{sifatdata.count_sifatdata}</p>
-                                </div>
-                              </Col>
-                            </Row>
-                          </Col>
-                        ))
-
-                      }
-                    </Row>
-                  </Col>
-                </Row>
-              </motion.div>
-            )}
-          </Container>
-        </section> */}
-        <section id="teams" className="block  bg-white py-0 rad10 mx-1 shaddow4 mb-5">
-          <div 
-            className="text-center shaddow1 rad10"
-            style={{backgroundColor:bgku}}
-          
-          >
-            <p className="text-light textsize16 font_weight600">Periode</p>
+            <p className="text-light textsize14 font_weight600">Periode</p>
           </div>
           <Container fluid className="pb-3">
             <input
@@ -579,7 +575,7 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                             key={index}
                             className={
                               activeItemPeriode === index
-                                ? "text-white border-bottom mt-1 rad10 cursor-true"
+                                ? "text-body border-bottom mt-1 rad10 cursor-true"
                                 : "border-bottom mt-1 cursor-true"
                             }
                             style={{ backgroundColor: activeItemPeriode === index ? bgcontentku : "" }}
@@ -598,8 +594,8 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                                 <div
                                   className={
                                     activeItemPeriode === index
-                                      ? "category textsize10 text-white cursor-true float-left uppercaseku"
-                                      : "category textsize10 text-blue-a cursor-true float-left uppercaseku"
+                                      ? "category textsize10 text-body cursor-true float-left uppercaseku"
+                                      : "category textsize10 text-body cursor-true float-left uppercaseku"
                                   }
                                 >
                                   {periodeText.length >= 35 ? periodeText.substring(0, 35) + "..." : periodeText}
@@ -626,17 +622,253 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
             </motion.div>
           </Container>
         </section>
-        
+        <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-5">
+          <div 
+            className="text-center shaddow4 rad10"
+            style={{backgroundColor:bgcontentku}}
+          
+          >
+            <p className="text-light textsize14 font_weight600">Kategori Data</p>
+          </div>
+          <Container fluid className="pb-3">
+            <input
+              type="text"
+              placeholder="Cari Kategori Data..."
+              className="form-control bg-input textsize12 rad10"
+              value={searchtermkategori_dataset}
+              onChange={(e) => setSearchTermKategori(e.target.value)}
+            />
+           
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <Row className='portfoliolist'>
+                <Col sm={12} className="max-height1">
+                  <Row>
+                    {Array.isArray(filteredKategori) && filteredKategori.length > 0 ? (
+                      filteredKategori.map((kategori_datasetn, index) => {
+                        const kategoriText = kategori_datasetn || ""; // string langsung
+                        return (
+                          <Col
+                            sm={12}
+                            key={index}
+                            className={
+                              activeItemKategori === index
+                                ? "text-body border-bottom mt-1 rad10 cursor-true"
+                                : "border-bottom mt-1 cursor-true"
+                            }
+                            style={{ backgroundColor: activeItemKategori === index ? bgcontentku : "" }}
+                            onClick={() => {
+                              activeItemKategori === index
+                                ? setKeywordKategori("")
+                                : setKeywordKategori(kategoriText);
+                              activeItemKategori === index ? setSearchKeyword("") : setSearchKeyword("");
+                              activeItemKategori === index
+                                ? handleClickkategori_dataset(null)
+                                : handleClickkategori_dataset(index);
+                            }}
+                          >
+                            <Row>
+                              <Col className="col-12 clearfix py-1">
+                                <div
+                                  className={
+                                    activeItemKategori === index
+                                      ? "category textsize10 text-body cursor-true float-left uppercaseku"
+                                      : "category textsize10 text-body cursor-true float-left uppercaseku"
+                                  }
+                                >
+                                  {kategoriText.length >= 35 ? kategoriText.substring(0, 35) + "..." : kategoriText}
+                                </div>
+                                <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
+                                  {/* karena array of string, ga ada count_periode_dataset */}
+                                  <p className="textsize8 text-white">
+                                    {activeItemKategori === index ? <MdClose /> : <MdAdsClick />}
+                                  </p>
+                                </div>
+                              </Col>
+                            </Row>
+                          </Col>
+                        );
+                      })
+                    ) : (
+                      <p className="text-silver-light font_weight600 italicku text-center mt-3">Ups.. Kategori Data Tidak Ditemukan</p>
+                    )}
+
+
+                  </Row>
+                </Col>
+              </Row>
+            </motion.div>
+          </Container>
+        </section>
+        <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-5">
+          <div 
+            className="text-center shaddow4 rad10"
+            style={{backgroundColor:bgcontentku}}
+          
+          >
+            <p className="text-light textsize14 font_weight600">Unit Wilayah</p>
+          </div>
+          <Container fluid className="pb-3">
+            <input
+              type="text"
+              placeholder="Cari Unit Wilayah..."
+              className="form-control bg-input textsize12 rad10"
+              value={searchtermunitwilayah_dataset}
+              onChange={(e) => setSearchTermUnitWilayah(e.target.value)}
+            />
+           
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <Row className='portfoliolist'>
+                <Col sm={12} className="max-height1">
+                  <Row>
+                    {Array.isArray(filteredunitwilayah) && filteredunitwilayah.length > 0 ? (
+                      filteredunitwilayah.map((unitwilayah_datasetn, index) => {
+                        const unitwilayahText = unitwilayah_datasetn || ""; // string langsung
+                        return (
+                          <Col
+                            sm={12}
+                            key={index}
+                            className={
+                              activeItemUnitWilayah === index
+                                ? "text-body border-bottom mt-1 rad10 cursor-true"
+                                : "border-bottom mt-1 cursor-true"
+                            }
+                            style={{ backgroundColor: activeItemUnitWilayah === index ? bgcontentku : "" }}
+                            onClick={() => {
+                              activeItemUnitWilayah === index
+                                ? setKeywordUnitWilayah("")
+                                : setKeywordUnitWilayah(unitwilayahText);
+                              activeItemUnitWilayah === index ? setSearchKeyword("") : setSearchKeyword("");
+                              activeItemUnitWilayah === index
+                                ? handleClickunitwilayah_dataset(null)
+                                : handleClickunitwilayah_dataset(index);
+                            }}
+                          >
+                            <Row>
+                              <Col className="col-12 clearfix py-1">
+                                <div
+                                  className={
+                                    activeItemUnitWilayah === index
+                                      ? "category textsize10 text-body cursor-true float-left uppercaseku"
+                                      : "category textsize10 text-body cursor-true float-left uppercaseku"
+                                  }
+                                >
+                                  {unitwilayahText.length >= 35 ? unitwilayahText.substring(0, 35) + "..." : unitwilayahText}
+                                </div>
+                                <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
+                                  <p className="textsize8 text-white">
+                                    {activeItemUnitWilayah === index ? <MdClose /> : <MdAdsClick />}
+                                  </p>
+                                </div>
+                              </Col>
+                            </Row>
+                          </Col>
+                        );
+                      })
+                    ) : (
+                      <p className="text-silver-light font_weight600 italicku text-center mt-3">Ups.. UnitWilayah Tidak Ditemukan</p>
+                    )}
+
+
+                  </Row>
+                </Col>
+              </Row>
+            </motion.div>
+          </Container>
+        </section>
+        <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-3">
+          <div 
+            className="text-center shaddow4 rad10"
+            style={{backgroundColor:bgcontentku}}
+          
+          >
+            <p className="text-light textsize14 font_weight600">Satuan Dataset</p>
+          </div>
+          <Container fluid className="pb-3">
+            <input
+              type="text"
+              placeholder="Cari Satuan..."
+              className="form-control bg-input textsize12 rad10"
+              value={searchtermsatuan_dataset}
+              onChange={(e) => setSearchTermSatuan(e.target.value)}
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <Row className='portfoliolist'>
+                <Col sm={12} className="max-height1">
+                  <Row>
+                    {Array.isArray(filteredsatuan) && filteredsatuan.length > 0 ? (
+                      filteredsatuan.map((satuan, index) => (
+                        <Col
+                          sm={12}
+                          key={satuan.id_satuan || index}
+                          className={activeItemSatuan === index ? `text-body border-bottom mt-1 rad10 cursor-true` : `border-bottom mt-1 cursor-true`}
+                          style={{ backgroundColor: activeItemSatuan === index ? bgcontentku : `` }}
+                          onClick={() => {
+                            activeItemSatuan === index ? setKeywordSatuan("") : setKeywordSatuan(satuan.id_satuan);
+                            activeItemSatuan === index ? setKeywordSatuanName("") : setKeywordSatuanName(satuan.nama_satuan);
+                            //activeItemSatuan === index ? setKeywordTag("") : setKeywordTag("");
+                            activeItemSatuan === index ? setSearchKeyword("") : setSearchKeyword("");
+                            activeItemSatuan === index ? handleClicksatuan_dataset(null) : handleClicksatuan_dataset(index);
+                            //activeItemSatuan === index ? handleClickTag(null) : handleClickTag(null);
+                          }}
+                        >
+                          <Row>
+                            <Col key={satuan.id} className="col-12 clearfix py-1">
+                              <div
+                                className={
+                                  activeItemSatuan === index
+                                    ? "category textsize10 text-body cursor-true float-left  uppercaseku"
+                                    : "category textsize10 text-body bg-body cursor-true float-left uppercaseku"
+                                }
+                              >
+                                {satuan.nama_satuan.length >= 35
+                                  ? satuan.nama_satuan.substring(0, 35) + "..."
+                                  : satuan.nama_satuan}
+                              </div>
+                              <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
+                                <p className="textsize8 text-white">
+                                  {activeItemSatuan === index ? <MdClose /> : <MdAdsClick  />}
+                                </p>
+                              </div>
+                            </Col>
+                          </Row>
+                        </Col>
+                      ))
+
+                    ) : (
+                      <p className="text-body font_weight600 italicku text-center mt-3">Ups.. Satuan Tidak Ditemukan</p>
+                    )}
+                  </Row>
+                </Col>
+              </Row>
+            </motion.div>
+          </Container>
+        </section>
       </Col>
       <Col md={8} sm={12} className='float-center margin-b10'>
         <section id="teams" className="block  py-1 ">
          
           <div className="text-center">
-            <p className="text-silver textsize10 ">Pencarian berdasarkan Judul, Satker, Prioritas Data, Dll.</p>
+            <p className="text-body textsize10 ">Pencarian berdasarkan Judul, Satker, Prioritas Data, Dll.</p>
             <div className="mb-3">
               <TextField
                 label="Masukkan Kata Kunci"
-                className="bg-input rad15 textsize16"
+                className="bg-input rad15 textsize12"
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -657,7 +889,7 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                 sx={{ 
                   width: "80%", 
                   "& .MuiOutlinedInput-root": {
-                    height: "7vh",
+                    height: "6vh",
                     fontSize: "100%",
                     borderRadius: "15px"
                   },
@@ -714,7 +946,7 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                 <Row className='portfoliolists'>
                   <Row className="mb-3 pb-2" style={{borderBottom:"1px solid #c5c3c3"}}>
                     <Col className="text-start">
-                      <p className="mb-0 text-muted textsize12 italicku">
+                      <p className="mb-0 text-muted textsize12 italicku text-body">
                         Ditemukan <strong>{sortedData.length}</strong> Dataset
                       </p>
                     </Col>
@@ -746,6 +978,7 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                             }}
                             disableSelectionOnClick
                             getRowHeight={() => 'auto'}
+                            getRowClassName={() => 'bg-body'}
                             autoHeight // <- ini penting biar tidak scroll
                             localeText={{
                               noRowsLabel: "📭 Data Tidak Ditemukan", // ganti teks default
@@ -780,7 +1013,6 @@ const [sortBy, setSortBy] = useState("terbaru"); // default urutan
                                 paddingBottom:"10px",
                                 paddingLeft:"5px",
                                 paddingRight:"5px",
-                                backgroundColor: "rgba(255, 255, 255, 0.9)", // bisa dihapus kalau mau full transparan
                                 borderRadius: "6px",
                                 boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)"
                                 

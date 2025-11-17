@@ -3,7 +3,7 @@ import axios from "axios";
 
 import {Container,Row,Col,Image} from 'react-bootstrap';
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 
 function AppTeams() {
   const [artikelku, setArtikel] = useState([]);

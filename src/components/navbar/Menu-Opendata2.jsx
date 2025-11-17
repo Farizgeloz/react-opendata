@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation,Link } from "react-router-dom";
 import {Container ,Nav,Navbar,NavDropdown, NavLink} from 'react-bootstrap';
+import Toogle_Mode from "../page_web/Themes_Mode";
 import '../styles/style_font.css';
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const portal = "Portal Open Data";
 
 function MenuItem({title,submenu,linked,bg}){
@@ -23,7 +25,7 @@ function MenuItem({title,submenu,linked,bg}){
         color: '#ffffff',
         padding: '6px 16px',
         margin: '0 0.25rem',
-        fontSize: '120%',
+        fontSize: '100%',
         textDecoration: 'none',
         display: 'inline-block',
         transition: 'background-color 0.2s ease-in-out, box-shadow 0.2s',
@@ -67,16 +69,18 @@ function MenuItem({title,submenu,linked,bg}){
     
     const getMenu = async () => {
       try {
+        const response = await api_url_satuadmin.get("api/open-item/menu-opendata2", {
+          params: title ? { categoryku: title } : {}
+        });
 
-        const query = title ? `?categoryku=${encodeURIComponent(title)}` : '';
-        const response = await fetch(apiurl + `api/open-item/menu-opendata2${query}`);
-        const result = await response.json();
-        setMenu2(result);
-       
+        setMenu2(response.data);
+
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
     };
+
+
 
     const [hover1, setHover1] = useState(false);
 
@@ -91,8 +95,8 @@ function MenuItem({title,submenu,linked,bg}){
             }}
             className={
               color2
-                ? 'dropdown-toggle nav-link text-white-a mx-0 textsize12 px-4 uppercaseku'
-                : 'dropdown-toggle nav-link text-blue-a3 mx-0 textsize12 px-4 uppercaseku'
+                ? 'dropdown-toggle nav-link text-white-a mx-0 textsize10 px-4 uppercaseku'
+                : 'dropdown-toggle nav-link text-blue-a3 mx-0 textsize10 px-4 uppercaseku'
             }
             style={{
               backgroundColor: bg,
@@ -101,7 +105,7 @@ function MenuItem({title,submenu,linked,bg}){
               color: '#ffffff',
               padding: '6px 16px',
               margin: '0 0.25rem',
-              fontSize: '120%',
+              fontSize: '100%',
               textDecoration: 'none',
               display: 'inline-block',
               transition: 'background-color 0.2s ease-in-out, box-shadow 0.2s',
@@ -129,7 +133,7 @@ function MenuItem({title,submenu,linked,bg}){
           {isMobile && isAccordionOpen && (
             <div className="accordion-menu px-1 mx-2" active>
               {menuku2.map((item) => (
-                <Link key={item.id} to={item.linked} className="d-block py-2 text-white border-bottom mx-5 textsize12">
+                <Link key={item.id} to={item.linked} className="d-block py-2 text-white border-bottom mx-5 textsize10">
                   {item.sub_menu}
                 </Link>
               ))}
@@ -163,18 +167,29 @@ function Menu({bgku}) {
 
   useEffect(() => {
     getMenu();
+    getContent();
   }, []);
 
   const getMenu = async () => {
     try {
-      const response = await axios.get(apiurl + `api/open-item/menu-opendata`);
+      const response = await api_url_satuadmin.get( `api/open-item/menu-opendata`);
 
       // Cek apakah response.data itu array atau object
       const payload = Array.isArray(response.data) ? response.data : response.data.datas;
 
       setMenu(payload);
 
-      const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      
+
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+  };
+
+  const getContent = async () => {
+    try {
+
+      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }
@@ -237,7 +252,7 @@ function Menu({bgku}) {
                 })
               
               }
-              
+              <Toogle_Mode />
             </Nav>
           </Navbar.Collapse>
         </Container>

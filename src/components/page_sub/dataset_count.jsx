@@ -1,17 +1,20 @@
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import axios from "axios";
 import { MdAutoAwesomeMotion, MdCategory } from "react-icons/md";
 import { FaBuildingColumns, FaDatabase, FaMapLocationDot, FaRectangleList } from 'react-icons/fa6';
-import api_url from '../../api/axiosConfig';
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+import { ThemeContext } from "../../ThemeContext";
+
+
 const portal = "Portal Open Data";
 
 
-function AppStatistik({ bgku,colortitleku }) {
+function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku3,bginputku,colortitleku,colordateku }) {
+  const { theme } = useContext(ThemeContext);
   const [luasku, setLuas] = useState("");
   const [populasiku, setPopulasi] = useState("");
   const [kepadatanku, setKepadatan] = useState("");
@@ -30,11 +33,6 @@ function AppStatistik({ bgku,colortitleku }) {
   const [datasetku_unitwilayah, setCountDataset_Unitwilayah] = useState("");
   const [datasetku_kategoridata, setCountDataset_Kategoridata] = useState("");
 
-  const [count_mapset, setCountMapset] = useState("");
-  const [count_mapsetpublik, setCountMapsetPublik] = useState("");
-  const [count_mapset_satker, setCountMapset_Satker] = useState("");
-  const [count_mapset_tipe, setCountMapset_Tipe] = useState("");
-  const [count_mapset_bidangurusan, setCountMapset_Bidangurusan] = useState("");
 
 
   useEffect(() => {
@@ -43,7 +41,7 @@ function AppStatistik({ bgku,colortitleku }) {
 
   const getStatistik = async () => {
     try {
-      const response = await axios.get(apiurl + 'api/open-item/ekosistem-bioinfo');
+      const response = await api_url_satuadmin.get( 'api/open-item/ekosistem-bioinfo');
       const data = response.data;
       
       setLuas(data.luas);
@@ -53,7 +51,7 @@ function AppStatistik({ bgku,colortitleku }) {
       setKodepos(data.kode_pos);
 
 
-      const response2 = await api_url.get("dataset");
+      const response2 = await api_url_satudata.get("dataset?limit=1000");
       const data2 = response2.data || [];
       // Hitung jumlah dataset per opd
       const countByperOpd = data2.reduce((acc, item) => {
@@ -143,15 +141,7 @@ function AppStatistik({ bgku,colortitleku }) {
       
       
 
-      const response3 = await axios.get(apiurl + 'api/satupeta/count');
-      const data3 = response3.data;
-      //console.log('DATA DARI BACKEND:', response3.data);
-      setCountMapset(data3.count_mapset);
-      setCountMapsetPublik(data3.count_mapsetpublik);
-      setCountMapset_Satker(data3.count_mapset_satker);
-      setCountMapset_Tipe(data3.count_mapset_tipe);
-      setCountMapset_Bidangurusan(data3.count_mapset_bidangurusan);
-
+      
 
     } catch (error) {
       console.error("Failed to fetch data:", error);
@@ -161,7 +151,7 @@ function AppStatistik({ bgku,colortitleku }) {
 
   };
   return (
-    <section id="statistiks" className="block statistik-block" style={{marginTop:"-6%"}}>
+    <section id="statistiks" className="statistik-block" style={{marginTop:"-6%"}}>
       
       
       <Container fluid className=' pb-5'>
@@ -176,8 +166,13 @@ function AppStatistik({ bgku,colortitleku }) {
                     
                    
                     <Col lg={3} md={3} sm={4} xs={12} className='p-1'>
-                        <div className='overlay2 rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh',backgroundColor:bgku}}>
-                            <FaDatabase className='align-middle text-orange mt-2 mb-2' style={{width:'40px',height:'40px'}} />
+                        <div className='overlay2 rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh',backgroundColor:bgcontentku}}>
+                            <FaDatabase className='align-middle mt-2 mb-2 text-orange' 
+                              style={{
+                                width:'40px',height:'40px',
+                                
+                              }}
+                            />
                             <div className='text-center px-2'>
                               <p className='textsize16 text-white font_weight600 mb-2' style={{lineHeight: '18px'}}>Dataset Tersedia</p>
                               <p className='textsize24 text-orange font_weight800  mb-0 '>{count_dataset}</p>
@@ -187,11 +182,18 @@ function AppStatistik({ bgku,colortitleku }) {
                         </div>
                     </Col>
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
-                        <div className='overlay2 bg-white rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
-                            <FaBuildingColumns className='align-middle mt-2 mb-2' style={{width:'40px',height:'40px',color:colortitleku}} />
+                        <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
+                            <FaBuildingColumns className='align-middle mt-2 mb-2' 
+                              style={{
+                                width:'40px',height:'40px',
+                                color: `${theme === "dark" 
+                                  ? colordateku 
+                                  : colortitleku}`
+                              }}
+                            />
                             <div className='text-center px-2'>
-                              <p className='textsize16 text-silver-dark font_weight600 mb-2' style={{lineHeight: '18px'}}>Satker/OPD</p>
-                              <p className='textsize24 text-black font_weight800  mb-0 '>{datasetku_produkdata}</p>
+                              <p className='textsize16 text-body font_weight600 mb-2' style={{lineHeight: '18px'}}>Satker/OPD</p>
+                              <p className='textsize24 text-body font_weight800  mb-0 '>{datasetku_produkdata}</p>
                               
                             </div>
                             
@@ -200,11 +202,18 @@ function AppStatistik({ bgku,colortitleku }) {
                     
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
                       <a href='/Opendata/Dataset' target="_blank">
-                        <div className='overlay2 bg-white rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
-                            <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' style={{width:'40px',height:'40px',color:colortitleku}} />
+                        <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
+                            <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
+                              style={{
+                                width:'40px',height:'40px',
+                                color: `${theme === "dark" 
+                                  ? colordateku 
+                                  : colortitleku}`
+                              }}
+                            />
                             <div className='text-center px-2'>
-                              <p className='textsize16 text-silver-dark font_weight600 mb-2' style={{lineHeight: '18px'}}>Sektor Dimensi</p>
-                              <p className='textsize24 text-black font_weight800  mb-0 '>{datasetku_sektor}</p>
+                              <p className='textsize16 text-body font_weight600 mb-2' style={{lineHeight: '18px'}}>Sektor Dimensi</p>
+                              <p className='textsize24 text-body font_weight800  mb-0 '>{datasetku_sektor}</p>
                               
                             </div>
                             
@@ -213,11 +222,18 @@ function AppStatistik({ bgku,colortitleku }) {
                     </Col>
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
                       <a href='/Opendata/Dataset' target="_blank">
-                        <div className='overlay2 bg-white rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
-                            <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' style={{width:'40px',height:'40px',color:colortitleku}} />
+                        <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
+                            <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
+                              style={{
+                                width:'40px',height:'40px',
+                                color: `${theme === "dark" 
+                                  ? colordateku 
+                                  : colortitleku}`
+                              }}
+                            />
                             <div className='text-center px-2'>
-                              <p className='textsize16 text-silver-dark font_weight600 mb-2' style={{lineHeight: '18px'}}>Unit Wilayah</p>
-                              <p className='textsize24 text-black font_weight800  mb-0 '>{datasetku_unitwilayah}</p>
+                              <p className='textsize16 text-body font_weight600 mb-2' style={{lineHeight: '18px'}}>Unit Wilayah</p>
+                              <p className='textsize24 text-body font_weight800  mb-0 '>{datasetku_unitwilayah}</p>
                               
                             </div>
                             
@@ -226,11 +242,18 @@ function AppStatistik({ bgku,colortitleku }) {
                     </Col>
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
                       <a href='/Opendata/Dataset' target="_blank">
-                        <div className='overlay2 bg-white rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
-                            <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' style={{width:'40px',height:'40px',color:colortitleku}} />
+                        <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
+                            <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
+                              style={{
+                                width:'40px',height:'40px',
+                                color: `${theme === "dark" 
+                                  ? colordateku 
+                                  : colortitleku}`
+                              }}
+                            />
                             <div className='text-center px-2'>
-                              <p className='textsize16 text-silver-dark font_weight600 mb-2' style={{lineHeight: '18px'}}>Periode Data</p>
-                              <p className='textsize24 text-black font_weight800  mb-0 '>{datasetku_periode}</p>
+                              <p className='textsize16 text-body font_weight600 mb-2' style={{lineHeight: '18px'}}>Periode Data</p>
+                              <p className='textsize24 text-body font_weight800  mb-0 '>{datasetku_periode}</p>
                               
                             </div>
                             
@@ -239,7 +262,7 @@ function AppStatistik({ bgku,colortitleku }) {
                     </Col>
                     {/* <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
                       <a href='/Opendata/Dataset' target="_blank">
-                        <div className='overlay2 bg-white rad5 align-middle' style={{height:'150px'}}>
+                        <div className='overlay2 bg-body rad5 align-middle' style={{height:'150px'}}>
                             <FaBuildingColumns className='align-middle mt-2 mb-2' style={{width:'40px',height:'40px',color:colortitleku}} />
                             <div className='text-center px-2'>
                               <p className='textsize12 text-silver-dark font_weight600 mb-2' style={{lineHeight: '18px'}}>Desa Terhubung</p>

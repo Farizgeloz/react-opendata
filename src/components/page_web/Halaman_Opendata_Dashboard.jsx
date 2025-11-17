@@ -15,18 +15,22 @@ import FeedbackModal from "../page_sub/FeedbackModal";
 import PopupIklan from '../page_sub/PopupIklan';
 
 import Menu from '../navbar/Menu-Opendata';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import {Row,Col,Image} from 'react-bootstrap';
 import { FcFeedback } from "react-icons/fc";
 import { MdInfoOutline } from "react-icons/md";
 import { Link } from 'react-router-dom';
+import { ThemeContext } from "../../ThemeContext";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const portal = "Portal Open Data";
 
 function DatasetPengelolah() {
+
+  const { theme } = useContext(ThemeContext);
 
   const [loading, setLoading] = useState(true);
   const [totalVisitors, setTotalVisitors] = useState(null);
@@ -39,10 +43,12 @@ function DatasetPengelolah() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await axios.post(`${apiurl}api/opendata_visitor/visitor`);
+         await api_url_satuadmin.post("api/opendata_visitor/visitor");
 
-        // Ambil total
-        const response = await axios.get(`${apiurl}api/opendata_visitor/count`);
+        // 🔹 2. Ambil total visitor
+        const response = await api_url_satuadmin.get("api/opendata_visitor/count");
+
+        // 🔹 3. Update state di React
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
@@ -53,38 +59,20 @@ function DatasetPengelolah() {
   }, []);
 
   useEffect(() => {
-    getImages();
-    const increaseVisitor = async () => {
-      try {
-        // Increment visitor di backend
-        await axios.post(`${apiurl}api/opendata_visitor/visitor`);
-
-        // Ambil total
-        const response = await axios.get(`${apiurl}api/opendata_visitor/count`);
-        setTotalVisitors(response.data);
-      } catch (error) {
-        console.error('Gagal ambil data pengunjung:', error);
-      }
-    };
-
-    increaseVisitor();
-  }, []);
-
-  useEffect(() => {
-    if (imageLoaded) {
+    //if (imageLoaded) {
       // Kasih sedikit delay agar transisi smooth
       const timer = setTimeout(() => {
         setLoading(false);
       }, 3000);
       return () => clearTimeout(timer);
-    }
+   // }
   }, [imageLoaded]);
 
   const getImages = async () => {
     try {
       
 
-      const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }
@@ -92,7 +80,7 @@ function DatasetPengelolah() {
       const data_image = response_image.data.image_logo;
       setImage1(data_image.presignedUrl3);
 
-      const response_setting = await axios.get(`${apiurl}api/open-item/site_opendata_setting`);
+      const response_setting = await api_url_satuadmin.get(`api/open-item/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
       
@@ -113,12 +101,11 @@ function DatasetPengelolah() {
           <div className="spinner-overlay justify-content-center">
             
             <div className="spinner-content text-center p-4 flip-card-infinite" >
-              {!imageLoaded && (
+              
                 <div className="image-placeholder shimmer rad15 img-logo-50px mb-2" />
-              )}
-              {image1 && (
+              
                 <motion.img
-                  src={image1}
+                  src={`./logo.png`}
                   alt="Logo"
                   className={`rad15 w-50 ${imageLoaded ? 'visible' : 'hidden'}`}
                   onLoad={() => setImageLoaded(true)}
@@ -130,7 +117,6 @@ function DatasetPengelolah() {
                     ease: 'easeInOut',
                   }}
                 />
-                )}
             
               <div className="dot-pulse mt-3">
                 <span></span>
@@ -148,7 +134,12 @@ function DatasetPengelolah() {
           </motion.div>
         )
       }
-      <div className="App"  style={{background:`linear-gradient(170deg, ${settings.bg_body}4D, #fff 40%, #fff 50%, #fff 65%, ${settings.bg_body} 90%, ${settings.bg_body}4D 100%)`}}>
+      <div className="App"  
+        style={{
+          background: `${theme === "dark" 
+          ? '#000' 
+          : `linear-gradient(170deg, ${settings.bg_body}4D, #fff 40%, #fff 50%, #fff 65%, ${settings.bg_body} 90%, ${settings.bg_body}4D 100%)`}`}}
+      >
       
           
         <Menu bgku={settings.bg_header}/>
@@ -168,6 +159,12 @@ function DatasetPengelolah() {
           />
           <AppCount 
             bgku={settings.bg_header} 
+            bgbodyku={settings.bg_body} 
+            bgtitleku={settings.bg_title}
+            bgcontentku={settings.bg_content}
+            bgcontentku2={settings.bg_content2}
+            bgcontentku3={settings.bg_content3}
+            bginputku={settings.bg_input}
             colortitleku={settings.color_title}
             colordateku={settings.color_date}
           />

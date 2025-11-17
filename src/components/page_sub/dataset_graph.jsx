@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react"; // ⬅️ tambahkan useContext di sini
 import axios from "axios";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {Row,Col} from 'react-bootstrap';
+import Image from 'react-bootstrap/Image';
 import { FaArrowRightArrowLeft, FaArrowUpWideShort, FaBuildingColumns, FaBuildingUser, FaPeopleArrows, FaRectangleList } from "react-icons/fa6";
 import { MdOutlineDatasetLinked } from "react-icons/md";
 import { motion } from "framer-motion";
+import { ThemeContext } from "../../ThemeContext";
 
 import {
   Chart as ChartJS,
@@ -18,7 +20,7 @@ import {
   Legend,
   Filler
 } from "chart.js";
-import api_url from "../../api/axiosConfig";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
 ChartJS.register(
   LineElement,
@@ -34,7 +36,9 @@ ChartJS.register(
   
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl = import.meta.env.VITE_API_URL;
+
+
+const portal = "Portal Open Data";
 
 const Spinner = () => 
     <div className='text-center justify-content-center' style={{height:"110px"}}>
@@ -70,7 +74,16 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
   const [datasetku_spm, setCountDataset_SPM] = useState("");
   const [datasetku_other, setCountDataset_Other] = useState(""); */
 
+  const [image1, setImage1] = useState("");
+  const [image2, setImage2] = useState("");
 
+  const [isDark, setIsDark] = useState(false);
+  const { theme } = useContext(ThemeContext);
+  
+
+  
+
+  
   
 
   useEffect(() => {
@@ -82,7 +95,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
 
   const getStatistik = async () => {
     try {
-      const response = await api_url.get("dataset");
+      const response = await api_url_satudata.get("dataset?limit=1000");
       const data = response.data || [];
       // Hitung jumlah dataset per opd
       const countByperOpd = data.reduce((acc, item) => {
@@ -175,6 +188,16 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
         y: count_kategoridata
       }));
       setRowsKategoridata(data_countkategoridata);
+      
+
+      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
+        params: {
+          portal:portal
+        }
+      });
+      const data_image = response_image.data.image_opendata_kategoribidang;
+      setImage1(data_image.presignedUrl1);
+      setImage2(data_image.presignedUrl2);
 
       
 
@@ -187,6 +210,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
   };
  
 
+
   
   
   
@@ -194,10 +218,9 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
   return (
     <>
      
-      <Row className=" bg-white  py-2 mx-4 my-3 rad15 d-flex flex-column item-align-center justify-content-center">
-        
-          
-        <Col  lg={12} md={12} sm={12} xs={12} className="drop-shadow-lg max-height2">
+      <Row className=" py-2 mx-4 ">
+         
+        <Col  lg={12} md={12} sm={12} xs={12} className="drop-shadow-lg max-height2 margin-t5">
           {loading ? (
             <Spinner />
           ) : (
@@ -207,155 +230,155 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
               transition={{ duration: 0.3 }}
               viewport={{ once: true }}
             >
-              <div className="md:col-span-4 col-span-6 p-2 ">
-                
+                <div className="bg-body  rad15 shaddow4 p-5">
 
-                <HighchartsReact
-                  highcharts={Highcharts}
-                  options={
-                    { 
-                      chart: {
-                        type: "column",
-                        name:"coba",
-                        backgroundColor: 'transparent',
-                      },
-                      title: {
-                        text: `<span style="color:${colordateku}">Grafik Jumlah </span>
-                              <span style="color:${colortitleku}">Per Satker</span> /
-                              <span style="color:${colortitleku}">Produsen Data</span>`,
-                        useHTML: true,
-                        style: {
-                          fontSize: '200%',
-                          fontFamily: 'Roboto, sans-serif',
-                          fontWeight: '800' // atau angka seperti '600'
-                        }
-                      },
-                      
-                      xAxis: {
-                          type: 'category',
-                          labels: {
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={
+                      { 
+                        chart: {
+                          type: "bar",
+                          name:"coba",
+                          backgroundColor: `${theme === "dark" ? '#212529' : '#ffffff'}`,
+                          borderRadius:"5%"
+                        },
+                        title: {
+                          text: `<span style="color:${theme === "dark" ? '#fff' : '#000'}">Grafik Jumlah </span>
+                                <span style="color:#EF6C00">Per Satker / Produsen Data</span>`,
+                          useHTML: true,
+                          style: {
+                            fontSize: '200%',
+                            fontFamily: 'Roboto, sans-serif',
+                            fontWeight: '800'
+                          }
+                        },
+                        
+                        xAxis: {
+                            type: 'category',
+                            labels: {
                               autoRotation: [-45, -90],
                               style: {
-                              fontSize: '120%',
-                              fontFamily: 'Roboto, sans-serif',
-                              color: '#000000',
-                              fontWeight: 'bold', // atau angka seperti '600'
-                            }
-                          }
-                      },
-                      yAxis: {
-                          min: 0,
-                          title: {
-                              text: 'Banyak Data',
-                              style: {
-                              fontSize: '120%',
-                              fontFamily: 'Roboto, sans-serif',
-                              color: '#666666',
-                              fontWeight: 'bold', // atau angka seperti '600'
-                            }
-                          },
-                          labels: {
-                              autoRotation: [-45, -90],
-                              style: {
-                                  fontSize: '100%',
-                                  fontFamily: "Roboto, sans-serif",
-                                  color: '#666666'
-                              }
-                          }
-                      },
-                      tooltip: {
-                        useHTML: true,
-                        headerFormat: '<div>',
-                        footerFormat: '</div>',
-                        pointFormatter: function() {
-                          var dataSum = 0,
-                            percentage;
-
-                          this.series.points.forEach(function(point) {
-                            dataSum += point.y;
-                          });
-
-                          percentage = (this.y / dataSum) * 100;
-                          let result = percentage.toString().substring(0, 5);
-
-                          return `<p><span><b>${this.name}</b></span></p>
-                                <p><span>Banyak Data: <b>${this.y}</b></span> (<span>${result}%</span>)</p>`
-                        }
-                      },
-                      plotOptions: {
-                          column: {
-                              borderRadius: '5%',
-                              dataLabels: {
-                                  enabled: true
+                                fontSize: '110%',
+                                fontFamily: 'Roboto, sans-serif',
+                                fontWeight: 'bold', // atau angka seperti '600'
+                                color:`${theme === "dark" ? '#fff' : '#000'}`
                               },
-                              groupPadding: 0.1,
-                              borderColor:'white',
-                              borderWidth:3,
-                          }
-                      },
-                      series: [{
-                        name: 'Population',
-                          colorByPoint: true,
-                          colors: [bgcontentku, bgku], // Biru dan Oranye
-                          groupPadding: 0,
-                          data: row_graph,
-                          dataLabels: {
-                              enabled: true,
-                              rotation: -90,
-                              color: '#FFFFFF',
-                              inside: true,
-                              verticalAlign: 'top',
-                              format: '{point.y:1f}', // one decimal
-                              y: 10, // 10 pixels down from the top
-                              style: {
-                                  fontSize: '120%',
-                                  fontFamily: 'Roboto, sans-serif',
-                                  color:'#ffffff'
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Banyak Data',
+                                style: {
+                                fontSize: '110%',
+                                fontFamily: 'Roboto, sans-serif',
+                                fontWeight: 'bold', // atau angka seperti '600'
+                                color:`${theme === "dark" ? '#fff' : '#000'}`
                               }
-                          }
-                      }],
-                      legend: {
-                          enabled: false,
-                          
-                          itemStyle: {
-                                  color: '#000',
-                                  fontFamily: 'Roboto, sans-serif',
-                                  fontSize: '120%'
-                          }
-                      },
-                      responsive: {
-                        rules: [{
-                            condition: {
-                                maxWidth: '80vh'
                             },
-                            chartOptions: {
-                                chart: {
-                                    height: 300
+                            labels: {
+                                autoRotation: [-45, -90],
+                                style: {
+                                    fontSize: '100%',
+                                    fontFamily: "Roboto, sans-serif",
+                                    color:`${theme === "dark" ? '#fff' : '#000'}`
+                                }
+                                
+                            }
+                        },
+                        tooltip: {
+                          useHTML: true,
+                          headerFormat: '<div>',
+                          footerFormat: '</div>',
+                          pointFormatter: function() {
+                            var dataSum = 0,
+                              percentage;
+
+                            this.series.points.forEach(function(point) {
+                              dataSum += point.y;
+                            });
+
+                            percentage = (this.y / dataSum) * 100;
+                            let result = percentage.toString().substring(0, 5);
+
+                            return `<p><span><b>${this.name}</b></span></p>
+                                  <p><span>Banyak Data: <b>${this.y}</b></span> (<span>${result}%</span>)</p>`
+                          }
+                        },
+                        plotOptions: {
+                            column: {
+                                borderRadius: '5%',
+                                dataLabels: {
+                                    enabled: true
                                 },
-                                subtitle: {
-                                    text: null
-                                },
-                                navigator: {
-                                    enabled: false
+                                groupPadding: 0.1,
+                                borderColor:'white',
+                                borderWidth:3,
+                            }
+                        },
+                        series: [{
+                          name: 'Population',
+                            colorByPoint: true,
+                            colors: [bgcontentku, bgku], // Biru dan Oranye
+                            groupPadding: 0,
+                            data: row_graph,
+                            dataLabels: {
+                                enabled: true,
+                                rotation: 0,
+                                color: '#FFFFFF',
+                                inside: true,
+                                verticalAlign: 'top',
+                                format: '{point.y:1f}', // one decimal
+                                y: 0, // 10 pixels down from the top
+                                style: {
+                                    fontSize: '100%',
+                                    fontFamily: 'Roboto, sans-serif',
+                                    color:'#ffffff'
                                 }
                             }
-                        }]
+                        }],
+                        legend: {
+                            enabled: false,
+                            
+                            itemStyle: {
+                                    color: '#000',
+                                    fontFamily: 'Roboto, sans-serif',
+                                    fontSize: '70%'
+                            }
+                        },
+                        responsive: {
+                          rules: [{
+                              condition: {
+                                  maxWidth: '80vh'
+                              },
+                              chartOptions: {
+                                  chart: {
+                                      height: 300
+                                  },
+                                  subtitle: {
+                                      text: null
+                                  },
+                                  navigator: {
+                                      enabled: false
+                                  }
+                              }
+                          }]
+                      }
+                      }      
+                        
                     }
-                    }      
-                      
-                  }
-                  containerProps={{ style: { height: "80vh" } }}
-                />
-              </div>
+                    containerProps={{ style: { height: "80vh" } }}
+                  />
+                </div>
             </motion.div>
           )}   
         </Col>
             
       </Row>
 
-      <Row className="bg-white  py-2 mx-4 my-3 rad15">
+      <Row className="mx-4 my-5">
         {/* Chart - Muncul dulu di mobile, pindah kiri di desktop */}
-        <Col lg={12} md={12} sm={12} xs={12} className="drop-shadow-lg max-height3 order-1 order-xs-last">
+        <Col lg={12} md={12} sm={12} xs={12} className="drop-shadow-lg order-1 order-xs-last">
           {loading ? (
             <Spinner />
           ) : (
@@ -365,112 +388,309 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
               transition={{ duration: 0.3 }}
               viewport={{ once: true }}
             >
-              <div className="p-2">
-                <HighchartsReact
-                  highcharts={Highcharts}
-                  options={{
-                    chart: { type: 'area', backgroundColor: null },
-                    title: {
-                      text: `<span style="color:${colordateku}">Grafik Jumlah </span>
-                            <span style="color:${colortitleku}">Per Periode</span>`,
-                      useHTML: true,
-                      style: {
-                        fontSize: '200%',
-                        fontFamily: 'Roboto, sans-serif',
-                        fontWeight: '800' // atau angka seperti '600'
-                      }
-                    },
-                    
-                    xAxis: {
-                      categories: row_periode_dataset.map(item => item.name),
-                      title: {
-                        text: 'Periode',
-                        style: {
-                          fontSize: '120%',
-                          fontFamily: 'Roboto, sans-serif',
-                          color: '#666666',
-                          fontWeight: 'bold'
+              <Row className="">
+                <Col md={6} sm={6} xs={12} className="py-5 px-2">
+                  <div className="bg-body  rad15 shaddow4 p-5">
+                    <HighchartsReact
+                      highcharts={Highcharts}
+                      options={{
+                        chart: {
+                          plotBackgroundColor: null,
+                          plotBorderWidth: null,
+                          plotShadow: false,
+                          backgroundColor: null,
+                          // Donut chart di Highcharts sebenarnya type "pie"
+                          type: "pie"
+                        },
+                        colors: ['#9654be','#f45945','#f9c907','#aad255','#00ada7','#05759a'],
+                        title: {
+                          text: `<span class="text-body">Grafik Jumlah </span>
+                                <span style="color:#EF6C00">Per Sektor</span>`,
+                          useHTML: true,
+                          style: {
+                            fontSize: '200%',
+                            fontFamily: 'Roboto, sans-serif',
+                            fontWeight: '800'
+                          }
+                        },
+                        tooltip: {
+                          pointFormat:`{series.name}: <b>{point.y}</b> ({point.percentage:.1f}%)`,
+                        },
+                        accessibility: { enabled: false },
+
+
+                        plotOptions:
+                          
+                        {
+                          pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            innerSize: "50%",
+                            dataLabels: [
+                              {
+                                enabled: true,
+                                distance: 0,
+                                style: { fontSize: '0.5em', opacity: 0.7 }
+                              },
+                              {
+                                enabled: true,
+                                distance: -40,
+                                format: '{point.percentage:.1f}%',
+                                style: { fontSize: '80%', opacity: 0.7 }
+                              }
+                            ],
+                            showInLegend: true
+                          }
+                        },
+                        series:
+                          [
+                            {
+                              name: " data",
+                              colorByPoint: true,
+                              data: row_sektor_dataset
+                            }
+                          ],
+
+                        legend: {
+                          enabled: true,
+                          itemStyle: {
+                            color:`${theme === "dark" ? '#fff' : '#000'}`,
+                            fontFamily: 'MuseoS500',
+                            fontSize: '100%'
+                          }
                         }
-                      }
-                    },
-                    yAxis: {
-                      title: {
-                        text: 'Jumlah Data',
-                        style: {
-                          fontSize: '120%',
-                          fontFamily: 'Roboto, sans-serif',
-                          color: '#666666',
-                          fontWeight: 'bold'
+                      }}
+                      containerProps={{ style: { height: "100%", width: "100%" } }}
+                    />
+                  </div>
+                </Col>
+                <Col md={6} sm={6} xs={12} className="py-5 px-2">
+                 <div className="bg-body  rad15 shaddow4 p-5">
+                    <HighchartsReact
+                      highcharts={Highcharts}
+                      options={{
+                        chart: { type: 'area', backgroundColor: null },
+                        title: {
+                          text: `<span class="text-body">Grafik Jumlah </span>
+                                <span style="color:#EF6C00">Per Periode</span>`,
+                          useHTML: true,
+                          style: {
+                            fontSize: '200%',
+                            fontFamily: 'Roboto, sans-serif',
+                            fontWeight: '800'
+                          }
+                        },
+                        
+                       xAxis: {
+                        categories: row_periode_dataset.map(item => item.name),
+                        title: {
+                          text: `<span class="text-body">Periode</span>`,
+                          useHTML: true, // ⬅️ WAJIB
+                          style: {
+                            fontSize: '120%',
+                            fontFamily: 'Roboto, sans-serif',
+                            fontWeight: 'bold',
+                            color:`${theme === "dark" ? '#fff' : '#000'}`
+                          }
+                        },
+                        labels: {
+                          autoRotation: [-45, -90],
+                          style: {
+                            fontSize: '90%',
+                            fontFamily: 'Roboto, sans-serif',
+                            fontWeight: 'bold', // atau angka seperti '600'
+                            color:`${theme === "dark" ? '#fff' : '#000'}`
+                          },
                         }
                       },
-                      allowDecimals: false
-                    },
-                    tooltip: { pointFormat: '{series.name}: <b>{point.y}</b>' },
-                    plotOptions: {
-                      area: {
-                        marker: {
-                          enabled: false,
-                          symbol: 'circle',
-                          radius: 2,
-                          states: { hover: { enabled: true } }
+                      yAxis: {
+                        title: {
+                          text: 'Jumlah Data',
+                          useHTML: true,
+                          style: {
+                            fontSize: '14px',
+                            fontFamily: 'Roboto, sans-serif',
+                            fontWeight: 'bold',
+                            color:`${theme === "dark" ? '#fff' : '#000'}`
+                          }
                         },
-                        fillOpacity: 0.5
-                      }
-                    },
-                    colors: [bgcontentku],
-                    series: [{
-                      name: 'Banyak Data',
-                      data: row_periode_dataset.map(item => item.y)
-                    }],
-                    legend: { enabled: false }
-                  }}
-                  containerProps={{ style: { height: "100%" } }}
-                />
-              </div>
+                        allowDecimals: false
+                      },
+                      tooltip: { pointFormat: '{series.name}: <b>{point.y}</b>' },
+                      plotOptions: {
+                        area: {
+                          marker: {
+                            enabled: false,
+                            symbol: 'circle',
+                            radius: 2,
+                            states: { hover: { enabled: true } }
+                          },
+                          fillOpacity: 0.5
+                        }
+                      },
+                      colors: [bgcontentku],
+                      series: [{
+                        name: 'Banyak Data',
+                        data: row_periode_dataset.map(item => item.y)
+                      }],
+                        legend: { enabled: false }
+                    }}
+                      containerProps={{ style: { height: "100%" } }}
+                    />
+                 </div>
+                </Col>
+                <Col md={6} sm={6} xs={12} className="py-5 px-2">
+                 <div className="bg-body  rad15 shaddow4 p-5">
+                    <HighchartsReact
+                      highcharts={Highcharts}
+                      options={{
+                        chart: { type: 'column', backgroundColor: null },
+                        title: {
+                          text: `<span class="text-body">Grafik Jumlah </span>
+                                <span style="color:#EF6C00">Per Unit Wilayah</span>`,
+                          useHTML: true,
+                          style: {
+                            fontSize: '200%',
+                            fontFamily: 'Roboto, sans-serif',
+                            fontWeight: '800'
+                          }
+                        },
+
+                        xAxis: {
+                          categories: row_unitwilayah_dataset.map(item => item.name),
+                          title: {
+                            text: 'Wilayah',
+                            style: { fontSize: '120%', fontWeight: 'bold', color:`${theme === "dark" ? '#fff' : '#000'}` }
+                          },
+                          labels: {
+                            autoRotation: [-45, -90],
+                            style: {
+                              fontSize: '90%',
+                              fontFamily: 'Roboto, sans-serif',
+                              fontWeight: 'bold', // atau angka seperti '600'
+                              color:`${theme === "dark" ? '#fff' : '#000'}`
+                            },
+                          }
+                        },
+
+                        yAxis: {
+                          title: {
+                            text: 'Jumlah Data',
+                            style: { fontSize: '120%', fontWeight: 'bold', color:`${theme === "dark" ? '#fff' : '#000'}` }
+                          },
+                          allowDecimals: false
+                        },
+
+                        tooltip: { pointFormat: '{series.name}: <b>{point.y}</b>' },
+
+                        plotOptions: {
+                          bar: {
+                            dataLabels: { enabled: true }
+                          }
+                        },
+
+                        // daftar warna yang dipakai bergiliran
+                        colors: ['#9654be','#f45945','#f9c907','#aad255','#00ada7','#05759a'],
+
+                        series: [{
+                          name: 'Jumlah Data',
+                          colorByPoint: true, // <- aktifkan ini
+                          data: row_unitwilayah_dataset.map(item => item.y)
+                        }],
+                        legend: { enabled: false }
+                      }}
+                    />
+
+
+                 </div>
+                </Col>
+
+                <Col md={6} sm={6} xs={12} className="py-5 px-2">
+                 <div className="bg-body  rad15 shaddow4 p-5">
+                    <HighchartsReact
+  highcharts={Highcharts}
+  options={{
+    chart: { 
+      type: 'pie', 
+      backgroundColor: `${theme === "dark" ? '#212529' : '#ffffff'}`,
+      borderRadius: "5%"
+    },
+
+    title: {
+      text: `<span style="color:${theme === "dark" ? '#fff' : '#000'}">Grafik Jumlah </span>
+             <span style="color:#EF6C00">Per Kategori Data</span>`,
+      useHTML: true,
+      style: {
+        fontSize: '200%',
+        fontFamily: 'Roboto, sans-serif',
+        fontWeight: '800'
+      }
+    },
+
+    tooltip: {
+      useHTML: true,
+      pointFormat: '<b>{point.name}</b>: {point.y} data ({point.percentage:.1f}%)'
+    },
+
+    accessibility: {
+      point: {
+        valueSuffix: '%'
+      }
+    },
+
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        borderColor: `${theme === "dark" ? '#212529' : '#ffffff'}`,
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b><br>{point.y} ({point.percentage:.1f}%)',
+          style: {
+            color: `${theme === "dark" ? '#fff' : '#000'}`,
+            fontSize: '100%',
+            fontFamily: 'Roboto, sans-serif',
+            fontWeight: 'bold',
+            textOutline: 'none'
+          }
+        },
+        showInLegend: true
+      }
+    },
+
+    legend: {
+      itemStyle: {
+        color: `${theme === "dark" ? '#fff' : '#000'}`,
+        fontFamily: 'Roboto, sans-serif',
+        fontSize: '100%'
+      }
+    },
+
+    colors: ['#9654be', '#f45945', '#f9c907', '#aad255', '#00ada7', '#05759a'],
+
+    series: [{
+      name: 'Jumlah Data',
+      colorByPoint: true,
+      data: row_kategoridata_dataset.map(item => ({
+        name: item.name,
+        y: item.y
+      }))
+    }]
+  }}
+/>
+
+
+
+                 </div>
+                </Col>
+
+              </Row>
             </motion.div>
           )}
         </Col>
-
-        {/* Bagian Kiri → Akan pindah ke kanan di layar md */}
-        {/* <Col lg={3} md={12} sm={12} xs={12} className="px-5 text-blue-dark order-2 order-xs-first  shaddow4 rad15">
-          <Row className=" margin-t5 ">
-            <Col lg={12} md={6} sm={6} xs={6}>
-              <p className="mb-1 text-center">Prioritas :</p>
-              <p className="textsize16 font_weight600 text-white text-center bg-orange rad15 p-1 d-flex justify-content-center align-items-center">
-                <FaArrowUpWideShort className="me-2 svg-1 text-black bg-white p-2 rad15" />
-                <span>{datasetku_prioritas}</span>
-              </p>
-            </Col>
-            <Col lg={12} md={6} sm={6} xs={6}>
-              <p className="mb-1 text-center">Non Prioritas :</p>
-              <p 
-                className="textsize16 font_weight600 text-white text-center rad15 p-1 d-flex  justify-content-center"
-                style={{backgroundColor:bgku}}
-              >
-                <FaArrowRightArrowLeft className="me-2 svg-1 text-black bg-white p-2 rad15" />
-                <span>{datasetku_nonprioritas}</span>
-              </p>
-            </Col>
-            <Col lg={12} md={6} sm={6} xs={6}>
-              <p className="mb-1 text-center">SPM :</p>
-              <p className="textsize16 font_weight600 text-white text-center bg-orange rad15 p-1 d-flex justify-content-center align-items-center">
-                <FaPeopleArrows className="me-2 svg-1 text-black bg-white p-2 rad15" />
-                <span>{datasetku_spm}</span>
-              </p>
-            </Col>
-            <Col lg={12} md={6} sm={6} xs={6}>
-              <p className="mb-1 text-center">Lainnya :</p>
-              <p 
-                className="textsize16 font_weight600 text-white text-center rad15 p-1 d-flex  justify-content-center"
-                style={{backgroundColor:bgku}}
-              >
-                <FaRectangleList className="me-2 svg-1 text-black bg-white p-2 rad15" />
-                <span>{datasetku_other}</span>
-              </p>
-            </Col>
-          </Row>
-        </Col> */}
       </Row>
+
+      
 
              
     </>

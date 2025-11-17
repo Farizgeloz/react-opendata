@@ -38,9 +38,6 @@
   .bg-white-overlay{
     background: hsla(0, 0%, 100%, 0.7);
   }
-  .bg-body{
-    background: linear-gradient(170deg, rgba(137, 193, 250, .5), #fff 40%, #fff 50%, #fff 65%, rgba(0, 126, 255, .5));
-  }
   .bg-body2{
     background: linear-gradient(180deg, rgba(137, 193, 250, .5), #fff 40%, #fff 50%, #fff 65%, rgba(0, 126, 255, .5));
   }
@@ -418,7 +415,7 @@ background: linear-gradient(to right, #dc3545, #1A2980); /* W3C, IE 10+/ Edge, F
     .btn-grad-blue-4 {
       transition: 0.5s;
       background-size: 150% auto;           
-      box-shadow: 0 0 20px #eee;
+      box-shadow: 0 0 5px #eee;
       border-radius: 10px;
       display: block;
     }

@@ -14,8 +14,9 @@ import { FcFeedback } from "react-icons/fc";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const portal = "Portal Open Data";
 
 function Dashboard() {
@@ -28,10 +29,10 @@ function Dashboard() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await axios.post(`${apiurl}api/opendata_visitor/visitor`);
+        await api_url_satuadmin.post(`api/opendata_visitor/visitor`);
 
         // Ambil total
-        const response = await axios.get(`${apiurl}api/opendata_visitor/count`);
+        const response = await api_url_satuadmin.get(`api/opendata_visitor/count`);
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
@@ -50,7 +51,7 @@ function Dashboard() {
   const getImage = async () => {
     try {
 
-      /*const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      /*const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }
@@ -59,7 +60,7 @@ function Dashboard() {
       setImage1(data_image.presignedUrl1);
       setImage2(data_image.presignedUrl2);*/
 
-      const response_setting = await axios.get(`${apiurl}api/open-item/site_opendata_setting`);
+      const response_setting = await api_url_satuadmin.get(`api/open-item/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
 
@@ -69,12 +70,12 @@ function Dashboard() {
   };
 
   return (
-    <div className="App">
+    <div className="App bg-body">
      
         
        <Menu bgku={settings.bg_header}/>
       
-      <main className='bg-white mt-10'>
+      <main className='bg-body mt-10'>
         
         <AppSatker />
         

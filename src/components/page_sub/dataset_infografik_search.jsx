@@ -5,10 +5,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {Container,Row,Col} from 'react-bootstrap';
 import { FaBuildingColumns } from "react-icons/fa6";
+import { api_url_satuadmin } from "../../api/axiosConfig";
 
 
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const Spinner = () => 
   <div className='text-center justify-content-center' style={{height:"110px"}}>
       <div className="dot-overlay mt-5" >
@@ -54,7 +55,7 @@ function Infografik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
 
   /*const getDatasetUnsur = async () => {
     try {
-      const response = await axios.get(apiurl + 'api/opendata/dataset_item', {
+      const response = await api_url_satuadmin.get( 'api/opendata/dataset_item', {
         params: {
           search_satker: keywordpengelolah
         }
@@ -75,7 +76,7 @@ function Infografik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
 
   const getDatasetSearch = async () => {
     try {
-      const response = await axios.get(apiurl + 'api/opendata/dataset_info');
+      const response = await api_url_satuadmin.get( 'api/opendata/dataset_info');
 
       const data = response.data;
 
@@ -199,7 +200,7 @@ function Infografik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
     <Row className=' margin-t5 mx-5'>
       
       <Col md={12} sm={12} className='float-center margin-b10'>
-        <section id="teams" className="block   py-3 rad15 shaddow1 bg-white">
+        <section id="teams" className="block   py-3 rad15 shaddow1 bg-body">
           <div className="">
             <p className="px-2 text-black textsize12 font_weight600">Tabel Dataset Prioritas, Non Prioritas, SPM, dll. per Satker</p>   
           </div>

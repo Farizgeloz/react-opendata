@@ -7,8 +7,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Tabs, Tab, Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { FaBuildingColumns } from "react-icons/fa6";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 
 const Spinner = () => 
   <div className='text-center justify-content-center' style={{height:"110px"}}>
@@ -64,7 +65,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
 
   // ---- Fetchers ----
   const getDatasetUnsur2 = async (dimensi = "",satker = "") => {
-    const res = await axios.get(apiurl + "api/opendata/dataset_item", {
+    const res = await api_url_satuadmin.get( "api/opendata/dataset_item", {
       params: {
         search_bidangurusan: dimensi,
         search_satker: satker
@@ -75,8 +76,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
   };
 
   const getDatasetUnsur = async (dimensi = "",satker = "") => {
-       
-    const res3 = await axios.get("https://api.mataprabulinggih.net/api/v1/public/dataset");
+    const res3 = await api_url_satudata.get("dataset?limit=1000");   
     const allDataset = res3.data || [];
 
 
@@ -96,7 +96,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
     const uniquePeriode = [
       ...new Set(allDataset.map(item => item.periode_dataset).filter(Boolean))
     ];
-    console.log("Full response periode:", uniqueSatker);
+    //console.log("Full response periode:", uniqueSatker);
     // simpan ke state
     setDatasetPeriode(uniquePeriode);
     //setDatasetSifatdata(res.data?.resultSifatData || []);
@@ -105,7 +105,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
 
   const getKategori = async () => {
     try {
-      const response = await axios.get(`https://api.mataprabulinggih.net/api/v1/public/referensi/sektor`);
+      const response = await api_url_satudata.get(`referensi/sektor`);
 
       // Cek apakah response.data itu array atau object
       const payload = Array.isArray(response.data) ? response.data : response.data.datas;
@@ -124,8 +124,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
     setLoading(true);
     try {
      
-
-      const res2 = await axios.get("https://api.mataprabulinggih.net/api/v1/public/dataset");
+      const res2 = await api_url_satudata.get("dataset?limit=1000");
 
       // ini respons axios lengkap (ada data, status, headers, dll)
       //console.log("Full response dataset:", res2);
@@ -191,13 +190,13 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
           return (
             <div className="">
               <p
-                className="textsize16 font_weight700"
+                className="textsize14 text-body font_weight700"
                 style={{ color: "#0a367b" || "#000" }} // fallback ke hitam
               >
                 {params.row.nama_dataset}
               </p>
-              <p className="textsize12 font_weight600 mb-0">Diperbaharui: {}</p>
-              <p className="textsize12 text-silver">{convertDate(params.row.updated_at)}</p>
+              <p className="textsize10 text-body font_weight600 mb-0">Diperbaharui: {}</p>
+              <p className="textsize10 text-body">{convertDate(params.row.updated_at)}</p>
               <Link to={ `/Dataset/Detail/${slugify(params.row.nama_dataset)}` } className="btn btn-orangeblue text-white-a mx-1">Lihat Dataset</Link>
               <Link to={ `https://sirusa.web.bps.go.id/metadata/variabel/index` } target="_blank" className="btn btn-blueorange text-white-a mx-1">Detail</Link>
             </div>
@@ -216,7 +215,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
           return (
             <div className="">
               
-              <p className="cursor-pointer textsize12 text-white text-center bg-green px-5 rad15 uppercaseku" style={{maxWidth:"80%"}}>
+              <p className="cursor-pointer textsize10 text-white text-center bg-green px-5 rad15 uppercaseku" style={{maxWidth:"80%"}}>
                 {params.row.sektor.nama_sektor || "-"}
               </p>
               {/*<p className="textsize8 font_weight600 mb-0">Sifat Data: </p>
@@ -251,10 +250,10 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
                     alignItems: "flex-start" // icon rata atas
                   }}
                 >
-                  <FaBuildingColumns size={15} />
+                  <FaBuildingColumns size={15} className="text-body" />
                 </div>
 
-                <p className="cursor-pointer textsize14 mb-0">
+                <p className="cursor-pointer textsize10 mb-0 text-body">
                   {params.row.opd.nama_opd}
                 </p>
               </div>
@@ -274,10 +273,10 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
         renderCell: (params) => {
           return (
             <div className="">
-              <p className="textsize12 font_weight600 mb-0">Kategori Data: </p>
-              <p className="cursor-pointer textsize11 text-center text-white bg-red px-5 rad15 uppercaseku" style={{maxWidth:"80%"}}>{params.row.kategori_dataset}</p>
-              <p className="textsize12 font_weight600 mb-0">Periode: </p>
-              <p className="cursor-pointer textsize11 text-center text-white bg-blue px-5 rad15 uppercaseku" style={{maxWidth:"80%"}}>{params.row.periode_dataset}</p>
+              <p className="textsize10 font_weight600 mb-0 text-body">Kategori Data: </p>
+              <p className="cursor-pointer textsize11 text-center bg-red px-5 rad15 uppercaseku text-white" style={{maxWidth:"80%"}}>{params.row.kategori_dataset}</p>
+              <p className="textsize10 font_weight600 mb-0 text-body">Periode: </p>
+              <p className="cursor-pointer textsize11 text-center bg-blue px-5 rad15 uppercaseku text-white" style={{maxWidth:"80%"}}>{params.row.periode_dataset}</p>
             </div>
            
           );
@@ -299,7 +298,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
         renderCell: (params) => {
           return (
             <div className="">
-              <p className="textsize16 font_weight700" style={{color:colortitleku}}>{params.row.nama_dataset}</p>
+              <p className="textsize12 font_weight700" style={{color:colortitleku}}>{params.row.nama_dataset}</p>
               <p className="textsize8 font_weight600 mb-0">Diperbaharui: </p>
               <p className="textsize10">{convertDate(params.row.updated_at)}</p>
                 <Link to={ `/Dataset/Detail/${slugify(params.row.nama_dataset)}` } className="btn btn-orangeblue text-white-a mx-1">Lihat Dataset</Link>
@@ -420,12 +419,12 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
 
   return (
     <>
-      <Row className="mx-5 mt-2 bg-white p-3 rad15 justify-content-center mb-3">
+      <Row className="mx-2 mt-2 bg-body p-3 rad15 justify-content-center mb-3">
         {/* Filter bar */}
         <Col xs={12} className="mb-3 d-flex justify-content-center">
             <TextField
               label="Masukkan Kata Kunci"
-              className="bg-input rad15 textsize16"
+              className="bg-input rad15 textsize12"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -446,7 +445,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
               sx={{ 
                 width: "80%", 
                 "& .MuiOutlinedInput-root": {
-                  height: "7vh",
+                  height: "6vh",
                   fontSize: "100%",
                   borderRadius: "15px"
                 },
@@ -483,7 +482,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
               Cari
             </button>
         </Col>
-        <Col sm={3} xs={12} className="mb-3">
+        <Col md={3} sm={12} className="mb-3">
             <Autocomplete
               options={sektor_idku}
               getOptionLabel={(opt) => opt?.nama_sektor || ""}
@@ -524,7 +523,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
               }}
             />
         </Col> 
-        <Col sm={4} xs={12} className="mb-3">
+        <Col md={4} sm={12} className="mb-3">
           <Autocomplete
             options={satkerku}
             getOptionLabel={(opt) => opt?.nama_opd || ""}
@@ -564,7 +563,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
             }}
           />
         </Col>   
-        <Col sm={3} xs={12} className="mb-3">
+        <Col md={3} sm={12} className="mb-3">
           <Autocomplete
             options={periodeku}
             getOptionLabel={(opt) => opt || ""}
@@ -646,9 +645,9 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
         </Col>   */} 
         
       </Row>
-      <Row className="mx-1 mt-2">
+      <Row className="mx-1 mt-2 justify-content-center">
         {/* Tabs + Grid */}
-        <Col xs={12}>
+        <Col md={10} sm={12}>
            <Container fluid>
             {loading ? (
               <Spinner />
@@ -662,7 +661,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
                 <Row className='portfoliolists'>
                   <Row className="mb-3 pb-2" style={{borderBottom:"1px solid #c5c3c3"}}>
                     <Col className="text-start">
-                      <p className="mb-0 text-muted textsize12 italicku">
+                      <p className="mb-0 text-muted textsize12 italicku text-body">
                         Ditemukan <strong>{sortedData.length}</strong> Dataset
                       </p>
                     </Col>
@@ -690,6 +689,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
                             pageSizeOptions={[5, 10, 50, 100]}
                             initialState={{ pagination: { paginationModel: { pageSize: 10, page: 0 } } }}
                             getRowHeight={() => 'auto'}
+                            getRowClassName={() => 'bg-body'}
                             disableRowSelectionOnClick
                             localeText={{
                               noRowsLabel: "📭 Data Tidak Tersedia", // ganti teks default
@@ -714,7 +714,6 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
                                 paddingBottom:"10px",
                                 paddingLeft:"5px",
                                 paddingRight:"5px",
-                                backgroundColor: "rgba(255, 255, 255, 0.9)", // bisa dihapus kalau mau full transparan
                                 borderRadius: "6px",
                                 boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)"
                               },

@@ -215,12 +215,12 @@
   }
 
   .btn-blueorange{
-    background-color: #0277BD;
+    background-color: #003577;
     color: #ffffff;
     border-radius: 5px;
   }
   .btn-blueorange:hover{
-    background-color: #003577;
+    background-color: #f7941d;
     border-radius: 5px;
     color: #ffffff;
   }

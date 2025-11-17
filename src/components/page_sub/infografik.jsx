@@ -6,13 +6,13 @@ import { Container, Row, Col, Image,Modal, Button } from "react-bootstrap";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { motion } from "framer-motion";
 
+
 import "react-lazy-load-image-component/src/effects/blur.css";
 
-import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemIcon, ListItemText} from '@mui/material';
-import { TextField, InputAdornment, IconButton } from '@mui/material';
+import { TextField, Autocomplete, CircularProgress, createTheme, ThemeProvider, IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 
-import { MdOutlineErrorOutline } from "react-icons/md";
+import { MdAddchart, MdAutoAwesomeMotion, MdOutlineErrorOutline } from "react-icons/md";
 import { FaDownload } from "react-icons/fa6";
 import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
@@ -41,7 +41,13 @@ const koleksiOptions = [
 function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku3,bginputku,colortitleku,colordateku }) {
   const { cari } = useParams();
   const [loading, setLoading] = useState(true);
-  const [dataartikelku, setdataartikel] = useState([]);
+  const [datainfografikku, setdatainfografik] = useState([]);
+  
+  const [sektor_idku, setKategori] = useState([]);
+  const [penyusun_ku, setPenyusun] = useState([]);
+  
+  const [keyworddimensi, setKeywordDimensi] = useState("");
+  const [keywordpenyusun, setKeywordPenyusun] = useState("");
   const [kunci, setkunci] = useState( cari|| "");
   const [sortBy, setSortBy] = useState("terbaru"); // default urutan
 
@@ -87,36 +93,70 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   
   useEffect(() => {
     
+    getKategori();
+    getPenyusun();
     setTimeout(() => {
-      getData({ page: pagess, setkunci: kunci});
+      getData({ page: pagess, setkunci: kunci, setdimensi: keyworddimensi, settopik: keywordpenyusun});
       setLoading(false);
     }, 1000); 
   }, []);
 
-  
+  const getKategori = async () => {
+    try {
+      const response = await api_url_satudata.get(`referensi/sektor`);
 
-  const getData = async ({page,setkunci}) => {
+      // Cek apakah response.data itu array atau object
+      const payload = Array.isArray(response.data) ? response.data : response.data.datas;
+
+      setKategori(payload);
+
+      
+
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+  };
+
+  const getPenyusun = async () => {
     //console.log("Fetching data with params:", { page, setkunci });
     
     try {
 
-      const response_artikel = await api_url_satuadmin.get( 'api/opendata/artikel', {
+      const response_infografik = await api_url_satuadmin.get('api/opendata/infografik');
+
+      const res = response_infografik.data;
+      setPenyusun(res.data_penyusun);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+    }
+  };
+
+  const getData = async ({page,setkunci,setdimensi,setpenyusun}) => {
+    //console.log("Fetching data with params:", { page, setkunci });
+    
+    try {
+
+      const response_infografik = await api_url_satuadmin.get('api/opendata/infografik', {
         params: {
           search_kunci: setkunci || '',
+          search_dimensi: setdimensi || '',
+          search_penyusun: setpenyusun || '',
           page,
           limit: pagination.limit
         },
         paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' })
       });
 
-      const res = response_artikel.data;
-      setdataartikel(res.data);
+      const res = response_infografik.data;
+      setdatainfografik(res.data);
       setPagination((prev) => ({
         ...prev,
         page: res.pagination.page,
         total: res.pagination.total,
         totalPages: res.pagination.totalPages
       }));
+
+      
      
       
     } catch (error) {
@@ -125,7 +165,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   };
 
   const handleSearch = () => {
-    getData({ page:pagess,setkunci: kunci });
+    getData({ page:pagess,setkunci: kunci,setdimensi: keyworddimensi,setpenyusun: keywordpenyusun });
   };
 
   function convertDate(datePicker) {
@@ -148,7 +188,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   }
 
   // 🔥 Urutkan data sebelum render
-  const sortedData = [...dataartikelku].sort((a, b) => {
+  const sortedData = [...datainfografikku].sort((a, b) => {
     if (sortBy === "terbaru") {
       return new Date(b.updated_at) - new Date(a.updated_at); 
     }
@@ -178,7 +218,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
             <Col md={12} className="justify-content-center text-center">
               <TextField
                 label="Masukkan Kata Kunci"
-                className="bg-input rad15 textsize16"
+                className="bg-input rad15 textsize12"
                 value={kunci}
                 onChange={(e) => setkunci(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -202,7 +242,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                 sx={{ 
                   width: "90%", 
                   "& .MuiOutlinedInput-root": {
-                    height: "7vh",
+                    height: "6vh",
                     fontSize: "100%",
                     borderRadius: "15px"
                   },
@@ -246,6 +286,88 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
             
           </Row>
       </Col>
+      <Col sm={3} xs={12} className="mb-3">
+        <Autocomplete
+          options={sektor_idku}
+          getOptionLabel={(opt) => opt?.nama_sektor || ""}
+          value={sektor_idku.find((d) => d.id_sektor === keyworddimensi) || null}
+          onChange={(_, v) => setKeywordDimensi(v?.id_sektor || "")}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Sektor"
+              variant="outlined"
+              className="bg-input rad15"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  height: 60,
+                  fontSize: "120%",
+                  background: "#d2f6fc",
+                  borderRadius: "12px"
+                },
+                "& .MuiInputLabel-root": {
+                  fontSize: "100%",
+                  fontWeight: 600,
+                  transition: "all 0.2s ease"
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  backgroundColor: "#1976d2",
+                  color: "#fff",
+                  borderRadius: "6px",
+                  padding: "0 6px",
+                  transform: "translate(14px, -9px) scale(0.85)"
+                }
+              }}
+            />
+          )}
+          sx={{
+            width: "100%",
+            "& .MuiAutocomplete-popupIndicator": { color: "#1976d2", transition: "transform 0.3s" },
+            "& .MuiAutocomplete-popupIndicatorOpen": { transform: "rotate(180deg)" }
+          }}
+        />
+      </Col> 
+      <Col sm={3} xs={12} className="mb-3">
+        <Autocomplete
+          options={penyusun_ku}
+          getOptionLabel={(opt) => opt?.penyusun || ""}
+          value={penyusun_ku.find((d) => d.penyusun === keywordpenyusun) || null}
+          onChange={(_, v) => setKeywordPenyusun(v?.penyusun || "")}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Penyusun"
+              variant="outlined"
+              className="bg-input rad15"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  height: 60,
+                  fontSize: "120%",
+                  background: "#d2f6fc",
+                  borderRadius: "12px"
+                },
+                "& .MuiInputLabel-root": {
+                  fontSize: "100%",
+                  fontWeight: 600,
+                  transition: "all 0.2s ease"
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  backgroundColor: "#1976d2",
+                  color: "#fff",
+                  borderRadius: "6px",
+                  padding: "0 6px",
+                  transform: "translate(14px, -9px) scale(0.85)"
+                }
+              }}
+            />
+          )}
+          sx={{
+            width: "100%",
+            "& .MuiAutocomplete-popupIndicator": { color: "#1976d2", transition: "transform 0.3s" },
+            "& .MuiAutocomplete-popupIndicatorOpen": { transform: "rotate(180deg)" }
+          }}
+        />
+      </Col> 
       
 
       <Col md={10}>
@@ -264,7 +386,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                 <Row className="mb-3 pb-2" style={{borderBottom:"1px solid #c5c3c3"}}>
                   <Col className="text-start">
                     <p className="mb-0 text-muted textsize12 italicku text-body">
-                      Ditemukan <strong>{sortedData.length}</strong> Artikel 
+                      Ditemukan <strong>{sortedData.length}</strong> Infografik 
                     </p>
                   </Col>
                   <Col className="d-flex justify-content-end">
@@ -287,7 +409,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                       
                         return (
                           <Col sm={12} md={3} lg={3} xs={12} key={data.id} className='py-2 col-6'>
-                            <div className='portfolio-wrapper rad15 bg-body p-2'>
+                            <div className='portfolio-wrapper rad10 bg-body p-2'>
                                 <div
                                   className='justify-content-center'
                                 >
@@ -297,13 +419,12 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                                   >
                                     <Image
                                       src={data.presignedUrl_a}
-                                      className='shaddow3 rad10'
+                                      className='shaddow3 rad5'
                                       style={{ height: '20vh',width:"100%",cursor: 'pointer' }}
                                       onContextMenu={(e) => e.preventDefault()}
                                       draggable={false}
                                       onClick={() => handleShowModalArtikel(data)}
                                     />
-                                    
                                   </div>
                                   <div className='label text-left py-2'>
                                     <p 
@@ -312,11 +433,18 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                                     >{convertDate(data.updated_at.toString().replace(/T/, ' ').replace(/\.\w*/, ''))}</p>
                                     <p
                                       className={` textsize11 font_weight600 mb-2 text-body`}
-                                      style={{ lineHeight: '1.2',minHeight:"70px"}}
+                                      style={{ lineHeight: '1.5',minHeight:"70px"}}
                                     >
-                                      {data.title.length > 80 ? data.title.slice(0, 80) + '...' : data.title}
+                                      {data.title.length > 70 ? data.title.slice(0, 70) + '...' : data.title}
                                     </p>
-                                    <Link to={`/Artikel/Detail/${slugify(data.title)}`} 
+                                    
+                                    <p 
+                                      className={` textsize10 mb-2  d-flex text-body`}
+                                    ><MdAutoAwesomeMotion size={20} className="mt-1" style={{marginRight:"5px"}} />{data.nama_topik}</p>
+                                    <p 
+                                      className={` textsize10 mb-3  d-flex text-body`}
+                                    ><MdAddchart size={20} className="mt-1" style={{marginRight:"5px"}} />{data.penyusun}</p>
+                                    <Link to={`/Infografik/Detail/${slugify(data.title)}`} 
                                       className={`text-white-a textsize10 p-2 rad10`}
                                       style={{backgroundColor:bgcontentku}}
                                     >Baca Selengkapnya </Link>

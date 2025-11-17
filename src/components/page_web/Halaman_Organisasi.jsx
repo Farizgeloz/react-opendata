@@ -4,7 +4,7 @@ import '../../components/styles/style_font.css';
 import '../../components/styles/style_bg.css';
 import '../../components/styles/style_button.css';
 import '../../components/styles/style_design.css';
-const apiurl = import.meta.env.VITE_API_URL;
+
 //const portal = "Portal Open Data";
 
 function Dashboard() {
@@ -38,7 +38,7 @@ function Dashboard() {
   const getImage = async () => {
     try {
 
-      /*const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      /*const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }

@@ -7,7 +7,7 @@ import '../../components/styles/style_design.css';
 
 import AppFooter from '../page_sub/opendata_footer';
 import Menu from '../navbar/Menu-Opendata2';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import axios from "axios";
 import { useNavigate, useParams,NavLink, Link } from "react-router-dom";
 import {Row,Col,Image} from 'react-bootstrap';
@@ -37,7 +37,7 @@ import { downloadJSON } from '../utils/downloadJSON';
 import { useRef } from 'react';
 import { FaRecycle } from 'react-icons/fa6';
 import { Autocomplete, TextField } from '@mui/material';
-import api_url from '../../api/axiosConfig';
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -45,9 +45,10 @@ import HighchartsReact from 'highcharts-react-official';
 import 'highcharts/highcharts-more';
 import 'highcharts/modules/solid-gauge';
 
+import { ThemeContext } from "../../ThemeContext";
+
 const XLSX = window.XLSX;
 
-const apiurl = import.meta.env.VITE_API_URL;
 const portal = "Portal Open Data";
 
 
@@ -82,6 +83,7 @@ const Spinner = () => (
 const GaugeChartCol = ({ item, keywordX,data_chart_a }) => {
   const colRef = useRef(null);
   const [colWidth, setColWidth] = useState(150);
+  const { themeku } = useContext(ThemeContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -95,24 +97,32 @@ const GaugeChartCol = ({ item, keywordX,data_chart_a }) => {
   }, []);
 
   return (
-    <div ref={colRef}>
+    <div ref={colRef} className='shaddow4'>
       <HighchartsReact
         highcharts={Highcharts}
         options={{
           chart: {
             type: "solidgauge",
             plotBackgroundColor: null,
+            backgroundColor: null, // latar chart full
             plotBorderWidth: 0,
-            plotShadow: false,
+            plotShadow: true, // aktifkan shadow
             height: colWidth, // tinggi sama dengan lebar agar bulat
-            width: colWidth
+            width: colWidth,
+            shadow: {
+              color: 'rgba(0, 0, 0, 0.3)',
+              offsetX: 0,
+              offsetY: 4,
+              opacity: 0.5,
+              width: 10
+            },
           },
           title: {
             text: "",
             style: {
               fontSize: '14px',
               fontFamily: 'Poppins, sans-serif',
-              color: '#666666',
+              color:`${themeku === "dark" ? '#fff' : '#000'}`,
               fontWeight: '600',
             }
           },
@@ -131,9 +141,9 @@ const GaugeChartCol = ({ item, keywordX,data_chart_a }) => {
             min: 0,
             max: Math.max(...data_chart_a.map(d => d.y)) * 1.2,
             stops: [
-              [0.1, '#55BF3B'],
+              [0.1, '#DF5353'],
               [0.5, '#DDDF0D'],
-              [0.9, '#DF5353']
+              [0.9, '#55BF3B']
             ],
             lineWidth: 0,
             tickWidth: 0,
@@ -148,7 +158,7 @@ const GaugeChartCol = ({ item, keywordX,data_chart_a }) => {
                 y: -20,
                 borderWidth: 0,
                 useHTML: true,
-                format: `<div style="text-align:center">
+                format: `<div class="text-body" style="text-align:center">
                           <span style="font-size:24px">{y}</span><br/>
                           <span style="font-size:16px;opacity:0.6">${item.name ? item.name : ''}</span>
                         </div>`
@@ -170,6 +180,7 @@ const GaugeChartCol = ({ item, keywordX,data_chart_a }) => {
 
 function DatasetPengelolah() {
   const [loading, setLoading] = useState(true);
+  const { themeku2 } = useContext(ThemeContext);
   const [isMobile, setIsMobile] = useState(false);
   const hasSentRef = useRef(false);
   const [totalVisitors, setTotalVisitors] = useState(null);
@@ -247,10 +258,10 @@ function DatasetPengelolah() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await axios.post(`${apiurl}api/opendata_visitor/visitor`);
+        await api_url_satuadmin.post(`api/opendata_visitor/visitor`);
 
         // Ambil total
-        const response = await axios.get(`${apiurl}api/opendata_visitor/count`);
+        const response = await api_url_satuadmin.get(`api/opendata_visitor/count`);
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
@@ -278,7 +289,7 @@ function DatasetPengelolah() {
 
   const getDataById = async () => {
       try {
-        const response = await api_url.get(`dataset/${id}`);
+        const response = await api_url_satudata.get(`dataset/${id}`);
         //console.log("Dataset online:", response.data);
         //console.log("fileku : "+response.data.file[0].link);
         //const data = response.data;
@@ -311,7 +322,7 @@ function DatasetPengelolah() {
         setgrafik_c(response.data.data.grafik_c);
         //setDocument(response.data.data.presignedUrl);
 
-        const response2 = await axios.get(apiurl+`api/opendata/dataset_detail_visitor_count/${id_dataset}`);
+        const response2 = await api_url_satuadmin.get(`api/opendata/dataset_detail_visitor_count/${id_dataset}`);
         setDataCount(response2.data.datacount);
         setDataCountDownload(response.data.datacountdownload);
         //fetchData(response.data.document);
@@ -342,7 +353,7 @@ function DatasetPengelolah() {
 
   const getDataById2 = async () => {
     try {
-      const response = await api_url.get(`dataset/${id}`);
+      const response = await api_url_satudata.get(`dataset/${id}`);
       //console.log("📦 Full API response:", response.data);
 
       const fileLink = response.data.file?.[0]?.link;
@@ -376,8 +387,8 @@ function DatasetPengelolah() {
     (async () => {
       try {
         //console.log("increaseVisitor fire, id =", id_dataset);
-        await axios.post(
-          `${apiurl}api/opendata/dataset_visitor`,
+        await api_url_satuadmin.post(
+          `api/opendata/dataset_visitor`,
           { id_dataset: id_dataset },                           // kirim JSON
           { headers: { "Content-Type": "application/json" } }
         );
@@ -392,8 +403,8 @@ function DatasetPengelolah() {
 
 
   const setDownloadvisitor = async () => {
-    await axios.post(
-      `${apiurl}api/opendata/dataset_download`,
+    await api_url_satuadmin.post(
+      `api/opendata/dataset_download`,
       { id_dataset: id_dataset },                           // kirim JSON
       { headers: { "Content-Type": "application/json" } }
     );
@@ -404,7 +415,7 @@ function DatasetPengelolah() {
 
   const getDataCount = async () => {
       try {
-        const response = await axios.get(apiurl + `api/opendata/dataset_detail_visitor_count/${id_dataset}`);
+        const response = await api_url_satuadmin.get( `api/opendata/dataset_detail_visitor_count/${id_dataset}`);
         //console.log("Dataset online:", response.data);
         //const data = response.data;
         
@@ -413,7 +424,7 @@ function DatasetPengelolah() {
         setDataCountDownload(response.data.datacountdownload);
         //fetchData(response.data.document);
 
-        const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+        const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
           params: {
             portal:portal
           }
@@ -434,62 +445,6 @@ function DatasetPengelolah() {
   
   };
 
-  
-  /* const getDocumentData = async (documen) => {
-  try {
-    // Ambil ekstensi file
-    const cleanName = documen.split('?')[0];
-    const extension = cleanName.split('.').pop().toLowerCase();
-    console.log("📂 Ekstensi file:", extension);
-
-    // Kalau bukan CSV → stop
-    if (extension !== "csv") {
-      console.warn("📛 Bukan file CSV:", extension);
-      return;
-    }
-
-    // Fetch CSV
-    const response = await fetch(documen);
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-    // Parse CSV
-    const csvData = await response.text();
-    const parsedResult = Papa.parse(csvData, { header: true, skipEmptyLines: true });
-    const parsedData = parsedResult.data;
-
-    console.log("📊 Parsed Data:", parsedData);
-
-    // Filter baris kosong
-    const cleanedData = parsedData.filter(row =>
-      row && Object.keys(row).some(key => row[key] !== "")
-    );
-    console.log("🧹 Cleaned Data:", cleanedData);
-
-    // Tambah ID
-    const rowscleanWithId = cleanedData.map((row, index) => ({
-      id: index + 1,
-      ...row
-    }));
-
-    // Simpan ke state
-    setData(rowscleanWithId);
-    console.log("✅ Final Data:", rowscleanWithId);
-
-    // Buat kolom tabel dinamis
-    const keys = Object.keys(cleanedData[0] || {});
-    const columnDefs = keys.map((key) => ({
-      field: key,
-      headerName: key.toUpperCase(),
-      flex: 1,
-      align: "center",
-    }));
-    setColumns(columnDefs);
-    console.log("📑 Columns:", columnDefs);
-
-  } catch (error) {
-    console.error("🔥 Error membaca file dokumen:", error);
-  }
-}; */
 
 
 
@@ -548,7 +503,7 @@ function DatasetPengelolah() {
     //console.log("✅ Final Data:", rowscleanWithId);
 
     // --- Buat kolom dinamis ---
-    const hiddenFields = ['id', '_key', ''];
+    const hiddenFields = ['id', '_key', 'kode_provinsi', 'kode_kabupaten', 'kemendagri_kode_kecamatan', 'bps_kode_kecamatan'];
     const keys = Object.keys(cleanedData[0] || {});
     const columnDefs = keys
       .filter((key) => !hiddenFields.includes(key.toLowerCase()))
@@ -560,7 +515,17 @@ function DatasetPengelolah() {
         flex: (["id","no"].includes(key.toLowerCase())) ? 0 : 1,
         minWidth: (["id","no"].includes(key.toLowerCase())) ? 70 : 100,
         width: (["id","no"].includes(key.toLowerCase())) ? 50 : undefined,
-        align: 'center',
+        align: 'left',
+        renderCell: (params) => {
+          const row = params.row;
+          return (
+            <div className="bg-body">
+                
+                   <p className="textsize10 text-body">{`${row[key]}`}</p>
+            </div>
+            
+          );
+        }
       }));
     setColumns(columnDefs);
     //console.log("📑 Columns:", columnDefs);
@@ -618,7 +583,7 @@ function DatasetPengelolah() {
 
   const getSetting = async () => {
     try {
-      const response_setting = await axios.get(`${apiurl}api/open-item/site_opendata_setting`);
+      const response_setting = await api_url_satuadmin.get(`api/open-item/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
         
@@ -972,7 +937,7 @@ const downloadxls = ()=>{
 
 
   return (
-    <div className="App" style={{background:`linear-gradient(170deg, ${settings.bg_body}4D, #fff 40%, #fff 50%, #fff 65%, ${settings.bg_body})`}}>
+    <div className="App bg-body">
      
         
       <Menu bgku={settings.bg_header} />
@@ -996,7 +961,7 @@ const downloadxls = ()=>{
               </div>
             </Col> */}
           </Row>
-          <Row className='px-5 py-2 bg-white mt-0'>
+          <Row className='px-5 py-2 bg-body mt-0'>
             <Col md={3} sm={12} className='d-none d-md-block float-center text-center shaddow4 rad10 px-0'>
               <div className='px-0 py-4 rad10 bg-zebra-170'>
                 <Image className="img-70 mx-auto justify-center  d-block px-5" src={image2} />
@@ -1005,11 +970,11 @@ const downloadxls = ()=>{
               <p className='mt-2 font_weight700 textsize12 bg-white px-2 py-2 rad10 uppercaseku' style={{color:settings.color_title,lineHeight:"1.5"}}>{satker}</p>
               
                <div className="d-flex flex-column justify-content-center align-items-center text-center">
-                <p className="mt-2 font_weight700 textsize12 mb-0">Dilihat</p>
+                <p className="mt-2 font_weight700 textsize12 mb-0 text-body">Dilihat</p>
                 <p className="text-white textsize14 text-center font_weight600 bg-orange max-width-180 rad10 px-5 mx-1">
                   <MdRemoveRedEye size={25} style={{ marginTop: "-1px" }} /> {datacount}
                 </p>
-                <p className="mt-2 font_weight700 textsize12 mb-0">Diunduh</p>
+                <p className="mt-2 font_weight700 textsize12 mb-0 text-body">Diunduh</p>
                 <p className="text-white textsize14 text-center font_weight600 bg-orange max-width-180 rad10 px-5 mx-1">
                   <MdDownloadForOffline size={25} style={{ marginTop: "-1px" }} /> {datacountdownload}
                 </p>
@@ -1025,7 +990,7 @@ const downloadxls = ()=>{
                 >
                   <Dropdown className="custom-dropdown m-5">
                     <Dropdown.Toggle id="dropdown-custom-toggle" variant="light" className="rad10 px-4 py-2 textsize14">
-                      Download Data
+                      Unduh Dataset
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="custom-dropdown-menu rad10">
@@ -1038,7 +1003,7 @@ const downloadxls = ()=>{
                             //setDownloadvisitor();
                           }}  
                           className="custom-dropdown-link">
-                          📄 Download XLSX
+                          📄 Unduh XLSX
                         </NavLink>
                       </Dropdown.Item>
                       <Dropdown.Item as="div">
@@ -1050,7 +1015,7 @@ const downloadxls = ()=>{
                           filename={`dataset-${Nama_dataset || 'export'}-${new Date().toISOString().split('T')[0]}.csv`} 
                           className="custom-dropdown-link"
                         >
-                          📊 Download CSV
+                          📊 Unduh CSV
                         </CSVLink>
                       </Dropdown.Item>
                       <Dropdown.Item as="div">
@@ -1061,14 +1026,14 @@ const downloadxls = ()=>{
                             setDownloadvisitor();
                           }}  
                           className="custom-dropdown-link">
-                          🧾 Download JSON
+                          🧾 Unduh JSON
                         </Link>
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </motion.div>
               )}
-              <div className="socials2 d-flex justify-content-center align-items-center text-center">
+              <div className="socials2 d-flex justify-content-center align-items-center text-center gap-3">
                 <Link 
                   to={shareLinks.facebook}
                   target="_blank" 
@@ -1102,7 +1067,7 @@ const downloadxls = ()=>{
                 </Link>
               </div>
               <div className='d-flex flex-column justify-content-center align-items-center text-center mt-5'>
-                <Link href="http://www.opendefinition.org/licenses/cc-by" className='text-silver italicku' rel="dc:rights">Creative Commons Attribution</Link>
+                <Link href="http://www.opendefinition.org/licenses/cc-by" className='text-body italicku' rel="dc:rights">Creative Commons Attribution</Link>
                 <Link href="http://opendefinition.org/okd/" title="This dataset satisfies the Open Definition.">
                     <Image className="img-header" src={image3} alt=""/>
                 </Link>
@@ -1122,7 +1087,7 @@ const downloadxls = ()=>{
                   <Row className='mx-2 '>
                     
                     <Col md={12} sm={12}>
-                      <p className='textsize24 text-left font_weight700 py-2' style={{color:settings.color_title}}>Dataset Detail</p>
+                      <p className='textsize24 text-left font_weight700 py-2 text-body'>Dataset Detail</p>
                       <p 
                         className='text-white textsize16 text-left box-header-title'
                         style={{background:`linear-gradient(to right, ${settings.bg_content}, ${settings.bg_header})`}}
@@ -1133,13 +1098,13 @@ const downloadxls = ()=>{
                     <Col md={12} sm={12} className=''>
                       <div className="d-flex text-center">
                        
-                        <p className="text-silver textsize12 capitalizeku text-center font_weight600 px-2 mx-1">
+                        <p className="text-body textsize12 capitalizeku text-center font_weight600 px-2 mx-1">
                           <MdOutlineListAlt  size={25} style={{ marginTop: "-1px" }} /> {Kategori}
                         </p>
-                        <p className="text-silver textsize12 text-center font_weight600 px-2 mx-1">
+                        <p className="text-body textsize12 text-center font_weight600 px-2 mx-1">
                           <MdOutlineEditCalendar size={25} style={{ marginTop: "-1px" }} /> {TanggalUpdate}
                         </p>
-                        <p className="text-silver textsize12 capitalizeku text-center font_weight600 px-2 mx-1">
+                        <p className="text-body textsize12 capitalizeku text-center font_weight600 px-2 mx-1">
                           <FaRecycle size={25} style={{ marginTop: "-1px" }} /> {Periode_dataset}
                         </p>
                       </div>
@@ -1201,7 +1166,7 @@ const downloadxls = ()=>{
                     
                   </Row>
 
-                  <Row className='p-2 margin-t5 mx-1 bg-white rad10 margin-b10'>
+                  <Row className='p-2 margin-t5 mx-1 bg-body rad10 margin-b10'>
                     
                     <Tabs
                       defaultActiveKey="metadata"
@@ -1225,14 +1190,12 @@ const downloadxls = ()=>{
                                   <Col md={12} sm={12} className='bg-silver'>
                                     <table className="table table-borderless table-sm w-100">
                                       <tbody>
-                                        {deskripsi_dataset && deskripsi_dataset.split("\n").map((item, index) => (
-                                          <tr key={index}>
-                                            <td className="px-2 textsize12">
-                                              {item.replace(/^\d+\.\s*/, "")}
-                                            </td>
-                                          </tr>
-                                        ))}
-
+                                        {deskripsi_dataset && typeof deskripsi_dataset === 'string' ? (
+                                          <div className="textsize12 mt-3">
+                                            <div className='textsize11 text-body' dangerouslySetInnerHTML={{ __html: deskripsi_dataset }} />
+                                          </div>
+                                        ) : ("")}
+                                        
                                       </tbody>
                                     </table>
                                   </Col>
@@ -1295,56 +1258,56 @@ const downloadxls = ()=>{
                                 
                                   
                                   <Col md={4} sm={4} className=''>
-                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-silver'>Sektor / Topik</p>
+                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-body'>Sektor / Topik</p>
                                   </Col>
                                   <Col md={8} sm={8} className=''>
-                                    <p className='textsize12 font_weight600 mt-2 uppercaseku'>{Kategori}</p>
+                                    <p className='textsize12 font_weight600 mt-2 uppercaseku text-body'>{Kategori}</p>
                                   </Col>
-                                  <Col md={4} sm={4} className='bg-silver'>
-                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-silver'>Produsen Data</p>
+                                  <Col md={4} sm={4} style={{backgroundColor:'#99999987'}}>
+                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-body'>Produsen Data</p>
                                   </Col>
-                                  <Col md={8} sm={8} className='bg-silver'>
-                                    <p className='textsize12 font_weight600 mt-2 uppercaseku'>{satker}</p>
+                                  <Col md={8} sm={8} style={{backgroundColor:'#99999987'}}>
+                                    <p className='textsize12 font_weight600 mt-2 uppercaseku text-body'>{satker}</p>
                                   </Col>
                                   
                                   <Col md={4} sm={4}>
-                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-silver'>Unit Wilayah</p>
+                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-body'>Unit Wilayah</p>
                                   </Col>
                                   <Col md={8} sm={8}>
-                                    <p className='textsize12 font_weight600 mt-2 uppercaseku'>{unit_wilayah}</p>
+                                    <p className='textsize12 font_weight600 mt-2 uppercaseku text-body'>{unit_wilayah}</p>
                                   </Col>
                                   
-                                  <Col md={4} sm={4} className='bg-silver'>
-                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-silver'>Kategori Data</p>
+                                  <Col md={4} sm={4} style={{backgroundColor:'#99999987'}}>
+                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-body'>Kategori Data</p>
                                   </Col>
-                                  <Col md={8} sm={8} className='bg-silver'>
-                                    <p className='textsize12 font_weight600 mt-2 uppercaseku'>{Kategori_Data}</p>
+                                  <Col md={8} sm={8} style={{backgroundColor:'#99999987'}}>
+                                    <p className='textsize12 font_weight600 mt-2 uppercaseku text-body'>{Kategori_Data}</p>
                                   </Col>
 
                                   <Col md={4} sm={4} className=''>
-                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-silver'>Periode</p>
+                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-body'>Periode</p>
                                   </Col>
                                   <Col md={8} sm={8} className=''>
-                                    <p className='textsize12 font_weight600 mt-2 uppercaseku'>{Periode_dataset}</p>
+                                    <p className='textsize12 font_weight600 mt-2 uppercaseku text-body'>{Periode_dataset}</p>
                                   </Col>
-                                  <Col md={4} sm={4} className='bg-silver'>
-                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-silver'>Satuan</p>
+                                  <Col md={4} sm={4} style={{backgroundColor:'#99999987'}}>
+                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-body'>Satuan</p>
                                   </Col>
-                                  <Col md={8} sm={8} className='bg-silver'>
-                                    <p className='textsize12 font_weight600 mt-2 uppercaseku'>{Satuan}</p>
+                                  <Col md={8} sm={8} style={{backgroundColor:'#99999987'}}>
+                                    <p className='textsize12 font_weight600 mt-2 uppercaseku text-body'>{Satuan}</p>
                                   </Col>
                                   
                                   <Col md={4} sm={4}>
-                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-silver'>Tgl. Dibuat</p>
+                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-body'>Tgl. Dibuat</p>
                                   </Col>
                                   <Col md={8} sm={8}>
-                                    <p className='textsize12 font_weight600 mt-2 uppercaseku'>{TanggalUnggah}</p>
+                                    <p className='textsize12 font_weight600 mt-2 uppercaseku text-body'>{TanggalUnggah}</p>
                                   </Col>
-                                  <Col md={4} sm={4} className='bg-silver'>
-                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-silver'>Tgl. Update</p>
+                                  <Col md={4} sm={4} style={{backgroundColor:'#99999987'}}>
+                                    <p className='textsize12 font_weight600 mt-2 mb-0 text-body'>Tgl. Update</p>
                                   </Col>
-                                  <Col md={8} sm={8} className='bg-silver'>
-                                    <p className='textsize12 font_weight600 mt-2 uppercaseku'>{TanggalUpdate}</p>
+                                  <Col md={8} sm={8} style={{backgroundColor:'#99999987'}}>
+                                    <p className='textsize12 font_weight600 mt-2 uppercaseku text-body'>{TanggalUpdate}</p>
                                   </Col>
                                 </Row>
                               </motion.div>
@@ -1575,7 +1538,7 @@ const downloadxls = ()=>{
                 />
               </Col>
             </Row>
-            <Row className='p-2 margin-t2 mx-1 bg-white rad10 margin-b10 justify-content-center'>
+            <Row className='p-2 margin-t2 mx-1 bg-body rad10 margin-b10 justify-content-center'>
               
               <Tabs
                 defaultActiveKey="raws"
@@ -1594,17 +1557,29 @@ const downloadxls = ()=>{
                               plotBackgroundColor: null,
                               plotBorderWidth: null,
                               plotShadow: false,
+                              backgroundColor: null,
                               // Donut chart di Highcharts sebenarnya type "pie"
                               type: keywordC === "donut" ? "pie" : keywordC || "pie"
                             },
                             colors: ['#9654be','#f45945','#f9c907','#aad255','#00ada7','#05759a'],
-                            title: {
+                            /* title: {
                               text: 'VISUALISASI DATA ' + (keywordX ? keywordX.toUpperCase() : ""),
                               style: {
                                 fontSize: '180%',
                                 fontFamily: 'Poppins, sans-serif',
-                                color: '#666666',
+                                color: `${themeku2 === "dark" ? '#fff' : '#000'}`,
                                 fontWeight: '800',
+                              }
+                            }, */
+                            title: {
+                              text: `<span class="text-body textsize14">VISUALISASI DATA ${keywordX ? keywordX.toUpperCase() : ""}</span>`,
+
+                              useHTML: true, // ⬅️ WAJIB
+                              style: {
+                                fontSize: '120%',
+                                fontFamily: 'Roboto, sans-serif',
+                                fontWeight: 'bold',
+                                color:`${themeku2 === "dark" ? '#fff' : '#000'}`
                               }
                             },
                             tooltip: {
@@ -1622,9 +1597,40 @@ const downloadxls = ()=>{
                               keywordC === "column" || keywordC === "line"
                                 ? {
                                     categories: data_chart_a.map(item => item.name),
-                                    title: { text: null }
+                                    title: { text: null },
+                                    labels: {
+                                      autoRotation: [-45, -60],
+                                      style: {
+                                        fontSize: '110%',
+                                        fontFamily: 'Roboto, sans-serif',
+                                        fontWeight: 'bold',
+                                        color: '#FFA726' // 🎯 Tambahkan ini
+                                      },
+                                    }
                                   }
                                 : undefined,
+                            yAxis: {
+                              title: {
+                                text: `<span class="text-body textsize10">Jumlah</span>`,
+
+                                useHTML: true, // ⬅️ WAJIB
+                                style: {
+                                  fontSize: '120%',
+                                  fontFamily: 'Roboto, sans-serif',
+                                  fontWeight: 'bold',
+                                  color:`${themeku2 === "dark" ? '#fff' : '#000'}`
+                                }
+                              },
+                              labels: {
+                                autoRotation: [-45, -90],
+                                style: {
+                                  fontSize: '80%',
+                                  fontFamily: 'Roboto, sans-serif',
+                                  fontWeight: 'bold',
+                                  color: '#FFA726' // 🎯 Tambahkan ini
+                                },
+                              }
+                            },
     
                             plotOptions:
                               keywordC === "pie" || keywordC === "donut"
@@ -1683,7 +1689,7 @@ const downloadxls = ()=>{
                             legend: (keywordC === "pie" || keywordC === "donut") ? {
                               enabled: true,
                               itemStyle: {
-                                color: '#000',
+                                color: '#FFA726',
                                 fontFamily: 'MuseoS500',
                                 fontSize: '90%'
                               }
@@ -1698,7 +1704,7 @@ const downloadxls = ()=>{
                       {keywordC === "solidgauge" ? ( 
                         <Row className="g-3 justify-content-center"> {/* g-3 untuk gap antar Col */}
                           <Col xs={12} className="text-center mb-3">
-                            <p className='textsize18 text-center font_weight800 uppercaseku' style={{color:"#666666"}}>VISUALISASI DATA {keywordX}</p>
+                            <p className='textsize18 text-center font_weight800 uppercaseku text-body'>VISUALISASI DATA {keywordX}</p>
                           </Col>
                           {data_chart_a.map((item, idx) => (
                             <Col key={idx} xs={12} sm={6} md={4} lg={3}>
@@ -1711,22 +1717,57 @@ const downloadxls = ()=>{
                         <HighchartsReact
                           highcharts={Highcharts}
                           options={{
-                            chart: { type: "area" },
+                            chart: { 
+                              type: "area",
+                              backgroundColor: null,
+
+                             },
                             title: {
-                              text: 'VISUALISASI DATA ' + (keywordX ? keywordX.toUpperCase() : ""),
+                              text: `<span class="text-body textsize14">VISUALISASI DATA ${keywordX ? keywordX.toUpperCase() : ""}</span>`,
+
+                              useHTML: true, // ⬅️ WAJIB
                               style: {
-                                fontSize: '180%',
-                                fontFamily: 'Poppins, sans-serif',
-                                color: '#666666',
-                                fontWeight: '800',
+                                fontSize: '120%',
+                                fontFamily: 'Roboto, sans-serif',
+                                fontWeight: 'bold',
+                                color:`${themeku2 === "dark" ? '#fff' : '#000'}`
                               }
+                              
                             },
                             xAxis: {
                               categories: [...new Set(data_chart_a.map(item => item.name))],
-                              title: { text: null }
+                              title: { text: null },
+                              labels: {
+                                autoRotation: [-45, -90],
+                                style: {
+                                  fontSize: '90%',
+                                  fontFamily: 'Roboto, sans-serif',
+                                  fontWeight: 'bold',
+                                  color: '#FFA726' // 🎯 Tambahkan ini
+                                },
+                              }
                             },
                             yAxis: {
-                              title: { text: "Jumlah" }
+                              title: {
+                                text: `<span class="text-body textsize10">Jumlah</span>`,
+
+                                useHTML: true, // ⬅️ WAJIB
+                                style: {
+                                  fontSize: '120%',
+                                  fontFamily: 'Roboto, sans-serif',
+                                  fontWeight: 'bold',
+                                  color:`${themeku2 === "dark" ? '#fff' : '#000'}`
+                                }
+                              },
+                              labels: {
+                                autoRotation: [-45, -90],
+                                style: {
+                                  fontSize: '80%',
+                                  fontFamily: 'Roboto, sans-serif',
+                                  fontWeight: 'bold',
+                                  color: '#FFA726' // 🎯 Tambahkan ini
+                                },
+                              }
                             },
 
                             tooltip: {
@@ -1798,10 +1839,9 @@ const downloadxls = ()=>{
                     <div className='w-100 'style={{ overflowX: "auto" }}>
                       <table  className='w-auto table-responsive rad10'>
                         <thead className='rad10' style={{backgroundColor:settings.bg_header}}>
-                          <tr className=' py-2 text-center text-light'>
-                            <th rowSpan={2} style={{backgroundColor:settings.bg_header}}>Nama Dataset</th>
+                          <tr className=' py-2 text-center text-white'>
+                            <th rowSpan={2} style={{backgroundColor:settings.bg_header}} >Nama Dataset</th>
                             <th colSpan={100}
-
                             className='bg-border4' style={{backgroundColor:settings.bg_header}}>{keywordX?keywordX:"Pilih X Axis"}</th>
                           </tr>
                           <tr className=' py-2 text-center text-light'>
@@ -1812,21 +1852,15 @@ const downloadxls = ()=>{
                         </thead>
                         <tbody>
                             <tr>
-                              <td className='bg-border3' style={{minWidth:"400px"}}> {Nama_dataset}</td>
+                              <td className='bg-border3 text-body' style={{minWidth:"400px"}}> {Nama_dataset}</td>
                               {Object.entries(groupedSums_a) ? Object.entries(groupedSums_a).map(([group, total]) => (
-                                <td className='bg-border3' key={group}>
-                                
+                                <td className='bg-border3 text-body' key={group}>
                                   {total}
                                 </td>
-                              
-
                               )) :<p>Data Kosong</p>}
                             </tr>
                         </tbody>
                       </table>
-                          
-
-                    
                     </div>
                   ) : ""}
 
@@ -1851,6 +1885,24 @@ const downloadxls = ()=>{
                           getRowHeight={() => 'auto'}
                           
                           sx={{
+                            "--DataGrid-color-background-base": "transparent",
+                                backgroundColor: "transparent !important", // paksa transparan table
+                                border: "none", // hilangkan border utama,
+                                marginBottom:"50px",
+                              "& .MuiDataGrid-root": {
+                                backgroundColor: "transparent", // ⬅ background utama transparan
+                                marginBottom:"50px"
+                              },
+                              "& .MuiDataGrid-row": {
+                                marginTop: "8px",
+                                paddingTop:"10px",
+                                paddingBottom:"10px",
+                                paddingLeft:"5px",
+                                paddingRight:"5px",
+                                borderRadius: "6px",
+                                boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)"
+                                
+                              },
                             "& .custom-header": {
                               backgroundColor:settings.bg_header,
                               color: "white",

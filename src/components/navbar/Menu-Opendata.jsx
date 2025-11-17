@@ -3,8 +3,10 @@ import axios from "axios";
 import {Container ,Nav,Navbar,NavDropdown, NavLink} from 'react-bootstrap';
 import '../styles/style_font.css';
 import { Link } from "react-router-dom";
+import Toogle_Mode from "../page_web/Themes_Mode";
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const portal = "Portal Open Data";
 
 function MenuItem({title,submenu,linked,bg}){
@@ -23,7 +25,7 @@ function MenuItem({title,submenu,linked,bg}){
         color: '#ffffff',
         padding: '6px 16px',
         margin: '0 0.25rem',
-        fontSize: '120%',
+        fontSize: '100%',
         textDecoration: 'none',
         display: 'inline-block',
         transition: 'background-color 0.2s ease-in-out, box-shadow 0.2s',
@@ -67,12 +69,12 @@ function MenuItem({title,submenu,linked,bg}){
     
     const getMenu = async () => {
       try {
+        const response = await api_url_satuadmin.get("api/open-item/menu-opendata2", {
+          params: title ? { categoryku: title } : {}
+        });
 
-        const query = title ? `?categoryku=${encodeURIComponent(title)}` : '';
-        const response = await fetch(apiurl + `api/open-item/menu-opendata2${query}`);
-        const result = await response.json();
-        setMenu2(result);
-       
+        setMenu2(response.data);
+
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -91,8 +93,8 @@ function MenuItem({title,submenu,linked,bg}){
             }}
             className={
               color2
-                ? 'dropdown-toggle nav-link text-white-a mx-0 textsize12 px-4 uppercaseku'
-                : 'dropdown-toggle nav-link text-blue-a3 mx-0 textsize12 px-4 uppercaseku'
+                ? 'dropdown-toggle nav-link text-white-a mx-0 textsize10 px-4 uppercaseku'
+                : 'dropdown-toggle nav-link text-blue-a3 mx-0 textsize10 px-4 uppercaseku'
             }
             style={{
               backgroundColor: bg,
@@ -101,7 +103,7 @@ function MenuItem({title,submenu,linked,bg}){
               color: '#ffffff',
               padding: '6px 16px',
               margin: '0 0.25rem',
-              fontSize: '120%',
+              fontSize: '100%',
               textDecoration: 'none',
               display: 'inline-block',
               transition: 'background-color 0.2s ease-in-out, box-shadow 0.2s',
@@ -119,7 +121,7 @@ function MenuItem({title,submenu,linked,bg}){
             <div data-bs-popper="static" className="dropdown-menu" aria-labelledby="">
               {
                 menuku2.map((item)=>(
-                  <Link key={item.id} to={item.linked} className="nav-link" style={{fontSize:"120%"}}>{item.sub_menu}</Link>
+                  <Link key={item.id} to={item.linked} className="nav-link" style={{fontSize:"100%"}}>{item.sub_menu}</Link>
                 ))
               }
             </div>
@@ -176,14 +178,14 @@ function Menu({bgku}) {
 
   const getMenu = async () => {
     try {
-      const response = await axios.get(apiurl + `api/open-item/menu-opendata`);
+      const response = await api_url_satuadmin.get(`api/open-item/menu-opendata`);
 
       // Cek apakah response.data itu array atau object
       const payload = Array.isArray(response.data) ? response.data : response.data.datas;
 
       setMenu(payload);
 
-      const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }
@@ -249,8 +251,9 @@ function Menu({bgku}) {
                 })
               
               }
-              
+              <Toogle_Mode />
             </Nav>
+            
           </Navbar.Collapse>
         </Container>
       </Navbar>

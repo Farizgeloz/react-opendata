@@ -18,8 +18,9 @@ import {Row,Col,Image} from 'react-bootstrap';
 import { FcFeedback } from "react-icons/fc";
 import { MdHomeFilled, MdInfoOutline, MdOutlineFeaturedPlayList } from "react-icons/md";
 import { Link } from 'react-router-dom';
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 const portal = "Portal Open Data";
 
 function DatasetPengelolah() {
@@ -41,10 +42,10 @@ function DatasetPengelolah() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await axios.post(`${apiurl}api/opendata_visitor/visitor`);
+        await api_url_satuadmin.post(`api/opendata_visitor/visitor`);
 
         // Ambil total
-        const response = await axios.get(`${apiurl}api/opendata_visitor/count`);
+        const response = await api_url_satuadmin.get(`api/opendata_visitor/count`);
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
@@ -58,7 +59,7 @@ function DatasetPengelolah() {
   const getImage = async () => {
     try {
 
-      const response_image = await axios.get(apiurl + 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
         params: {
           portal:portal
         }
@@ -67,7 +68,7 @@ function DatasetPengelolah() {
       setImage1(data_image.presignedUrl1);
       //setImage2(data_image.presignedUrl2);
 
-      const response_setting = await axios.get(`${apiurl}api/open-item/site_opendata_setting`);
+      const response_setting = await api_url_satuadmin.get(`api/open-item/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
 
@@ -77,7 +78,7 @@ function DatasetPengelolah() {
   };
 
   return (
-    <div className="App" style={{background:`linear-gradient(170deg, ${settings.bg_body}4D, #fff 40%, #fff 50%, #fff 65%, ${settings.bg_body})`}}>
+    <div className="App bg-body" style={{background:`linear-gradient(170deg, ${settings.bg_body}4D, #fff 40%, #fff 50%, #fff 65%, ${settings.bg_body})`}}>
      
         
        <Menu bgku={settings.bg_header}/>
@@ -96,14 +97,14 @@ function DatasetPengelolah() {
             
           </Row>
           
-          <Row className='shaddow1 rad15 mx-2 bg-white mb-3'>
+          <Row className='shaddow1 rad15 mx-2 bg-body mb-3'>
             <Col md={2} sm={12} className='float-center'>
               {!isMobile && (
               <Image className="img-100 mt-2" src={image1} />
               )}
             </Col>
             <Col md={10} sm={12}>
-              <p className='textsize24 text-left font_weight700 mb-1' style={{color:settings.color_title}}>Metadata</p>
+              <p className='textsize24 text-left font_weight700 mb-1 text-body'>Metadata</p>
               <p 
                 className='text-white textsize14 text-left box-header-title'
                 style={{background:`linear-gradient(to right, ${settings.bg_content}, ${settings.bg_header})`}}

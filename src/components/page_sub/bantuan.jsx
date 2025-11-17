@@ -2,13 +2,15 @@ import Container from 'react-bootstrap/Container';
 import { Row, Col, Table,Accordion } from 'react-bootstrap';
 
 import React, { useEffect, useState } from "react";
-import { FaBuildingColumns } from "react-icons/fa6";
+import { FaBuildingColumns,FaBookOpen  } from "react-icons/fa6";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
 
 
-const apiurl = import.meta.env.VITE_API_URL;
+
 
 
 
@@ -39,7 +41,7 @@ function AppKategori({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconten
 
   const getData = async () => {
     try {
-      const response = await axios.get(apiurl + 'api/open-item/opendata-bantuan');
+      const response = await api_url_satuadmin.get( 'api/open-item/opendata-bantuan');
       const data = response.data.resultWithUrls;
      setData(data);
      
@@ -126,7 +128,7 @@ function AppKategori({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconten
   
 
   return (
-    <section id="works" className="block revolusi-block paddingx-5">
+    <section id="works" className="revolusi-block paddingx-5">
      
       <Container fluid className='rad15 mt-5 mb-5'>
          
@@ -138,10 +140,10 @@ function AppKategori({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconten
             <section id={datas.seksi} style={{paddingTop:'5%'}}>
               <div className="pt-5 mb-4">
                 <p 
-                  className='textsize20 font_weight600  margin-t15s text-red'
-                ><FaBuildingColumns style={{marginTop:"-5px"}} /> {datas.title}</p>
+                  className='textsize20 font_weight600  margin-t15s text-body'
+                ><FaBookOpen style={{marginTop:"-5px"}} /> {datas.title}</p>
               </div>
-              <div className='textsize12' dangerouslySetInnerHTML={{ __html: datas.content }} />
+              <div className='textsize12 text-body' dangerouslySetInnerHTML={{ __html: datas.content }} />
             </section>
           ))}
         
