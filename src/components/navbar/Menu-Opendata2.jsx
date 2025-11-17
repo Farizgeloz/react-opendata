@@ -84,78 +84,74 @@ function MenuItem({title,submenu,linked,bg}){
 
     const [hover1, setHover1] = useState(false);
 
-    if(submenu!==""){
-      return(
-
-        <div className="nav-item dropdown">
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              if (isMobile) setIsAccordionOpen(!isAccordionOpen);
-            }}
-            className={
-              color2
-                ? 'dropdown-toggle nav-link text-white-a mx-0 textsize10 px-4 uppercaseku'
-                : 'dropdown-toggle nav-link text-blue-a3 mx-0 textsize10 px-4 uppercaseku'
-            }
-            style={{
-              backgroundColor: bg,
-              border:'2px solid rgb(255 255 255 / 60%)',
-              borderRadius: '5px',
-              color: '#ffffff',
-              padding: '6px 16px',
-              margin: '0 0.25rem',
-              fontSize: '100%',
-              textDecoration: 'none',
-              display: 'inline-block',
-              transition: 'background-color 0.2s ease-in-out, box-shadow 0.2s',
-              boxShadow: hover1 ? 'inset 0 0 0 1000px rgba(255, 255, 255, 0.1)' : 'none',
-            }}
-            href="#"
-            onMouseEnter={() => setHover1(true)}
-            onMouseLeave={() => setHover1(false)}
-          >
-            {title}
-          </a>
-
-          {/* Desktop dropdown */}
-          {!isMobile && (
-            <div data-bs-popper="static" className="dropdown-menu" aria-labelledby="">
-              {
-                menuku2.map((item)=>(
-                  <Link key={item.id} to={item.linked} className="nav-link" style={{fontSize:"120%"}}>{item.sub_menu}</Link>
-                ))
-              }
+    const semuaKosong = menuku2?.every(
+          (item) => !item.sub_menu || item.sub_menu.trim() === ""
+        );
+    
+        const linkedFinal = semuaKosong ? menuku2?.[0]?.linked : linked;
+    
+        if (menuku2 !== null && !semuaKosong) {
+          return (
+    
+            <div className="nav-item dropdown">
+              <Link
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (isMobile) setIsAccordionOpen(!isAccordionOpen);
+                }}
+                className={
+                  color2
+                    ? 'dropdown-toggle nav-link text-white-a mx-0 textsize10 px-4 uppercaseku'
+                    : 'dropdown-toggle nav-link text-blue-a3 mx-0 textsize10 px-4 uppercaseku'
+                }
+                style={{
+                  backgroundColor: bg,
+                  border:'2px solid rgb(255 255 255 / 60%)',
+                  borderRadius: '5px',
+                  color: '#ffffff',
+                  padding: '6px 16px',
+                  margin: '0 0.25rem',
+                  fontSize: '100%',
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  transition: 'background-color 0.2s ease-in-out, box-shadow 0.2s',
+                  boxShadow: hover1 ? 'inset 0 0 0 1000px rgba(255, 255, 255, 0.1)' : 'none',
+                }}
+                to="#"
+                onMouseEnter={() => setHover1(true)}
+                onMouseLeave={() => setHover1(false)}
+              >
+                {title}
+              </Link>
+    
+              {/* Desktop dropdown */}
+              {!isMobile && (
+                <div data-bs-popper="static" className="dropdown-menu" aria-labelledby="">
+                  {menuku2.map((item) => (
+                    <Link key={item.id} to={item.linked} className="nav-link" style={{ fontSize: "100%" }}>
+                      {item.sub_menu}
+                    </Link>
+                  ))}
+                </div>
+              )}
+    
+              {/* Mobile accordion */}
+              {isMobile && isAccordionOpen && (
+                <div className="accordion-menu px-1 mx-2" active>
+                  {menuku2.map((item) => (
+                    <Link key={item.id} to={item.linked} className="d-block py-2 text-white border-bottom mx-5">
+                      {item.sub_menu}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Mobile accordion */}
-          {isMobile && isAccordionOpen && (
-            <div className="accordion-menu px-1 mx-2" active>
-              {menuku2.map((item) => (
-                <Link key={item.id} to={item.linked} className="d-block py-2 text-white border-bottom mx-5 textsize10">
-                  {item.sub_menu}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-
-        
-        /*<NavDropdown className={color2 ? 'nav-link textsize8 font_weight600 text-sage ' : 'nav-link textsize8 font_weight600 text-black'} title={title} id=""  rendermenuonmount={true}>
-             {
-              menuku2.map((item)=>(
-                 <NavLink className="" href={item.linked}>{item.sub_menu}</NavLink>
-              ))
-             }
-        </NavDropdown>*/
-        
-      );
-    }else{
-      return(
-        <LinkButton linked={linked} title={title} />
-      );
-    }
+    
+          );
+        } else {
+          // Tidak ada submenu → Button biasa
+          return <LinkButton linked={linkedFinal} title={title} />;
+        }
 }
 
 function Menu({bgku}) {

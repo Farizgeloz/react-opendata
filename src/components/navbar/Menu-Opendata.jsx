@@ -10,6 +10,7 @@ import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 const portal = "Portal Open Data";
 
 function MenuItem({title,submenu,linked,bg}){
+  
     const [menuku2, setMenu2] = useState([]);
 
     const [isMobile, setIsMobile] = useState(false);
@@ -74,6 +75,8 @@ function MenuItem({title,submenu,linked,bg}){
         });
 
         setMenu2(response.data);
+        console.log(response.data);
+        
 
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -81,9 +84,16 @@ function MenuItem({title,submenu,linked,bg}){
     };
 
     const [hover1, setHover1] = useState(false);
+    
+    // Deteksi submenu kosong
+    const semuaKosong = menuku2?.every(
+      (item) => !item.sub_menu || item.sub_menu.trim() === ""
+    );
 
-    if(submenu!==""){
-      return(
+    const linkedFinal = semuaKosong ? menuku2?.[0]?.linked : linked;
+
+    if (menuku2 !== null && !semuaKosong) {
+      return (
 
         <div className="nav-item dropdown">
           <Link
@@ -119,11 +129,11 @@ function MenuItem({title,submenu,linked,bg}){
           {/* Desktop dropdown */}
           {!isMobile && (
             <div data-bs-popper="static" className="dropdown-menu" aria-labelledby="">
-              {
-                menuku2.map((item)=>(
-                  <Link key={item.id} to={item.linked} className="nav-link" style={{fontSize:"100%"}}>{item.sub_menu}</Link>
-                ))
-              }
+              {menuku2.map((item) => (
+                <Link key={item.id} to={item.linked} className="nav-link" style={{ fontSize: "100%" }}>
+                  {item.sub_menu}
+                </Link>
+              ))}
             </div>
           )}
 
@@ -139,21 +149,12 @@ function MenuItem({title,submenu,linked,bg}){
           )}
         </div>
 
-        
-        /*<NavDropdown className={color2 ? 'nav-link textsize8 font_weight600 text-sage ' : 'nav-link textsize8 font_weight600 text-black'} title={title} id=""  rendermenuonmount={true}>
-             {
-              menuku2.map((item)=>(
-                 <NavLink className="" href={item.linked}>{item.sub_menu}</NavLink>
-              ))
-             }
-        </NavDropdown>*/
-        
       );
-    }else{
-      return(
-        <LinkButton linked={linked} title={title} />
-      );
+    } else {
+      // Tidak ada submenu → Button biasa
+      return <LinkButton linked={linkedFinal} title={title} />;
     }
+
 }
 function Menu({bgku}) {
   const bgkuu=bgku;
@@ -244,10 +245,14 @@ function Menu({bgku}) {
             <Nav className="ms-auto">
               {
                 menuku.map((menu,index) => {
-                  return (
-                    <MenuItem key={index} title={menu.category} submenu={menu.sub_menu} linked={menu.linked} bg={bgku}/>
-                    
-                  );
+                  
+                  
+                 
+                    return (
+                      <MenuItem key={index} title={menu.category} submenu="" linked={menu.linked} bg={bgku}/>
+                      
+                    );
+                 
                 })
               
               }
