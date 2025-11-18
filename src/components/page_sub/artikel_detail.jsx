@@ -31,11 +31,19 @@ import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
 
 
-const Spinner = () => 
-    <div className="height-map">
-      <div className="loaderr2"></div>
-      <p className="margin-auto text-center text-silver">Dalam Proses...</p>
-    </div>;
+const Spinner = () => (
+  <div className='text-center justify-content-center' style={{height:"110px"}}>
+    <div className="dot-overlay mt-5" >
+        <div className="dot-pulse">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        
+    </div>
+    <p className='text-center text-shadow-border-multicolor-smooth italicku'>Proses ...</p>
+  </div>
+);
 
 
 
@@ -52,6 +60,8 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   const [showModalArtikel, setShowModalArtikel] = useState(false);
   const [modalData, setModalData] = useState({ title: '', image: '' });
   const [modalDataArtikel, setModalDataArtikel] = useState({ title: '', image: '' });
+
+  const [isValidImg, setIsValidImg] = useState(true);
 
   const { id } = useParams();
 
@@ -289,206 +299,233 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
       
 
       <Col md={8} className="px-5">
-       
+        {loading ? (
+          <Spinner />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            viewport={{ once: true }}
+          >
             <p 
               className="textsize24 font_weight600 uppercaseku mt-5 text-body" style={{lineHeight:"1.2"}}
             >{dataku.title}</p>
+            
+            <div className="d-flex mb-4">
+              <p className="mb-0 textsize14 text-silver font_weight600 italicku">Admin {dataku.nick_admin}  <FaMinus className="mx-2" />  </p>
+              <p className="mb-0 textsize14 text-silver font_weight600 italicku">{convertDate(dataku.updated_at?.replace(/T/, ' ')?.replace(/\.\w*/, ''))}</p>
+            </div>
+         
+            {dataku.presignedUrl_a && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={
+                  loading
+                    ? { opacity: [0.1, 1, 0.1] } // efek berdenyut saat loading
+                    : { opacity: 1 }             // tampil penuh setelah load
+                }
+                transition={
+                  loading
+                    ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                    : { duration: 0.8 }
+                }
+                className="rad10 w-100 overflow-hidden"
+              >
+                <LazyLoadImage
+                  src={dataku.presignedUrl_a}
+                  alt="[Foto]"
+                  effect="blur" // 🔄 efek blur sebelum muncul
+                  afterLoad={() => setLoading(false)} // selesai load
+                  className="rad10 w-100"
+                />
+              </motion.div>
+            )}
         
-        <div className="d-flex mb-4">
-          <p className="mb-0 textsize14 text-silver font_weight600 italicku">Admin {dataku.nick_admin}  <FaMinus className="mx-2" />  </p>
-          <p className="mb-0 textsize14 text-silver font_weight600 italicku">{convertDate(dataku.updated_at?.replace(/T/, ' ')?.replace(/\.\w*/, ''))}</p>
-        </div>
-        {dataku.presignedUrl_a && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={
-              loading
-                ? { opacity: [0.1, 1, 0.1] } // efek berdenyut saat loading
-                : { opacity: 1 }             // tampil penuh setelah load
-            }
-            transition={
-              loading
-                ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
-                : { duration: 0.8 }
-            }
-            className="rad10 w-100 overflow-hidden"
-          >
-            <LazyLoadImage
-              src={dataku.presignedUrl_a}
-              alt="[Foto]"
-              effect="blur" // 🔄 efek blur sebelum muncul
-              afterLoad={() => setLoading(false)} // selesai load
-              className="rad10 w-100"
-            />
+       
+       
+            {dataku && typeof dataku.content_a === 'string' ? (
+              <div className="textsize10 mt-3">
+                <div className='textsize11 text-body' dangerouslySetInnerHTML={{ __html: dataku.content_a }} />
+              </div>
+            ) : ("")}
+            {dataku.presignedUrl_b && (
+              isValidImg && (
+                <motion.img
+                  src={dataku.presignedUrl_b}
+                  alt="[Foto]"
+                  className="rad10 w-100 mt-5 mb-3"
+                  onLoad={() => setLoading(false)}
+                  onError={() => setIsValidImg(false)}   // ❌ URL jelek → sembunyikan gambar
+                  initial={{ opacity: 0 }}
+                  animate={
+                    loading
+                      ? { opacity: [0.1, 1, 0.1] }
+                      : { opacity: [0.1, 0.5, 1] }
+                  }
+                  transition={
+                    loading
+                      ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                      : { duration: 3.5 }
+                  }
+                />
+              )
+            )}
+            {typeof dataku?.content_b === "string" && dataku.content_b ? (
+              <div className="textsize12 mt-3">
+                <div className='textsize11 text-body' dangerouslySetInnerHTML={{ __html: dataku.content_b }} />
+              </div>
+            ) : ("")}
+            {dataku.presignedUrl_c && (
+              isValidImg && (
+                <motion.img
+                  src={dataku.presignedUrl_c}
+                  alt="[Foto]"
+                  className="rad10 w-100 mt-5 mb-3"
+                  onLoad={() => setLoading(false)}
+                  onError={() => setIsValidImg(false)}   // ❌ URL jelek → sembunyikan gambar
+                  initial={{ opacity: 0 }}
+                  animate={
+                    loading
+                      ? { opacity: [0.1, 1, 0.1] }
+                      : { opacity: [0.1, 0.5, 1] }
+                  }
+                  transition={
+                    loading
+                      ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                      : { duration: 3.5 }
+                  }
+                />
+              )
+            )}
+            
+            {dataku && typeof dataku.content_c === 'string' ? (
+              <div className="textsize12 mt-3">
+                <div className='textsize11 text-body' dangerouslySetInnerHTML={{ __html: dataku.content_c }} />
+              </div>
+            ) : ("")}
+            {typeof dataku?.sumber === "string" && dataku.sumber ? (
+              <p className="mt-5 mb-0 textsize12 font_weight600" style={{color:'#EF6C00'}}>Sumber: <span className="font_weight400">{dataku.sumber}</span></p>
+            ) : ("")}
+            {dataku.download_file && dataku.download_file.length >= 3 ? (
+              <Link
+                to={dataku.presignedUrl_download}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-success mt-5"
+              >
+                <FaDownload /> Download File
+              </Link>
+            ) : null}
           </motion.div>
         )}
-        
-       
-       
-        {dataku && typeof dataku.content_a === 'string' ? (
-          <div className="textsize10 mt-3">
-            <div className='textsize11 text-body' dangerouslySetInnerHTML={{ __html: dataku.content_a }} />
-          </div>
-        ) : ("")}
-        {dataku.presignedUrl_b && (
-          <motion.img
-            src={dataku.presignedUrl_b}
-            alt="[Foto]"
-            className="rad10 w-100 mt-5 mb-3"
-            onLoad={() => setLoading(false)} // ✅ selesai load → ubah state
-            initial={{ opacity: 0 }}
-            animate={
-              loading
-                ? { opacity: [0.1, 1, 0.1] } // 🔄 animasi berdenyut kalau loading
-                : { opacity: [0.1, 0.5, 1] }              // ✅ tampil normal setelah loaded
-            }
-            transition={
-              loading
-                ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
-                : { duration: 3.5 }
-            }
-          />
-        )}
-        {typeof dataku?.content_b === "string" && dataku.content_b ? (
-          <div className="textsize12 mt-3">
-            <div className='textsize11 text-body' dangerouslySetInnerHTML={{ __html: dataku.content_b }} />
-          </div>
-        ) : ("")}
-        {dataku.presignedUrl_c && (
-          <motion.img
-            src={dataku.presignedUrl_c}
-            alt="[Foto]"
-            className="rad10 w-100 mt-5 mb-3"
-            onLoad={() => setLoading(false)} // ✅ selesai load → ubah state
-            initial={{ opacity: 0 }}
-            animate={
-              loading
-                ? { opacity: [0.1, 1, 0.1] } // 🔄 animasi berdenyut kalau loading
-                : { opacity: [0.1, 0.5, 1] }              // ✅ tampil normal setelah loaded
-            }
-            transition={
-              loading
-                ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
-                : { duration: 3.5 }
-            }
-          />
-        )}
-        
-        {dataku && typeof dataku.content_c === 'string' ? (
-          <div className="textsize12 mt-3">
-            <div className='textsize11 text-body' dangerouslySetInnerHTML={{ __html: dataku.content_c }} />
-          </div>
-        ) : ("")}
-        {typeof dataku?.sumber === "string" && dataku.sumber ? (
-          <p className="mt-5 mb-0 textsize12 font_weight600" style={{color:'#EF6C00'}}>Sumber: <span className="font_weight400">{dataku.sumber}</span></p>
-        ) : ("")}
-        {dataku.download_file && dataku.download_file.length >= 3 ? (
-          <Link
-            to={dataku.presignedUrl_download}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-success mt-5"
-          >
-            <FaDownload /> Download File
-          </Link>
-        ) : null}
       </Col>
       <Col md={3}>
-        
+        {loading ? (
+          <Spinner />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            viewport={{ once: true }}
+          >
 
-        <Row className='portfoliolist justify-content-md-center p-2 mt-5'>
-          <Col md={12} sm={12} className='d-flex align-items-center justify-content-center'>
-              <div className='px-0 py-4 rad10 bg-zebra-170 d-flex align-items-center justify-content-center w-100"'>
-                <Image className="img-100 mx-auto justify-center  d-block px-5" src={image2} style={{width:'70%'}} />
-              </div>
-          </Col>
-          <Col md={12} className="mb-2">
-            <div className="d-flex mx-2 py-2 align-items-center justify-content-center rad10" style={{backgroundColor:"#60728b"}}>
-              <div className="px-3 d-flex rad10" 
-                  style={{paddingBottom:"5px",marginTop:"-10px",width:"fit-content"}}>
-                <ShareButtons url={`/Artikel/${dataku.id_artikel}`} title={dataku.title} />
-              </div>
-            </div>
-          </Col>
-          
-          {dataartikelku.length > 0 ? (
-            <>
-            {
-              dataartikelku
-              .slice(0, 4)
-              .map((data,index) => {
-                return (
-                    <div className=' px-4 mt-2' key={index}>
-                        <Row
-                          className='justify-content-center rad15 bg-body mb-2 p-2 shaddow4'
-                        >
-                          <Col md={3} sm={3}
-                            className='label text-left py-2'
-                            style={{ maxHeight: '210px',cursor: 'pointer' }}
-                          >
-                            <Image
-                              src={data.presignedUrl_a}
-                              className='shaddow3 rad10 w-100'
-                              style={{ maxHeight: '210px',cursor: 'pointer' }}
-                              onContextMenu={(e) => e.preventDefault()}
-                              draggable={false}
-                              onClick={() => handleShowModalArtikel(data)}
-                            />
-                          </Col>
-                          <Col md={9} sm={9} className='label text-left py-2 mt-0 mb-2'>
-                            <p
-                              className="text-body textsize12 font_weight600 mb-3"
-                              style={{ lineHeight: '1.5' }}
+            <Row className='portfoliolist justify-content-md-center p-2 mt-5'>
+              <Col md={12} sm={12} className='d-flex align-items-center justify-content-center'>
+                  <div className='px-0 py-4 rad10 bg-zebra-170 d-flex align-items-center justify-content-center w-100"'>
+                    <Image className="img-100 mx-auto justify-center  d-block px-5" src={image2} style={{width:'70%'}} />
+                  </div>
+              </Col>
+              <Col md={12} className="mb-2">
+                <div className="d-flex mx-2 py-2 align-items-center justify-content-center rad10" style={{backgroundColor:"#60728b"}}>
+                  <div className="px-3 d-flex rad10" 
+                      style={{paddingBottom:"5px",marginTop:"-10px",width:"fit-content"}}>
+                    <ShareButtons url={`/Artikel/${dataku.id_artikel}`} title={dataku.title} />
+                  </div>
+                </div>
+              </Col>
+              
+              {dataartikelku.length > 0 ? (
+                <>
+                {
+                  dataartikelku
+                  .slice(0, 4)
+                  .map((data,index) => {
+                    return (
+                        <div className=' px-4 mt-2' key={index}>
+                            <Row
+                              className='justify-content-center rad15 bg-body mb-2 p-2 shaddow4'
                             >
-                              {data.title.length > 70 ? data.title.slice(0, 70) + '...' : data.title}
-                            </p>
-                            <p className='text-body textsize10 mb-3'>{convertDate(data.updated_at.toString().replace(/T/, ' ').replace(/\.\w*/, ''))}</p>
-                            
-                            <Link to={`/Artikel/Detail/${slugify(data.title)}`} 
-                              className={` text-white-a textsize10 p-2 rad10`}
-                              style={{backgroundColor:bgcontentku}}
-                            >Baca Selengkapnya </Link>
-                          </Col>
-                        </Row>
-                    </div>
-                );
-              })
-            }
-            {/* Modal */}
-            <Modal show={showModalArtikel} onHide={() => setShowModalArtikel(false)} size="lg" centered style={{zIndex:9999}}>
-              <Modal.Header closeButton>
-                <Modal.Title>{modalDataArtikel.title}</Modal.Title>
-              </Modal.Header>
-              <Modal.Body className="text-center">
-                <Image 
-                  src={modalDataArtikel.image} 
-                  fluid 
-                  className="rad10"
-                  onContextMenu={(e) => e.preventDefault()}
-                  draggable={false} 
-                />
-              </Modal.Body>
-              <Modal.Footer>
-                <Link
-                  to={modalDataArtikel.image}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-success"
-                >
-                  <FaDownload /> Download Gambar
-                </Link>
-                <Button variant="secondary" onClick={() => setShowModalArtikel(false)}>
-                  Tutup
-                </Button>
-              </Modal.Footer>
-            </Modal>
-            
-            </>
-          ) : ("")}
-          
+                              <Col md={3} sm={3}
+                                className='label text-left py-2'
+                                style={{ maxHeight: '210px',cursor: 'pointer' }}
+                              >
+                                <Image
+                                  src={data.presignedUrl_a}
+                                  className='shaddow3 rad10 w-100'
+                                  style={{ maxHeight: '210px',cursor: 'pointer' }}
+                                  onContextMenu={(e) => e.preventDefault()}
+                                  draggable={false}
+                                  onClick={() => handleShowModalArtikel(data)}
+                                />
+                              </Col>
+                              <Col md={9} sm={9} className='label text-left py-2 mt-0 mb-2'>
+                                <p
+                                  className="text-body textsize12 font_weight600 mb-3"
+                                  style={{ lineHeight: '1.5' }}
+                                >
+                                  {data.title.length > 70 ? data.title.slice(0, 70) + '...' : data.title}
+                                </p>
+                                <p className='text-body textsize10 mb-3'>{convertDate(data.updated_at.toString().replace(/T/, ' ').replace(/\.\w*/, ''))}</p>
+                                
+                                <Link to={`/Artikel/Detail/${slugify(data.title)}`} 
+                                  className={` text-white-a textsize10 p-2 rad10`}
+                                  style={{backgroundColor:bgcontentku}}
+                                >Baca Selengkapnya </Link>
+                              </Col>
+                            </Row>
+                        </div>
+                    );
+                  })
+                }
+                {/* Modal */}
+                <Modal show={showModalArtikel} onHide={() => setShowModalArtikel(false)} size="lg" centered style={{zIndex:9999}}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>{modalDataArtikel.title}</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body className="text-center">
+                    <Image 
+                      src={modalDataArtikel.image} 
+                      fluid 
+                      className="rad10"
+                      onContextMenu={(e) => e.preventDefault()}
+                      draggable={false} 
+                    />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Link
+                      to={modalDataArtikel.image}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-success"
+                    >
+                      <FaDownload /> Download Gambar
+                    </Link>
+                    <Button variant="secondary" onClick={() => setShowModalArtikel(false)}>
+                      Tutup
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+                
+                </>
+              ) : ("")}
+              
 
-        </Row>
+            </Row>
+          </motion.div>
+        )}
       </Col>
 
       

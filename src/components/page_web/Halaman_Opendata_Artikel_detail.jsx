@@ -88,7 +88,7 @@ function DatasetPengelolah() {
   
   return (
     <>
-    {loading ? (
+    {/*loading ? (
       <div className="spinner-overlay justify-content-center">
         
         <div 
@@ -119,15 +119,15 @@ function DatasetPengelolah() {
           </div>
         </div>
       </div>
-    ) : (
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-      </motion.div>
-    )
-  }
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+        </motion.div>
+      )
+    */}
     <div className={`App bg-body`}>
       <Menu bgku={settings.bg_header}/>
       
