@@ -172,7 +172,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   };
 
   return (
-    <Row className=" mx-5 mt-3 d-flex justify-content-center ">
+    <Row className=" mx-2 mt-3 d-flex justify-content-center ">
       <Col md={12} className="px-4 mb-2 bg-body py-4 rad10 shaddow3">
           <Row className="">
             <Col md={12} className="justify-content-center text-center">

@@ -1520,7 +1520,7 @@ background: #efefef !important;
 border-bottom: 1px solid #fff;
 }
 .btn-toggle{
-  margin-top:-20px;
+  margin-top:-10px;
   background: var(--light);
 }
 .navbar-toggler-icon{

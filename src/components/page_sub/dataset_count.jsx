@@ -156,9 +156,9 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
       
       <Container fluid className=' pb-5'>
        
-        <Row className='px-5 justify-content-md-center'>
+        <Row className='px-2 justify-content-center'>
            
-            <Col sm={12} className='  rad15 p-3'>
+            <Col sm={10} className='  rad15 p-3'>
               
               <div className='content text-center'>
                 

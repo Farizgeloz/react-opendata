@@ -421,14 +421,14 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   
 
   return (
-    <Row className=' margin-t9 mx-1'>
+    <Row className=' margin-t9 mx-1 w-100'>
       <Col md={12} sm={12}>
        <div className=''>
           <Row className='mb-2'>
             <Col md={12} className="d-flex justify-content-between align-items-center" style={{backgroundColor:"#60728b"}}>
                                         
               {/* Breadcrumb */}
-              <div className="px-3 d-flex rad10 italicku" style={{ paddingTop:"5px", paddingBottom:"5px", width:"fit-content"}}>
+              <div className="px-3 d-flex rad10 italicku" style={{ paddingTop:"5px", paddingBottom:"5px", width:"fit-content",flexWrap: "wrap"}}>
                 <Link to="/" className="textsize12 text-white-a d-flex"> <MdHomeFilled className='mt-1'/> <span className='px-2'> Beranda</span></Link><span className="mx-3 text-white">/</span>
                 <Link to="/Dataset" className="textsize12 text-white-a d-flex"><MdOutlineFeaturedPlayList className='mt-1'/> <span className='px-2'>Koleksi Dataset</span></Link><span className="mx-3 text-white">/</span>
                 <Link to={`/Dataset/Sektor/${topik}`} className="textsize12 text-white-a d-flex"><MdListAlt className='mt-1'/>Sektor <span className='px-2'> {topik}</span></Link>
@@ -454,7 +454,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                   <Row className="  px-5">
                     {
                       sektor_idku.map((sektor_idi, index) => (
-                        <Col sm={6} md={4} lg={4} xs={6} key={sektor_idi.id_sektor} className="py-0">
+                        <Col sm={6} md={4} lg={4} xs={12} key={sektor_idi.id_sektor} className="py-0">
                           <div className="portfolio-wrapper">
                             <Link to={`/Dataset/Sektor/${encodeURIComponent(sektor_idi.nama_sektor)}`}>
                               <div 

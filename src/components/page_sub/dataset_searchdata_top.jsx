@@ -170,7 +170,7 @@ console.log("datasetSorted", datasetSorted.map(d => ({
                               <Col md={2} xs={2} className="justify-content-end d-flex align-items-center">
                                 <p
                                   className="px-3 py-2 rad15 text-white"
-                                  style={{ backgroundColor: bgbodyku, textAlign: "right",height:"auto",lineHeight:"20px" }}
+                                  style={{ backgroundColor: bgcontentku, textAlign: "right",height:"auto",lineHeight:"20px" }}
                                 >
                                   <MdRemoveRedEye />
                                   {datas.count_dataset} 

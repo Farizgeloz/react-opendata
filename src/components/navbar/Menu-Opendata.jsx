@@ -224,11 +224,11 @@ function Menu({bgku}) {
       <Navbar expand="lg" className="w-100">
         
          <Container className="px-0" style={{maxWidth:'95%'}}>
-          <Navbar.Brand href="#home" className='d-flex text-blue margin-logo' style={{width:"40vh"}}>
+          <Navbar.Brand href="#home" className='d-flex text-blue margin-logo' style={{width:"35vh"}}>
             <img
-              src={isMobile ? image1 : (color ? image1 : image2)}
+              src={isMobile ? image2 : (color ? image2 : image2)}
               className="img-header"
-              style={{ width: "40vh", height: "auto" }}
+              style={{ width: "35vh", height: "auto" }}
             />
             
           </Navbar.Brand>
@@ -236,7 +236,7 @@ function Menu({bgku}) {
           <Navbar.Collapse
             id="basic-navbar-nav"
             style={{
-              maxWidth: 'calc(100% - 40vh)', // lebar 100% minus 250px
+              maxWidth: 'calc(100% - 35vh)', // lebar 100% minus 250px
               flex: '1 1 auto',
               whiteSpace: 'nowrap',
               position: 'relative',

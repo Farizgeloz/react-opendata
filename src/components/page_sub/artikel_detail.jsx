@@ -288,7 +288,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
         <Col md={12} className="d-flex justify-content-between align-items-center" style={{backgroundColor:"#60728b"}}>
                                     
           {/* Breadcrumb */}
-          <div className="px-3 d-flex rad10 italicku" style={{ paddingTop:"5px", paddingBottom:"5px", width:"fit-content"}}>
+          <div className="px-3 d-flex rad10 italicku" style={{ paddingTop:"5px", paddingBottom:"5px", width:"fit-content",flexWrap:"wrap" }}>
             <Link to="/" className="textsize12 text-white-a d-flex"> <MdHomeFilled className='mt-1'/> <span className='px-2'> Beranda</span></Link><span className="mx-3 text-white">/</span>
             <Link to="/Artikel" className="textsize12 text-white-a d-flex"><MdOutlineFeaturedPlayList className='mt-1'/> <span className='px-2'>Artikel</span></Link><span className="mx-3 text-white">/</span>
             <Link to="/Artikel" className="textsize12 text-white-a d-flex"><MdOutlineFeed className='mt-1'/> <span className='px-2'>{deslugify(id)}</span></Link>

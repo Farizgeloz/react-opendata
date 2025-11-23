@@ -64,8 +64,8 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
       
       <Container fluid className=' pb-5'>
        
-        <Row className='px-5 py-5'>
-          <Col md={7} xs={12} className='mt-0'>
+        <Row className='px-2 py-5 justify-content-center'>
+          <Col md={6} xs={12} className='mt-0'>
             <h2 
               className='text-left textsize30 font_weight800 text-body'
             >Penasaran dengan data 

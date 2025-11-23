@@ -64,7 +64,7 @@ function DatasetKategori() {
         
       <Menu bgku={settings.bg_header}/>
       
-      <main>
+      <main className='w-100'>
        
         <AppSearchdata
           bgku={settings.bg_header} 

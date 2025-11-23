@@ -88,9 +88,9 @@ function DatasetPengelolah() {
         
        <Menu bgku={settings.bg_header}/>
       
-      <main>
+      <main className='w-100'>
         
-        <div className='mx-2 padding-t9'>
+        <div className='mx-2 padding-t9 w-100'>
           <Row className='mb-2'>
             <Col md={12} className="d-flex justify-content-between align-items-center" style={{backgroundColor:"#60728b"}}>
                             
@@ -107,12 +107,12 @@ function DatasetPengelolah() {
             </Col>
             <Col md={10} sm={12}>
               <Row className=''>
-                <Col md={6} sm={12} className='float-center'>
+                <Col md={6} sm={12} sx={12} className='float-center'>
                  <p className='textsize20 text-left font_weight700 mb-1 text-body'>Cari Dataset</p>
                 </Col>
-                <Col md={6} sm={12} className=''>
+                <Col md={6} sm={12} sx={12} className=''>
                   <div className='d-flex justify-content-end gap-2'>
-                    <a href='/Dataset/Permohonan' className='px-5 py-2 btn btn-orangeblue text-white-a font_weight600 bg-border2 mt-2'>Ajukan Permohonan Dataset</a>
+                    <a href='/Dataset/Permohonan' className='px-3 py-2 btn btn-orangeblue text-white-a font_weight600 bg-border2 mt-2'>Ajukan Permohonan Dataset</a>
                     <PermohonanLacakModal 
                       bgku={settings.bg_header} 
                       bgbodyku={settings.bg_body} 
