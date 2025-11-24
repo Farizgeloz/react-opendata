@@ -14,7 +14,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import { MdAddchart, MdAutoAwesomeMotion, MdOutlineErrorOutline } from "react-icons/md";
 import { FaDownload } from "react-icons/fa6";
-import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
+import { api_url_satudata,api_url_satuadmin, api_url_satuadmin_create } from "../../api/axiosConfig";
 
 
 
@@ -122,7 +122,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
     
     try {
 
-      const response_infografik = await api_url_satuadmin.get('api/opendata/infografik');
+      const response_infografik = await api_url_satuadmin_create.get('api/opendata/infografik');
 
       const res = response_infografik.data;
       setPenyusun(res.data_penyusun);
