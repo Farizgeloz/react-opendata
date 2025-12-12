@@ -41,11 +41,11 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
     
     
     useEffect(() => {
-        getMenu();
+        //getMenu();
         getDatasetUnsur();
     }, []);
 
-    const getMenu = async () => {
+    /* const getMenu = async () => {
         try {
 
         const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
@@ -62,7 +62,7 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
         } catch (error) {
         console.error("Failed to fetch data:", error);
         }
-    };
+    }; */
 
     const getDatasetUnsur = async (dimensi = "",satker = "") => {
        
@@ -271,7 +271,7 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
         nomor_tiket, // 🔹 tiket unik
         nama, telpon, email, pekerjaan, instansi,
         bidangusaha, bidangilmu, jabatan, judul,
-        penghasil, opd: opdId, deskripsi, tujuan, dihubungi,
+        penghasil, opd: Number(opdId), deskripsi, tujuan, dihubungi,
         };
 
         await api_url_satuadmin.post("api/opendata/dataset_permohonan", payload);

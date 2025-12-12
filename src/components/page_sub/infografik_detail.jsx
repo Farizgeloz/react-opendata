@@ -7,7 +7,7 @@ import { Row, Col } from "react-bootstrap";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FaMinus,FaFacebookF, FaTwitter, FaWhatsapp,FaLink } from 'react-icons/fa';
 
-
+import { motion } from "framer-motion";
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
@@ -22,11 +22,19 @@ import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
 
 
-const Spinner = () => 
-    <div className="height-map">
-      <div className="loaderr2"></div>
-      <p className="margin-auto text-center text-silver">Dalam Proses...</p>
-    </div>;
+const Spinner = () => (
+  <div className='text-center justify-content-center' style={{height:"110px"}}>
+    <div className="dot-overlay mt-5" >
+        <div className="dot-pulse">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        
+    </div>
+    <p className='text-center text-shadow-border-multicolor-smooth italicku'>Proses ...</p>
+  </div>
+);
 
 
 
@@ -332,74 +340,83 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
         </Col>
         
       </Row>
-      
-
       <Col md={9} className="px-5">
-       
-        <p 
-          className="textsize16 font_weight600 uppercaseku mt-5 text-body" style={{lineHeight:"1.2"}}
-        >{dataku.title}</p>
-
-        <Row>
-          <Col md={6}>
-            {dataku && <ImageSlider dataku={dataku} />}
-            
-           
-          </Col>
-          <Col md={6}>
-            <div className="d-flex mb-2">
-              <p className="mb-0 textsize10 text-silver font_weight600 italicku">Admin {dataku.nick_admin}  <FaMinus className="mx-2" />  </p>
-              <p className="mb-0 textsize10 text-silver font_weight600 italicku">{convertDate(dataku.updated_at?.replace(/T/, ' ')?.replace(/\.\w*/, ''))}</p>
-              <p className="text-body textsize10 text-center font_weight600 max-width-180 rad10 px-2 mx-1">
-                <MdRemoveRedEye size={20} style={{ marginTop: "-1px" }} /> {datacount}
-              </p>
-              <p className="text-body textsize10 text-center font_weight600 max-width-180 rad10 px-2 mx-1">
-                <MdDownloadForOffline size={20} style={{ marginTop: "-1px" }} /> {datacountdownload}
-              </p>
-            </div>
-            <div className="d-flex mb-2 gap-3">
-              <p 
-                className={` textsize10 mb-2  d-flex bg-border2 px-5 py-2 rad5`}
-                style={{height:"50px"}}
-              ><MdAutoAwesomeMotion size={20} className="mt-1" style={{marginRight:"5px"}} />{dataku.nama_topik}</p>
-              <p 
-                className={` textsize10 mb-3  d-flex bg-border2 px-5 py-2 rad5`}
-                style={{height:"50px"}}
-              ><MdAddchart size={20} className="mt-1" style={{marginRight:"5px"}} />{dataku.penyusun}</p>
-            </div>
-            <div className="d-flex justify-content-center align-items-center text-center">
+        {loading ? (
+          <Spinner />
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              viewport={{ once: true }}
+            >
               
-            </div>
-            
-            <p 
-              className="textsize12 font_weight600 uppercaseku mt-3 text-body" style={{lineHeight:"1.2"}}
-            >{dataku.sub_title}</p>
+              
+                <p 
+                  className="textsize16 font_weight600 uppercaseku mt-5 text-body" style={{lineHeight:"1.2"}}
+                >{dataku.title}</p>
 
-            {dataku && typeof dataku.content === 'string' ? (
-              <div className="textsize10 mt-3">
-                 <div className='textsize12 text-body' dangerouslySetInnerHTML={{ __html: dataku.content }} />
+                <Row>
+                  <Col md={6}>
+                    {dataku && <ImageSlider dataku={dataku} />}
+                    
+                  
+                  </Col>
+                  <Col md={6}>
+                    <div className="d-flex mb-2">
+                      <p className="mb-0 textsize10 text-silver font_weight600 italicku">Admin {dataku.nick_admin}  <FaMinus className="mx-2" />  </p>
+                      <p className="mb-0 textsize10 text-silver font_weight600 italicku">{convertDate(dataku.updated_at?.replace(/T/, ' ')?.replace(/\.\w*/, ''))}</p>
+                      <p className="text-body textsize10 text-center font_weight600 max-width-180 rad10 px-2 mx-1">
+                        <MdRemoveRedEye size={20} style={{ marginTop: "-1px" }} /> {datacount}
+                      </p>
+                      <p className="text-body textsize10 text-center font_weight600 max-width-180 rad10 px-2 mx-1">
+                        <MdDownloadForOffline size={20} style={{ marginTop: "-1px" }} /> {datacountdownload}
+                      </p>
+                    </div>
+                    <div className="d-flex mb-2 gap-3">
+                      <p 
+                        className={` textsize10 mb-2  d-flex bg-border2 px-5 py-2 rad5`}
+                        style={{height:"50px"}}
+                      ><MdAutoAwesomeMotion size={20} className="mt-1" style={{marginRight:"5px"}} />{dataku.nama_topik}</p>
+                      <p 
+                        className={` textsize10 mb-3  d-flex bg-border2 px-5 py-2 rad5`}
+                        style={{height:"50px"}}
+                      ><MdAddchart size={20} className="mt-1" style={{marginRight:"5px"}} />{dataku.penyusun}</p>
+                    </div>
+                    <div className="d-flex justify-content-center align-items-center text-center">
+                      
+                    </div>
+                    
+                    <p 
+                      className="textsize12 font_weight600 uppercaseku mt-3 text-body" style={{lineHeight:"1.2"}}
+                    >{dataku.sub_title}</p>
+
+                    {dataku && typeof dataku.content === 'string' ? (
+                      <div className="textsize10 mt-3">
+                        <div className='textsize12 text-body' dangerouslySetInnerHTML={{ __html: dataku.content }} />
+                        
+                      </div>
+                    ) : ("")}
+                    {typeof dataku?.sumber === "string" && dataku.sumber ? (
+                      <p className="mt-5 mb-0 textsize12 font_weight600" style={{color:'#EF6C00'}}>Sumber: <span className="font_weight400">{dataku.sumber}</span></p>
+                    ) : ("")}
+                    <div className="d-flex mt-5 mx-2 py-2 align-items-center justify-content-center rad10 bg-border2">
+                      <div className="px-3 d-flex rad10" 
+                          style={{paddingBottom:"5px",marginTop:"-10px",width:"fit-content"}}>
+                          {dataku.title &&
+                            <ShareButtons url={`/Infografik/Detail/${slugify(dataku.title)}`} title={dataku.title} />
+                          }
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
                 
-              </div>
-            ) : ("")}
-            {typeof dataku?.sumber === "string" && dataku.sumber ? (
-              <p className="mt-5 mb-0 textsize12 font_weight600" style={{color:'#EF6C00'}}>Sumber: <span className="font_weight400">{dataku.sumber}</span></p>
-            ) : ("")}
-            <div className="d-flex mt-5 mx-2 py-2 align-items-center justify-content-center rad10 bg-border2">
-              <div className="px-3 d-flex rad10" 
-                  style={{paddingBottom:"5px",marginTop:"-10px",width:"fit-content"}}>
-                  {dataku.title &&
-                    <ShareButtons url={`/Infografik/Detail/${slugify(dataku.title)}`} title={dataku.title} />
-                  }
-              </div>
-            </div>
-          </Col>
-        </Row>
-        
-        
-      </Col>
-      
+                
+              
+            </motion.div>
+          )}              
 
-      
+      </Col>
 
       
     </Row>

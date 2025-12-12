@@ -88,44 +88,6 @@ function DatasetPengelolah() {
   
   return (
     <>
-    {loading ? (
-      <div className="spinner-overlay justify-content-center">
-        
-        <div 
-          className={`spinner-content text-center p-4 flip-card-infinite`} 
-        >
-          
-            <div className="image-placeholder shimmer rad15 img-logo-50px mb-2" />
-          
-            <motion.img
-              src="/logo.png"
-              alt="Logo"
-              className={`rad15 w-50 ${imageLoaded ? 'visible' : 'hidden'}`}
-              onLoad={() => setImageLoaded(true)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0.3, 1, 0.3] }} // pudar ke terang ke pudar
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          <div className="dot-pulse mt-3">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-    ) : (
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-      </motion.div>
-    )
-  }
     <div className={`App bg-body`}>
       <Menu bgku={settings.bg_header}/>
       

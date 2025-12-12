@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { FcFeedback } from "react-icons/fc";
@@ -18,6 +18,11 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
     const [nama, setNama] = useState("");
     const [judul, setJudul] = useState("");
     const [opd, setOpd] = useState("");
+    const [deskripsi, setDeskripsi] = useState("");
+    const [dihubungi, setDihubungi] = useState("");
+    const [tgldibuat, setTgldibuat] = useState("");
+    const [pekerjaan, setPekerjaan] = useState("");
+    const [instansi, setInstansi] = useState("");
     const [pesan, setPesan] = useState("");
     const [status, setStatus] = useState("");
     const [pesanform, setPesanForm] = useState("");
@@ -33,7 +38,19 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
 
     const navigate = useNavigate();
 
-    
+    const chatEndRef = useRef(null);
+
+    useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [permohonantiketku]);
+
+    const InfoRow = ({ label, value }) => (
+        <div className="d-flex justify-content-between border-bottom py-2">
+            <span className="text-muted">{label}</span>
+            <span className="font_weight600 text-end">{value || "-"}</span>
+        </div>
+    );
+
     
     useEffect(() => {
         getDataById();
@@ -46,11 +63,11 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
         //console.log("fileku : "+response.data.file[0].link);
         //const data = response.data;
         
+        
         setNama(response.data.permohonan.nama_lengkap);
         setJudul(response.data.permohonan.judul);
-        const res3 = await api_url_satudata.get("dataset?limit=1000");
+        /* const res3 = await api_url_satudata.get("dataset?limit=1000");
         const allDataset = res3.data || [];
-        console.log("dataset",allDataset);
         
             
 
@@ -63,10 +80,14 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
 
         const uniqueSatker = Array.from(
             new Map(satkerList.map(opd => [opd.id_opd, opd])).values()
-        );
+        ); */
         setOpd(response.data.permohonan.nama_opd);
         setStatus(response.data.permohonan.status);
         setPermohonanTiket(response.data.permohonan_tiket);
+        setDeskripsi(response.data.permohonan.deskripsi);
+        setDihubungi(response.data.permohonan.dihubungi);
+        setTgldibuat(convertDate(response.data.permohonan.created_at.toString().replace(/T/, ' ').replace(/\.\w*/, '')));
+        setInstansi(response.data.permohonan.instansi);
         
         
         } catch (error) {
@@ -189,171 +210,199 @@ const handleSubmit = async (e) => {
     <>
 
         <Row className="justify-content-center">
-            <Col md={6} sm={12} className='align-items-center justify-content-center'>
-                <div className="m-1 bg-body bg-border2 mt-3 rad10  px-2">
-                    <p 
-                    className='text-white textsize14 text-left box-header-title d-flex'
-                    style={{background:`linear-gradient(to right, ${bgcontentku}, ${bgtitleku})`}}
-                    >
-                    <MdOutlineInfo className="mt-1" style={{marginRight:"10px"}} size={25} /> Info Tiket
-                    </p>
-                    <table className="table table-sm table-bordered mt-3">
-                        <tbody className="">
-                            <tr>
-                                <th>Nomor Tiket</th>
-                            </tr>
-                            <tr>
-                            <td>{id}</td>
-                            </tr>
-                            <tr>
-                                <th>Nama Lengkap</th>
-                            </tr>
-                            <tr>
-                            <td>{nama}</td>
-                            </tr>
-                            <tr>
-                                <th>Judul Permohonan</th>
-                            </tr>
-                            <tr>
-                            <td>{judul}</td>
-                            </tr>
-                            <tr>
-                                <th>OPD</th>
-                            </tr>
-                            <tr>
-                            <td>{opd}</td>
-                            </tr>
-                            <tr>
-                                <th>Status</th>
-                            </tr>
-                            <tr>
-                            <td>{status}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
+            {/* ================= INFO TIKET ================= */}
+            <Col md={6} sm={12}>
+                <div className="m-1 bg-body bg-border2 mt-3 rad12 p-3 shadow-sm">
 
-                
-            </Col>
-           <Col md={6} sm={12} className='align-items-center justify-content-center'>
-                <div className="m-1 bg-body bg-border2 mt-3 rad10  px-2">
-                     <p 
-                    className='text-white textsize14 text-left box-header-title d-flex'
-                    style={{background:`linear-gradient(to right, ${bgcontentku}, ${bgtitleku})`}}
+                <div
+                    className="text-white textsize14 d-flex align-items-center px-3 py-2 rad10 mb-3"
+                    style={{ background: `linear-gradient(to right, ${bgcontentku}, ${bgtitleku})` }}
+                >
+                    <MdOutlineInfo size={22} className="me-2" />
+                    Detail Tiket
+                </div>
+
+                <div className="d-flex flex-column gap-2 textsize13">
+                    <div className="d-flex justify-content-between border-bottom pb-2">
+                    <span className="fw-semibold text-start" style={{color:bgtitleku}}>{judul}</span>
+                    </div>
+                    <div className="d-flex justify-content-between border-bottom pb-2">
+                    <span className="text-muted w-30">Nomor Tiket</span>
+                    <span className="fw-semibold">{id}</span>
+                    </div>
+                     <div className="d-flex justify-content-between border-bottom pb-2">
+                    <span className="text-muted w-30">Tanggal Dibuat</span>
+                    <span className="fw-semibold">{tgldibuat}</span>
+                    </div>
+
+                    <div className="d-flex justify-content-between border-bottom pb-2">
+                    <span className="text-muted w-30">Nama Pemohon</span>
+                    <span className="fw-semibold">{nama}</span>
+                    </div>
+
+                    <div className="d-flex justify-content-between border-bottom pb-2">
+                    <span className="text-muted w-30">Instansi</span>
+                    <span className="fw-semibold">{instansi}</span>
+                    </div>
+
+
+                    <div className="d-flex justify-content-between border-bottom pb-2">
+                    <span className="text-muted w-30">OPD Terkait</span>
+                    <span className="fw-semibold">{opd}</span>
+                    </div>
+
+
+                    <div className="d-flex justify-content-between border-bottom pb-2">
+                    <span className="text-muted w-30">Dapat Dihubungi</span>
+                    <span className="fw-semibold">{dihubungi}</span>
+                    </div>
+
+                   
+
+                   
+                    
+                    <div className="d-flex justify-content-between border-bottom pb-2">
+                    <span className="text-muted w-30">Deskripsi</span>
+                    <span className="fw-semibold">{deskripsi}</span>
+                    </div>
+
+
+                    <div className="d-flex justify-content-between align-items-center pt-2">
+                    <span className="text-muted w-50">Status</span>
+                    <span
+                        className={`badge px-3 py-1 ${
+                        status === "Selesai"
+                            ? "bg-success"
+                            : status === "Proses"
+                            ? "bg-warning text-dark"
+                            : "bg-secondary"
+                        }`}
                     >
-                    <MdOutlineInfo className="mt-1" style={{marginRight:"10px"}} size={25} /> Percakapan
-                    </p>
+                        {status}
+                    </span>
+                    </div>
+                </div>
+                </div>
+            </Col>
+
+            {/* ================= PERCAPAKAN ================= */}
+            <Col md={6} sm={12}>
+                <div className="m-1 bg-body bg-border2 mt-3 rad12 p-3 shadow-sm">
+
+                    <div
+                        className="text-white textsize14 d-flex align-items-center px-3 py-2 rad10 mb-3"
+                        style={{ background: `linear-gradient(to right, ${bgcontentku}, ${bgtitleku})` }}
+                    >
+                        <MdOutlineInfo size={22} className="me-2" />
+                        Percakapan
+                    </div>
+
                     {status !== "Selesai" && (
-                        <Form onSubmit={handleSubmit} className="px-2">
-                            <div>
-                                
-                                <Form.Group controlId="formFeedbackText" className="mt-3">
-                                    <Form.Label className=" textsize11 text-body">Balas Pesan</Form.Label>
-                                    <Form.Control
-                                        as="textarea"
-                                        className="bg-border2 textsize11"
-                                        rows={4}
-                                        value={pesanform}
-                                        onChange={(e) => setPesanForm(e.target.value)}
-                                        required
-                                    />
-                                </Form.Group>
-                                
-                                
-                                
-                            </div>
-                            
-                            <div className="d-flex justify-content-end mt-5 mb-5 gap-3">
-                                <Button variant="secondary">
-                                    Batal
-                                </Button>
-                                <Button variant="primary" type="submit">
-                                    Kirim
-                                </Button>
-                            </div>
-                            
+                        <Form onSubmit={handleSubmit} className="mb-4">
+                        <Form.Group>
+                            <Form.Label className="textsize11 text-muted">
+                            Balas Pesan
+                            </Form.Label>
+                            <Form.Control
+                            as="textarea"
+                            rows={3}
+                            className="textsize12"
+                            value={pesanform}
+                            onChange={(e) => setPesanForm(e.target.value)}
+                            placeholder="Tulis balasan Anda..."
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSubmit(e);
+                                }
+                            }}
+                            required
+                            />
+                        </Form.Group>
+
+                        <div className="d-flex justify-content-end mt-3 gap-2">
+                            <Button variant="outline-secondary" size="sm">
+                            Batal
+                            </Button>
+                            <Button variant="primary" size="sm" type="submit">
+                            Kirim
+                            </Button>
+                        </div>
                         </Form>
                     )}
-                     <div style={{ maxHeight: "71vh", }} className="py-2 px-3 overflow-scroll-auto">
-                        {permohonantiketku.map((message) => (
-                        
-                            <div key={message.id_permohonan} className="p-1">
-                                {/* Info pengirim & tanggal */}
+
+                    <div style={{ maxHeight: "65vh" }} className="overflow-auto pe-2">
+
+                        {permohonantiketku.map((message) => {
+                            const isPemohon = message.from === "Pemohon";
+
+                            return (
                                 <div
-                                className={`d-flex ${
-                                    message.from === "Pemohon" ? "justify-content-end" : "justify-content-start"
+                                key={message.id_permohonan}
+                                className={`d-flex mb-3 ${
+                                    isPemohon ? "justify-content-end" : "justify-content-start"
                                 }`}
                                 >
-                                {message.from === "Pemohon" ? (
-                                    <>
-                                    <p className="mb-0 italicku text-silver text-end px-5">
-                                        {convertDate(message.updated_at)}
-                                    </p>
-                                    <p className="mb-0 italicku text-body text-end">Anda</p>
-                                    </>
-                                ) : (
-                                    <>
-                                    <p className="mb-0 italicku text-body text-end">Admin</p>
-                                    <p className="mb-0 italicku text-silver text-end px-5">
-                                        {convertDate(message.updated_at)}
-                                    </p>
-                                    </>
+                                {/* Avatar Admin */}
+                                {!isPemohon && (
+                                    <div className="me-2">
+                                    <div className="avatar-circle bg-primary text-white">A</div>
+                                    </div>
                                 )}
-                                </div>
 
-                                {/* Pesan */}
+                                {/* Bubble */}
                                 <div
-                                className={`rad10 py-2 pb-1 px-3 font_weight600 ${
-                                    message.from === "Pemohon"
-                                    ? "text-right"
-                                    : "text-left bg-border2"
-                                } ${message.status === "read" ? "text-primary" : "text-body"}`}
-                                style={{
-                                    backgroundColor: message.from === "Pemohon" ? "#94da828c" : "",
+                                    className="p-3 rad12"
+                                    style={{
+                                    maxWidth: "75%",
+                                    backgroundColor: isPemohon ? "#d1f0c4" : "#f1f1f1",
                                     whiteSpace: "pre-line",
                                     wordBreak: "break-word",
-                                    overflowWrap: "anywhere",
-                                    borderRadius: "10px",
-                                    pointerEvents: "auto",
-                                }}
+                                    }}
                                 >
-                                {message.pesan.split(/((?:https?:\/\/|www\.)[^\s]+)/g).map((part, index) => {
-                                    const isLink = /^(https?:\/\/|www\.)/.test(part);
-                                    if (!isLink) return part;
+                                    <div className="d-flex justify-content-between textsize10 font_weight600 mb-1">
+                                    <span className=" font_weight800">{isPemohon ? "Anda:" : "Admin:"}</span>
+                                    <span className="px-2 italicku text-silver">{convertDate(message.updated_at)}</span>
+                                    </div>
 
-                                    const href = part.startsWith("http") ? part : `http://${part}`;
-
-                                    return (
-                                    <a
-                                        key={index}
-                                        href={href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{
-                                        textDecoration: "underline",
-                                        color: "#007bff",
-                                        cursor: "pointer",
-                                        pointerEvents: "auto",
-                                        wordBreak: "break-all",
-                                        position: "relative",
-                                        zIndex: 10,
-                                        }}
-                                    >
-                                        {part}
-                                    </a>
-                                    );
-                                })}
+                                    <div className="textsize12">
+                                    {message.pesan
+                                        .split(/((?:https?:\/\/|www\.)[^\s]+)/g)
+                                        .map((part, idx) => {
+                                        if (!/^(https?:\/\/|www\.)/.test(part)) return part;
+                                        const href = part.startsWith("http") ? part : `http://${part}`;
+                                        return (
+                                            <a
+                                            key={idx}
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-primary text-decoration-underline"
+                                            >
+                                            {part}
+                                            </a>
+                                        );
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
 
+                                {/* Avatar Anda */}
+                                {isPemohon && (
+                                    <div className="ms-2">
+                                        <div className="avatar-circle bg-success text-white">U</div>
+                                    </div>
+                                )}
+                                </div>
+                            );
+                        })}
 
-                        ))}
                         
+
                     </div>
                 </div>
             </Col>
-        </Row>
+            </Row>
+
 
        
         

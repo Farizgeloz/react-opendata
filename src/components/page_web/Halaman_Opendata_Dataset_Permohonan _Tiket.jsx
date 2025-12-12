@@ -160,7 +160,7 @@ function DatasetPengelolah() {
               <p className='text-center text-body textsize16 font_weight600'>Tiket Permohonan Dataset</p>
              
               
-              <Col md={8} sm={12}>
+              <Col md={10} sm={12}>
                 <AppSearchdata  
                   bgku={settings.bg_header} 
                   bgbodyku={settings.bg_body} 

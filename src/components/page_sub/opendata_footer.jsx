@@ -122,6 +122,7 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
                   <Link key={index} className="btn btn-orangeblue float-center mb-1" to={datas.linked} target="_blank" rel="noopener noreferrer">
                    
                     <Image className='img-60' src={datas.presignedUrl_1} />
+                    
                   
                   </Link>
                 ) : ("")      
