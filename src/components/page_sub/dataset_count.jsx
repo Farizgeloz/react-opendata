@@ -182,6 +182,7 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                         </div>
                     </Col>
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
+                       <a href='/Dataset' target="_blank">       
                         <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
                             <FaBuildingColumns className='align-middle mt-2 mb-2' 
                               style={{
@@ -198,10 +199,11 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                             </div>
                             
                         </div>
+                      </a> 
                     </Col>
                     
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
-                      <a href='/Opendata/Dataset' target="_blank">
+                      <a href='/Dataset' target="_blank">
                         <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
                             <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
                               style={{
@@ -221,7 +223,7 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                       </a> 
                     </Col>
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
-                      <a href='/Opendata/Dataset' target="_blank">
+                      <a href='/Dataset' target="_blank">
                         <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
                             <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
                               style={{
@@ -241,7 +243,7 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                       </a> 
                     </Col>
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
-                      <a href='/Opendata/Dataset' target="_blank">
+                      <a href='/Dataset' target="_blank">
                         <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
                             <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
                               style={{
