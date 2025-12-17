@@ -198,7 +198,7 @@ export default function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgconte
               <p className="textsize10 text-body font_weight600 mb-0">Diperbaharui: {}</p>
               <p className="textsize10 text-body">{convertDate(params.row.updated_at)}</p>
               <Link to={ `/Dataset/Detail/${slugify(params.row.nama_dataset)}` } className="btn btn-orangeblue text-white-a mx-1">Lihat Dataset</Link>
-              <Link to={ `https://sirusa.web.bps.go.id/metadata/variabel/index` } target="_blank" className="btn btn-blueorange text-white-a mx-1">Detail</Link>
+              {/* <Link to={ `https://sirusa.web.bps.go.id/metadata/variabel/index` } target="_blank" className="btn btn-blueorange text-white-a mx-1">Detail</Link> */}
             </div>
            
           );
