@@ -125,12 +125,20 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   const [loading, setLoading] = useState(true);
   const { topik } = useParams();  // ⬅️ otomatis berubah sesuai link
   const sektorDecoded = decodeURIComponent(topik);
+
+  const [showFilter, setShowFilter] = useState(true);
   
   const [sektor_idku, setKategori] = useState([]);
   const [satkerku, setDatasetSatker] = useState([]);
   const [periodeku, setDatasetPeriode] = useState([]);
+  const [kategoriku, setDatasetKategori] = useState([]);
+  const [unitwilayahku, setDatasetUnitWilayah] = useState([]);
+  const [satuanku, setDatasetSatuan] = useState([]);
   const [searchtermsatker, setSearchTermSatker] = useState("");
   const [searchtermperiode_dataset, setSearchTermPeriode] = useState("");
+  const [searchtermkategori_dataset, setSearchTermKategori] = useState("");
+  const [searchtermunitwilayah_dataset, setSearchTermUnitWilayah] = useState("");
+  const [searchtermsatuan_dataset, setSearchTermSatuan] = useState("");
   //const [searchtermtag, setSearchTermTag] = useState("");
   //const [sifatdataku, setDatasetSifatdata] = useState([]);
   const [periode_datasetku, setDatasetPeriode_dataset] = useState([]);
@@ -140,6 +148,10 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   const [keywordsatker, setKeywordSatker] = useState("");
   const [keywordsatkerName, setKeywordSatkerName] = useState("");
   const [keywordperiode_dataset, setKeywordPeriode] = useState("");
+  const [keywordkategori_dataset, setKeywordKategori] = useState("");
+  const [keywordunitwilayah_dataset, setKeywordUnitWilayah] = useState("");
+  const [keywordsatuan_dataset, setKeywordSatuan] = useState("");
+  const [keywordsatuanName, setKeywordSatuanName] = useState("");
   //const [keywordtag, setKeywordTag] = useState("");
 
   const [image1, setImage1] = useState("");
@@ -150,8 +162,14 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   const cariParam = new URLSearchParams(location.search).get("search") || "";
 
   const [sortBy, setSortBy] = useState("terbaru"); // default urutan
+
+  const isMobile = window.innerWidth < 768;
   
-  
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setShowFilter(false);
+    }
+  }, []);
 
   const getDatasetUnsur = async (dimensi = "",satker = "") => {
      
@@ -178,6 +196,29 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
     //console.log("Full response periode:", uniqueSatker);
     // simpan ke state
     setDatasetPeriode(uniquePeriode);
+
+    const uniqueKategori = [
+      ...new Set(allDataset.map(item => item.kategori_dataset).filter(Boolean))
+    ];
+    setDatasetKategori(uniqueKategori);
+
+    const uniqueUnitWilayah = [
+      ...new Set(allDataset.map(item => item.unit_wilayah).filter(Boolean))
+    ];
+    setDatasetUnitWilayah(uniqueUnitWilayah);
+
+    const satuanList = allDataset
+      .map(item => ({
+        id_satuan: item.satuan?.id_satuan,
+        nama_satuan: item.satuan?.nama_satuan
+      }))
+      .filter(satuan => satuan.id_satuan && satuan.nama_satuan);
+
+    const uniqueSatuan = Array.from(
+      new Map(satuanList.map(satuan => [satuan.id_satuan, satuan])).values()
+    );
+
+    setDatasetSatuan(uniqueSatuan);
     //setDatasetSifatdata(res.data?.resultSifatData || []);
     //setDatasetTag(res.data?.resultTag || []);
   };
@@ -205,12 +246,18 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
           !keywordsatker || item.opd.id_opd === keywordsatker;
         const matchPeriode =
           !keywordperiode_dataset || item.periode_dataset === keywordperiode_dataset;
+        const matchKategori =
+          !keywordkategori_dataset || item.kategori_dataset === keywordkategori_dataset;
+        const matchUnitwilayah =
+          !keywordunitwilayah_dataset || item.unit_wilayah === keywordunitwilayah_dataset;
+        const matchSatuan =
+          !keywordsatuan_dataset || item.satuan.id_satuan === keywordsatuan_dataset;
         const matchKeyword =
           !searchKeyword ||
           item.nama_dataset.toLowerCase().includes(searchKeyword.toLowerCase()) ||
           item.opd.nama_opd.toLowerCase().includes(searchKeyword.toLowerCase()) ||
           item.sektor.nama_sektor.toLowerCase().includes(searchKeyword.toLowerCase());
-        return matchTopik && matchSatker && matchPeriode && matchKeyword;
+        return matchTopik && matchSatker && matchPeriode&& matchKategori && matchUnitwilayah && matchSatuan && matchKeyword;
       });
 
       // Masukkan hasil filter ke state
@@ -255,13 +302,13 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   useEffect(() => {
     
     setTimeout(() => {
-      getDatasetSearch({ satker: keywordsatker, periode_dataset: keywordperiode_dataset});
+      getDatasetSearch({ satker: keywordsatker, periode_dataset: keywordperiode_dataset, kategori_dataset: keywordkategori_dataset, unitwilayah_dataset: keywordunitwilayah_dataset, satuan_dataset: keywordsatuan_dataset});
       
     }, 1000); 
-  }, [sektorDecoded,keywordsatker, keywordperiode_dataset]);
+  }, [sektorDecoded,keywordsatker, keywordperiode_dataset, keywordkategori_dataset, keywordunitwilayah_dataset, keywordsatuan_dataset]);
 
   const handleSearch = () => {
-    getDatasetSearch({ satker: keywordsatker, periode_dataset: keywordperiode_dataset, keyword: searchKeyword });
+    getDatasetSearch({ satker: keywordsatker, periode_dataset: keywordperiode_dataset, kategori_dataset: keywordkategori_dataset, unitwilayah_dataset: keywordunitwilayah_dataset, satuan_dataset: keywordsatuan_dataset, keyword: searchKeyword });
   };
 
   const columns = useMemo(
@@ -339,23 +386,34 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   : [];
 
   const memoRows = useMemo(() => rowsku, [rowsku]);
-
-  const [activeItemSatker, setActiveItemSatker] = useState(null);
+  
+    const [activeItemSatker, setActiveItemSatker] = useState(null);
     //const [activeItemSifatdata, setActiveItemSifatdata] = useState(null);
-  const [activeItemPeriode, setActiveItemPeriode] = useState(null);
+    const [activeItemPeriode, setActiveItemPeriode] = useState(null);
+    const [activeItemKategori, setActiveItemKategori] = useState(null);
+    const [activeItemUnitWilayah, setActiveItemUnitWilayah] = useState(null);
+    const [activeItemSatuan, setActiveItemSatuan] = useState(null);
   //const [activeItemTag, setActiveItemTag] = useState(null);
 
   const handleClicksatker = (index) => {
     setActiveItemSatker(index);
-     
+    
   };
-  /* const handleClicksifatdata = (index) => {
-    setActiveItemSifatdata(index);
-     
-  }; */
   const handleClickperiode_dataset = (index) => {
     setActiveItemPeriode(index);
-     
+    
+  };
+  const handleClickkategori_dataset = (index) => {
+    setActiveItemKategori(index);
+    
+  };
+  const handleClickunitwilayah_dataset = (index) => {
+    setActiveItemUnitWilayah(index);
+    
+  };
+  const handleClicksatuan_dataset = (index) => {
+    setActiveItemSatuan(index);
+    
   };
   /* const handleClickTag = (index) => {
     setActiveItemTag(index);
@@ -370,6 +428,23 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
       periode.toLowerCase().includes(searchtermperiode_dataset.toLowerCase())
     )
   : periodeku;
+
+  const filteredKategori = searchtermkategori_dataset
+  ? kategoriku.filter((kategori) =>
+      kategori.toLowerCase().includes(searchtermkategori_dataset.toLowerCase())
+    )
+  : kategoriku;
+
+  const filteredunitwilayah = searchtermunitwilayah_dataset
+  ? unitwilayahku.filter((unit_wilayah) =>
+      unit_wilayah.toLowerCase().includes(searchtermunitwilayah_dataset.toLowerCase())
+    )
+  : unitwilayahku;
+
+
+  const filteredsatuan = satuanku.filter((satuan) =>
+    satuan.nama_satuan.toLowerCase().includes(searchtermsatuan_dataset.toLowerCase())
+  );
 
   const sortedData = [...memoRows].sort((a, b) => {
     if (sortBy === "terbaru") {
@@ -421,21 +496,11 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   
 
   return (
-    <Row className=' margin-t9 mx-1 w-100'>
+    <Row className=' mx-1 w-100 justify-content-center'>
       <Col md={12} sm={12}>
-       <div className=''>
-          <Row className='mb-2'>
-            <Col md={12} className="d-flex justify-content-between align-items-center" style={{backgroundColor:"#60728b"}}>
-                                        
-              {/* Breadcrumb */}
-              <div className="px-3 d-flex rad10 italicku" style={{ paddingTop:"5px", paddingBottom:"5px", width:"fit-content",flexWrap: "wrap"}}>
-                <Link to="/" className="textsize12 text-white-a d-flex"> <MdHomeFilled className='mt-1'/> <span className='px-2'> Beranda</span></Link><span className="mx-3 text-white">/</span>
-                <Link to="/Dataset" className="textsize12 text-white-a d-flex"><MdOutlineFeaturedPlayList className='mt-1'/> <span className='px-2'>Koleksi Dataset</span></Link><span className="mx-3 text-white">/</span>
-                <Link to={`/Dataset/Sektor/${topik}`} className="textsize12 text-white-a d-flex"><MdListAlt className='mt-1'/>Sektor <span className='px-2'> {topik}</span></Link>
-              </div>
-            </Col>
-          </Row>
-          <Row className='p-1  bg-body rad10 mx-2'>
+       <div className='mb-5'>
+          
+          <Row className='p-1  bg-body rad10 mx-2 shaddow4'>
             <Col md={2} sm={3} xs={3} className='float-center'>
               <Image className="img-100" src={image1} />
             </Col>
@@ -477,306 +542,505 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
           
         </div>
       </Col>
-      <Col md={4} sm={12}>
-        <section id="teams" className="block  bg-body py-0 rad10 mx-1 shaddow4 mb-3 mt-3">
-          <div 
-            className="text-center shaddow1 rad10"
-            style={{backgroundColor:bgku}}
-          
-          >
-            <p className="text-light textsize14 font_weight600">OPD / Produsen Data</p>
-          </div>
-          <Container fluid className="pb-3">
-            <input
-              type="text"
-              placeholder="Cari OPD..."
-              className="form-control bg-input textsize12 rad10"
-              value={searchtermsatker}
-              onChange={(e) => setSearchTermSatker(e.target.value)}
-            />
-            
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <Row className='portfoliolist'>
-                <Col sm={12} className="max-height1">
-                  <Row>
-                    {Array.isArray(filteredSatker) && filteredSatker.length > 0 ? (
-                      filteredSatker.map((satker, index) => (
-                        <Col
-                          sm={12}
-                          key={satker.id_opd || index}
-                          className={activeItemSatker === index ? `text-white border-bottom mt-1 rad10 cursor-true` : `border-bottom mt-1 cursor-true`}
-                          style={{ backgroundColor: activeItemSatker === index ? bgcontentku : `` }}
-                          onClick={() => {
-                            activeItemSatker === index ? setKeywordSatker("") : setKeywordSatker(satker.id_opd);
-                            activeItemSatker === index ? setKeywordSatkerName("") : setKeywordSatkerName(satker.nama_opd);
-                            //activeItemSatker === index ? setKeywordTag("") : setKeywordTag("");
-                            activeItemSatker === index ? setSearchKeyword("") : setSearchKeyword("");
-                            activeItemSatker === index ? handleClicksatker(null) : handleClicksatker(index);
-                            //activeItemSatker === index ? handleClickTag(null) : handleClickTag(null);
-                          }}
-                        >
-                          <Row>
-                            <Col key={satker.id} className="col-12 clearfix py-1">
-                              <div
-                                className={
-                                  activeItemSatker === index
-                                    ? "category textsize10 text-body cursor-true float-left  uppercaseku"
-                                    : "category textsize10 text-body cursor-true float-left uppercaseku"
-                                }
-                              >
-                                {satker.nama_opd.length >= 35
-                                  ? satker.nama_opd.substring(0, 35) + "..."
-                                  : satker.nama_opd}
-                              </div>
-                              <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
-                                <p className="textsize8 text-body">
-                                  {activeItemSatker === index ? <MdClose /> : <MdAdsClick  />}
-                                </p>
-                              </div>
+      {/* SIDEBAR */}
+     <motion.div
+        animate={{
+          width: showFilter
+            ? (isMobile ? "100%" : "33%")
+            : "0%",
+          opacity: showFilter ? 1 : 0
+        }}
+        transition={{ duration: 0.3 }}
+        className="overflow-hidden"
+      >
+        {showFilter && (
+          <Col md={12}>
+            <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-3">
+              <div 
+                className="text-center shaddow4 rad10"
+                style={{backgroundColor:bgcontentku}}
+              
+              >
+                <p className="text-light textsize14 font_weight600">OPD / Produsen Data</p>
+              </div>
+              <Container fluid className="pb-3">
+                <input
+                  type="text"
+                  placeholder="Cari OPD..."
+                  className="form-control bg-input textsize12 rad10"
+                  value={searchtermsatker}
+                  onChange={(e) => setSearchTermSatker(e.target.value)}
+                />
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <Row className='portfoliolist'>
+                    <Col sm={12} className="max-height1">
+                      <Row>
+                        {Array.isArray(filteredSatker) && filteredSatker.length > 0 ? (
+                          filteredSatker.map((satker, index) => (
+                            <Col
+                              sm={12}
+                              key={satker.id_opd || index}
+                              className={activeItemSatker === index ? `text-body border-bottom mt-1 rad10 cursor-true` : `border-bottom mt-1 cursor-true`}
+                              style={{ backgroundColor: activeItemSatker === index ? bgcontentku : `` }}
+                              onClick={() => {
+                                activeItemSatker === index ? setKeywordSatker("") : setKeywordSatker(satker.id_opd);
+                                activeItemSatker === index ? setKeywordSatkerName("") : setKeywordSatkerName(satker.nama_opd);
+                                //activeItemSatker === index ? setKeywordTag("") : setKeywordTag("");
+                                activeItemSatker === index ? setSearchKeyword("") : setSearchKeyword("");
+                                activeItemSatker === index ? handleClicksatker(null) : handleClicksatker(index);
+                                //activeItemSatker === index ? handleClickTag(null) : handleClickTag(null);
+                              }}
+                            >
+                              <Row>
+                                <Col key={satker.id} className="col-12 clearfix py-1">
+                                  <div
+                                    className={
+                                      activeItemSatker === index
+                                        ? "category textsize10 text-white cursor-true float-left  uppercaseku"
+                                        : "category textsize10 text-body bg-body cursor-true float-left uppercaseku"
+                                    }
+                                  >
+                                    {satker.nama_opd.length >= 35
+                                      ? satker.nama_opd.substring(0, 35) + "..."
+                                      : satker.nama_opd}
+                                  </div>
+                                  <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
+                                    <p className="textsize8 text-white">
+                                      {activeItemSatker === index ? <MdClose /> : <MdAdsClick  />}
+                                    </p>
+                                  </div>
+                                </Col>
+                              </Row>
                             </Col>
-                          </Row>
-                        </Col>
-                      ))
+                          ))
 
-                    ) : (
-                      <p className="text-body font_weight600 italicku text-center mt-3">Ups.. OPD Tidak Ditemukan</p>
-                    )}
+                        ) : (
+                          <p className="text-body font_weight600 italicku text-center mt-3">Ups.. OPD Tidak Ditemukan</p>
+                        )}
+                      </Row>
+                    </Col>
                   </Row>
-                </Col>
-              </Row>
-            </motion.div>
-          </Container>
-        </section>
-        {/* <section id="teams" className="block  bg-body py-0 rad10 mx-1 shaddow4 mb-3">
-          <div 
-            className="text-center shaddow1 rad10"
-            style={{backgroundColor:bgku}}
-          
-          >
-            <p className="text-light textsize12 font_weight600">Prioritas Data</p>
-          </div>
-          <Container fluid className="pb-3">
-            
-            {loading ? (
-              <Spinner />
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                viewport={{ once: true }}
+                </motion.div>
+              </Container>
+            </section>
+            <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-5">
+              <div 
+                className="text-center shaddow4 rad10"
+                style={{backgroundColor:bgcontentku}}
+              
               >
-                <Row className='portfoliolist'>
-                  <Col sm={12} className="max-height1">
-                    <Row>
-                      {
-                        filteredSifatdata.map((sifatdata, index) => (
-                          <Col
-                            sm={12}
-                            key={sifatdata.id || index}
-                            className={activeItemSifatdata === index ? `text-white border-bottom mt-1 rad10 cursor-true` : `border-bottom mt-1 cursor-true`}
-                            style={{ backgroundColor: activeItemSifatdata === index ? bgcontentku : `` }}
-                            onClick={() => {
-                              activeItemSifatdata === index ? setKeywordSifatdata("") : setKeywordSifatdata(sifatdata.sifat_data);
-                              //activeItemSifatdata === index ? setKeywordTag("") : setKeywordTag("");
-                              activeItemSifatdata === index ? setSearchKeyword("") : setSearchKeyword("");
-                              activeItemSifatdata === index ? handleClicksifatdata(null) : handleClicksifatdata(index);
-                              //activeItemSifatdata === index ? handleClickTag(null) : handleClickTag(null);
-                            }}
-                          >
-                            <Row>
-                              <Col key={sifatdata.id} className="col-12 clearfix py-1">
-                                <div
-                                  className={
-                                    activeItemSifatdata === index
-                                      ? "category textsize8 text-white cursor-true float-left  uppercaseku"
-                                      : "category textsize8 text-blue-a cursor-true float-left uppercaseku"
-                                  }
-                                >
-                                  {sifatdata.sifat_data.length >= 40
-                                    ? sifatdata.sifat_data.substring(0, 30) + "..."
-                                    : sifatdata.sifat_data}
-                                </div>
-                                <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
-                                  <p className="textsize8 text-white">{sifatdata.count_sifatdata}</p>
-                                </div>
+                <p className="text-light textsize14 font_weight600">Periode</p>
+              </div>
+              <Container fluid className="pb-3">
+                <input
+                  type="text"
+                  placeholder="Cari Periode..."
+                  className="form-control bg-input textsize12 rad10"
+                  value={searchtermperiode_dataset}
+                  onChange={(e) => setSearchTermPeriode(e.target.value)}
+                />
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <Row className='portfoliolist'>
+                    <Col sm={12} className="max-height1">
+                      <Row>
+                        {Array.isArray(filteredPeriode) && filteredPeriode.length > 0 ? (
+                          filteredPeriode.map((periode_datasetn, index) => {
+                            const periodeText = periode_datasetn || ""; // string langsung
+                            return (
+                              <Col
+                                sm={12}
+                                key={index}
+                                className={
+                                  activeItemPeriode === index
+                                    ? "text-body border-bottom mt-1 rad10 cursor-true"
+                                    : "border-bottom mt-1 cursor-true"
+                                }
+                                style={{ backgroundColor: activeItemPeriode === index ? bgcontentku : "" }}
+                                onClick={() => {
+                                  activeItemPeriode === index
+                                    ? setKeywordPeriode("")
+                                    : setKeywordPeriode(periodeText);
+                                  activeItemPeriode === index ? setSearchKeyword("") : setSearchKeyword("");
+                                  activeItemPeriode === index
+                                    ? handleClickperiode_dataset(null)
+                                    : handleClickperiode_dataset(index);
+                                }}
+                              >
+                                <Row>
+                                  <Col className="col-12 clearfix py-1">
+                                    <div
+                                      className={
+                                        activeItemPeriode === index
+                                          ? "category textsize10 text-white cursor-true float-left uppercaseku"
+                                          : "category textsize10 text-body cursor-true float-left uppercaseku"
+                                      }
+                                    >
+                                      {periodeText.length >= 35 ? periodeText.substring(0, 35) + "..." : periodeText}
+                                    </div>
+                                    <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
+                                      {/* karena array of string, ga ada count_periode_dataset */}
+                                      <p className="textsize8 text-white">
+                                        {activeItemPeriode === index ? <MdClose /> : <MdAdsClick />}
+                                      </p>
+                                    </div>
+                                  </Col>
+                                </Row>
                               </Col>
-                            </Row>
-                          </Col>
-                        ))
-
-                      }
-                    </Row>
-                  </Col>
-                </Row>
-              </motion.div>
-            )}
-          </Container>
-        </section> */}
-        <section id="teams" className="block  bg-body py-0 rad10 mx-1 shaddow4 mb-3">
-          <div 
-            className="text-center shaddow1 rad10"
-            style={{backgroundColor:bgku}}
-          
-          >
-            <p className="text-light textsize14 font_weight600">Periode</p>
-          </div>
-          <Container fluid className="pb-3">
-            <input
-              type="text"
-              placeholder="Cari Periode..."
-              className="form-control bg-input textsize12 rad10"
-              value={searchtermperiode_dataset}
-              onChange={(e) => setSearchTermPeriode(e.target.value)}
-            />
-            
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <Row className='portfoliolist'>
-                <Col sm={12} className="max-height1">
-                  <Row>
-                    {Array.isArray(filteredPeriode) && filteredPeriode.length > 0 ? (
-                      filteredPeriode.map((periode_datasetn, index) => {
-                        const periodeText = periode_datasetn || ""; // string langsung
-                        return (
-                          <Col
-                            sm={12}
-                            key={index}
-                            className={
-                              activeItemPeriode === index
-                                ? "text-body border-bottom mt-1 rad10 cursor-true"
-                                : "border-bottom mt-1 cursor-true"
-                            }
-                            style={{ backgroundColor: activeItemPeriode === index ? bgcontentku : "" }}
-                            onClick={() => {
-                              activeItemPeriode === index
-                                ? setKeywordPeriode("")
-                                : setKeywordPeriode(periodeText);
-                              activeItemPeriode === index ? setSearchKeyword("") : setSearchKeyword("");
-                              activeItemPeriode === index
-                                ? handleClickperiode_dataset(null)
-                                : handleClickperiode_dataset(index);
-                            }}
-                          >
-                            <Row>
-                              <Col className="col-12 clearfix py-1">
-                                <div
-                                  className={
-                                    activeItemPeriode === index
-                                      ? "category textsize10 text-body cursor-true float-left uppercaseku"
-                                      : "category textsize10 text-body cursor-true float-left uppercaseku"
-                                  }
-                                >
-                                  {periodeText.length >= 35 ? periodeText.substring(0, 35) + "..." : periodeText}
-                                </div>
-                                <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
-                                  {/* karena array of string, ga ada count_periode_dataset */}
-                                  <p className="textsize8 text-body">
-                                    {activeItemPeriode === index ? <MdClose /> : <MdAdsClick />}
-                                  </p>
-                                </div>
-                              </Col>
-                            </Row>
-                          </Col>
-                        );
-                      })
-                    ) : (
-                      <p className="text-body font_weight600 italicku text-center mt-3">Ups.. Periode Tidak Ditemukan</p>
-                    )}
+                            );
+                          })
+                        ) : (
+                          <p className="text-silver-light font_weight600 italicku text-center mt-3">Ups.. Periode Tidak Ditemukan</p>
+                        )}
 
 
+                      </Row>
+                    </Col>
                   </Row>
-                </Col>
-              </Row>
-            </motion.div>
-          </Container>
-        </section>
+                </motion.div>
+              </Container>
+            </section>
+            <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-5">
+              <div 
+                className="text-center shaddow4 rad10"
+                style={{backgroundColor:bgcontentku}}
+              
+              >
+                <p className="text-light textsize14 font_weight600">Kategori Data</p>
+              </div>
+              <Container fluid className="pb-3">
+                <input
+                  type="text"
+                  placeholder="Cari Kategori Data..."
+                  className="form-control bg-input textsize12 rad10"
+                  value={searchtermkategori_dataset}
+                  onChange={(e) => setSearchTermKategori(e.target.value)}
+                />
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <Row className='portfoliolist'>
+                    <Col sm={12} className="max-height1">
+                      <Row>
+                        {Array.isArray(filteredKategori) && filteredKategori.length > 0 ? (
+                          filteredKategori.map((kategori_datasetn, index) => {
+                            const kategoriText = kategori_datasetn || ""; // string langsung
+                            return (
+                              <Col
+                                sm={12}
+                                key={index}
+                                className={
+                                  activeItemKategori === index
+                                    ? "text-body border-bottom mt-1 rad10 cursor-true"
+                                    : "border-bottom mt-1 cursor-true"
+                                }
+                                style={{ backgroundColor: activeItemKategori === index ? bgcontentku : "" }}
+                                onClick={() => {
+                                  activeItemKategori === index
+                                    ? setKeywordKategori("")
+                                    : setKeywordKategori(kategoriText);
+                                  activeItemKategori === index ? setSearchKeyword("") : setSearchKeyword("");
+                                  activeItemKategori === index
+                                    ? handleClickkategori_dataset(null)
+                                    : handleClickkategori_dataset(index);
+                                }}
+                              >
+                                <Row>
+                                  <Col className="col-12 clearfix py-1">
+                                    <div
+                                      className={
+                                        activeItemKategori === index
+                                          ? "category textsize10 text-white cursor-true float-left uppercaseku"
+                                          : "category textsize10 text-body cursor-true float-left uppercaseku"
+                                      }
+                                    >
+                                      {kategoriText.length >= 35 ? kategoriText.substring(0, 35) + "..." : kategoriText}
+                                    </div>
+                                    <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
+                                      {/* karena array of string, ga ada count_periode_dataset */}
+                                      <p className="textsize8 text-white">
+                                        {activeItemKategori === index ? <MdClose /> : <MdAdsClick />}
+                                      </p>
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            );
+                          })
+                        ) : (
+                          <p className="text-silver-light font_weight600 italicku text-center mt-3">Ups.. Kategori Data Tidak Ditemukan</p>
+                        )}
+
+
+                      </Row>
+                    </Col>
+                  </Row>
+                </motion.div>
+              </Container>
+            </section>
+            <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-5">
+              <div 
+                className="text-center shaddow4 rad10"
+                style={{backgroundColor:bgcontentku}}
+              
+              >
+                <p className="text-light textsize14 font_weight600">Unit Wilayah</p>
+              </div>
+              <Container fluid className="pb-3">
+                <input
+                  type="text"
+                  placeholder="Cari Unit Wilayah..."
+                  className="form-control bg-input textsize12 rad10"
+                  value={searchtermunitwilayah_dataset}
+                  onChange={(e) => setSearchTermUnitWilayah(e.target.value)}
+                />
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <Row className='portfoliolist'>
+                    <Col sm={12} className="max-height1">
+                      <Row>
+                        {Array.isArray(filteredunitwilayah) && filteredunitwilayah.length > 0 ? (
+                          filteredunitwilayah.map((unitwilayah_datasetn, index) => {
+                            const unitwilayahText = unitwilayah_datasetn || ""; // string langsung
+                            return (
+                              <Col
+                                sm={12}
+                                key={index}
+                                className={
+                                  activeItemUnitWilayah === index
+                                    ? "text-body border-bottom mt-1 rad10 cursor-true"
+                                    : "border-bottom mt-1 cursor-true"
+                                }
+                                style={{ backgroundColor: activeItemUnitWilayah === index ? bgcontentku : "" }}
+                                onClick={() => {
+                                  activeItemUnitWilayah === index
+                                    ? setKeywordUnitWilayah("")
+                                    : setKeywordUnitWilayah(unitwilayahText);
+                                  activeItemUnitWilayah === index ? setSearchKeyword("") : setSearchKeyword("");
+                                  activeItemUnitWilayah === index
+                                    ? handleClickunitwilayah_dataset(null)
+                                    : handleClickunitwilayah_dataset(index);
+                                }}
+                              >
+                                <Row>
+                                  <Col className="col-12 clearfix py-1">
+                                    <div
+                                      className={
+                                        activeItemUnitWilayah === index
+                                          ? "category textsize10 text-white cursor-true float-left uppercaseku"
+                                          : "category textsize10 text-body cursor-true float-left uppercaseku"
+                                      }
+                                    >
+                                      {unitwilayahText.length >= 35 ? unitwilayahText.substring(0, 35) + "..." : unitwilayahText}
+                                    </div>
+                                    <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
+                                      <p className="textsize8 text-white">
+                                        {activeItemUnitWilayah === index ? <MdClose /> : <MdAdsClick />}
+                                      </p>
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            );
+                          })
+                        ) : (
+                          <p className="text-silver-light font_weight600 italicku text-center mt-3">Ups.. UnitWilayah Tidak Ditemukan</p>
+                        )}
+
+
+                      </Row>
+                    </Col>
+                  </Row>
+                </motion.div>
+              </Container>
+            </section>
+            <section id="teams" className="bg-body py-0 rad10 mx-1 shaddow4 mb-3">
+              <div 
+                className="text-center shaddow4 rad10"
+                style={{backgroundColor:bgcontentku}}
+              
+              >
+                <p className="text-light textsize14 font_weight600">Satuan Dataset</p>
+              </div>
+              <Container fluid className="pb-3">
+                <input
+                  type="text"
+                  placeholder="Cari Satuan..."
+                  className="form-control bg-input textsize12 rad10"
+                  value={searchtermsatuan_dataset}
+                  onChange={(e) => setSearchTermSatuan(e.target.value)}
+                />
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <Row className='portfoliolist'>
+                    <Col sm={12} className="max-height1">
+                      <Row>
+                        {Array.isArray(filteredsatuan) && filteredsatuan.length > 0 ? (
+                          filteredsatuan.map((satuan, index) => (
+                            <Col
+                              sm={12}
+                              key={satuan.id_satuan || index}
+                              className={activeItemSatuan === index ? `text-body border-bottom mt-1 rad10 cursor-true` : `border-bottom mt-1 cursor-true`}
+                              style={{ backgroundColor: activeItemSatuan === index ? bgcontentku : `` }}
+                              onClick={() => {
+                                activeItemSatuan === index ? setKeywordSatuan("") : setKeywordSatuan(satuan.id_satuan);
+                                activeItemSatuan === index ? setKeywordSatuanName("") : setKeywordSatuanName(satuan.nama_satuan);
+                                //activeItemSatuan === index ? setKeywordTag("") : setKeywordTag("");
+                                activeItemSatuan === index ? setSearchKeyword("") : setSearchKeyword("");
+                                activeItemSatuan === index ? handleClicksatuan_dataset(null) : handleClicksatuan_dataset(index);
+                                //activeItemSatuan === index ? handleClickTag(null) : handleClickTag(null);
+                              }}
+                            >
+                              <Row>
+                                <Col key={satuan.id} className="col-12 clearfix py-1">
+                                  <div
+                                    className={
+                                      activeItemSatuan === index
+                                        ? "category textsize10 text-white cursor-true float-left  uppercaseku"
+                                        : "category textsize10 text-body bg-body cursor-true float-left uppercaseku"
+                                    }
+                                  >
+                                    {satuan.nama_satuan.length >= 35
+                                      ? satuan.nama_satuan.substring(0, 35) + "..."
+                                      : satuan.nama_satuan}
+                                  </div>
+                                  <div className="text-end float-right bg-silver-dark px-3 height-05 rad10">
+                                    <p className="textsize8 text-white">
+                                      {activeItemSatuan === index ? <MdClose /> : <MdAdsClick  />}
+                                    </p>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </Col>
+                          ))
+
+                        ) : (
+                          <p className="text-body font_weight600 italicku text-center mt-3">Ups.. Satuan Tidak Ditemukan</p>
+                        )}
+                      </Row>
+                    </Col>
+                  </Row>
+                </motion.div>
+              </Container>
+            </section>
+           </Col>
+        )}
+      </motion.div>
+
+     
+      <Col md={showFilter ? 7 : 12} sm={12} className="mt-4 margin-b10">
+        {/* ⬇️ PINDAHKAN HEADER KE SINI */}
         
-      </Col>
-        
-      <Col md={8} sm={12} className='float-center margin-b10 mt-4'>
         <section id="teams" className="block  py-1 ">
-          
-          <div className="text-center">
-            <p className="text-body textsize10 ">Pencarian berdasarkan Judul, OPD, Dll.</p>
-            <div className="mb-3">
-              <TextField
-                label="Masukkan Kata Kunci"
-                className="bg-input rad15 textsize12"
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                InputProps={{
-                  endAdornment: (
-                    searchKeyword && (
-                      <IconButton
-                        aria-label="clear"
-                        size="small"
-                        onClick={() => setSearchKeyword("")}
-                        edge="end"
-                      >
-                        <ClearIcon fontSize="small" />
-                      </IconButton>
-                    )
-                  ),
-                }}
-                sx={{ 
-                  width: "80%", 
-                  "& .MuiOutlinedInput-root": {
-                    height: "6vh",
-                    fontSize: "100%",
-                    borderRadius: "15px"
-                  },
-                  // 🔹 Ukuran label normal
-                  "& .MuiInputLabel-root": {
-                    fontSize: "90%", // 👉 label saat normal
-                  },
-                  "& .MuiInputLabel-root.Mui-focused, & .MuiInputLabel-root.MuiInputLabel-shrink": {
-                    backgroundColor: "#1976d2",
+          <div className="d-flex justify-content-between align-items-center mb-3">
+
+           <button
+              className="btn btn-sm rad10 w-5 px-3"
+              style={{ backgroundColor: bgcontentku, color: "#fff" }}
+              onClick={() => setShowFilter(!showFilter)}
+              title={showFilter ? "Tutup Filter" : "Buka Filter"}
+            >
+              {showFilter ? "✕" : "☰"}
+            </button>
+            <div className="text-center w-95">
+              <p className="text-body textsize10 ">Pencarian berdasarkan Judul, OPD, Dll.</p>
+              <div className="mb-3">
+                <TextField
+                  label="Masukkan Kata Kunci"
+                  className="bg-input rad15 textsize12"
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  InputProps={{
+                    endAdornment: (
+                      searchKeyword && (
+                        <IconButton
+                          aria-label="clear"
+                          size="small"
+                          onClick={() => setSearchKeyword("")}
+                          edge="end"
+                        >
+                          <ClearIcon fontSize="small" />
+                        </IconButton>
+                      )
+                    ),
+                  }}
+                  sx={{ 
+                    width: "80%", 
+                    "& .MuiOutlinedInput-root": {
+                      height: "6vh",
+                      fontSize: "100%",
+                      borderRadius: "15px"
+                    },
+                    // 🔹 Ukuran label normal
+                    "& .MuiInputLabel-root": {
+                      fontSize: "90%", // 👉 label saat normal
+                    },
+                    "& .MuiInputLabel-root.Mui-focused, & .MuiInputLabel-root.MuiInputLabel-shrink": {
+                      backgroundColor: "#1976d2",
+                      color: "#fff",
+                      borderRadius: "6px",
+                      padding: "0 6px",
+                      transform: "translate(14px, -9px) scale(0.85)",
+                      fontSize:"70%"
+                    }
+                  }}
+                />
+    
+                <button
+                  onClick={handleSearch}
+                  style={{
+                    margin:"0px 5px",
+                    padding: "18px 20px",
+                    borderRadius: 10,
+                    border: "none",
+                    background: bgku,
                     color: "#fff",
-                    borderRadius: "6px",
-                    padding: "0 6px",
-                    transform: "translate(14px, -9px) scale(0.85)",
-                    fontSize:"70%"
-                  }
-                }}
-              />
-  
-              <button
-                onClick={handleSearch}
-                style={{
-                  margin:"0px 5px",
-                  padding: "18px 20px",
-                  borderRadius: 10,
-                  border: "none",
-                  background: bgku,
-                  color: "#fff",
-                  fontWeight: 600,
-                  fontSize: "16px",
-                  cursor: "pointer",
-                  boxShadow: "0 2px 8px rgba(25,118,210,.3)"
-                }}
-              >
-                Cari
-              </button>
+                    fontWeight: 600,
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(25,118,210,.3)"
+                  }}
+                >
+                  Cari
+                </button>
+              </div>
             </div>
           </div>
-            <div className="rad15 mx-4  rad15 shaddow4" style={{background:`linear-gradient(to right, ${bgcontentku}, ${bgku})`}}>
+          
+          <div className="rad15 mx-4  rad15 shaddow4" style={{background:`linear-gradient(to right, ${bgcontentku}, ${bgku})`}}>
             <p className="px-2">
                 <span className="font_weight600 text-white">OPD: </span><span className="text-white font_weight400 p-1 rad10 uppercaseku">{keywordsatkerName}</span>,
                 <span className="font_weight600 text-white">Periode: </span><span className="text-white font_weight400 p-1 rad10 uppercaseku">{keywordperiode_dataset}</span>    
               
             </p>     
           </div>
+          
           <Container fluid>
             {loading ? (
               <Spinner />

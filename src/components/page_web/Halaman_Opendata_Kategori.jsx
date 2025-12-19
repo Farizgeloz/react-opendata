@@ -10,9 +10,11 @@ import AppFooter from '../page_sub/opendata_footer';
 import FeedbackModal from "../page_sub/FeedbackModal";
 import { FcFeedback } from "react-icons/fc";
 import { MdInfoOutline } from "react-icons/md";
+import { MdAdsClick, MdClose, MdHomeFilled, MdListAlt, MdOutlineFeaturedPlayList, MdSchool } from "react-icons/md";
 import { api_url_satudata,api_url_satuadmin } from "../../api/axiosConfig";
 
 
+import {Container,Row,Col} from 'react-bootstrap';
 import Menu from '../navbar/Menu-Opendata2';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -21,6 +23,7 @@ import { Link, useParams } from "react-router-dom";
 
 
 function DatasetKategori() {
+  const { topik } = useParams();  // ⬅️ otomatis berubah sesuai link
   const { kategori } = useParams();
   const [totalVisitors, setTotalVisitors] = useState(null);
   const [settings, setSetting] = useState("");
@@ -65,7 +68,17 @@ function DatasetKategori() {
       <Menu bgku={settings.bg_header}/>
       
       <main className='w-100'>
-       
+        <Row className='mb-2  margin-t9'>
+          <Col md={12} className="d-flex justify-content-between align-items-center" style={{backgroundColor:"#60728b"}}>
+                                      
+            {/* Breadcrumb */}
+            <div className="px-3 d-flex rad10 italicku" style={{ paddingTop:"5px", paddingBottom:"5px", width:"fit-content",flexWrap: "wrap"}}>
+              <Link to="/" className="textsize12 text-white-a d-flex"> <MdHomeFilled className='mt-1'/> <span className='px-2'> Beranda</span></Link><span className="mx-3 text-white">/</span>
+              <Link to="/Dataset" className="textsize12 text-white-a d-flex"><MdOutlineFeaturedPlayList className='mt-1'/> <span className='px-2'>Koleksi Dataset</span></Link><span className="mx-3 text-white">/</span>
+              <Link to={`/Dataset/Sektor/${topik}`} className="textsize12 text-white-a d-flex"><MdListAlt className='mt-1'/>Sektor <span className='px-2'> {topik}</span></Link>
+            </div>
+          </Col>
+        </Row>
         <AppSearchdata
           bgku={settings.bg_header} 
           bgbodyku={settings.bg_body} 
