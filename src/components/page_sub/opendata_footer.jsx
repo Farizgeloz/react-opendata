@@ -44,7 +44,7 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
 
   const getStatistik = async () => {
     try {
-      const response = await api_url_satuadmin.get( 'api/open-item/ekosistem-bioinfo');
+      const response = await api_url_satuadmin.get( 'open-item/ekosistem-bioinfo');
       const data = response.data;
       
       setAlamat(data.alamat);
@@ -53,7 +53,7 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
       setLinkedin(data.linkedin);
       setTwitter(data.twitter);
 
-      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'open-item/images_item', {
         params: {
           portal:portal
         }

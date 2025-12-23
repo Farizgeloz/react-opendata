@@ -100,7 +100,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
     
     try {
 
-      const response_artikel = await api_url_satuadmin.get( 'api/opendata/artikel', {
+      const response_artikel = await api_url_satuadmin.get( 'opendata/artikel', {
         params: {
           search_kunci: setkunci || '',
           page,

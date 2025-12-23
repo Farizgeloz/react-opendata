@@ -55,7 +55,7 @@ function Infografik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
 
   /*const getDatasetUnsur = async () => {
     try {
-      const response = await api_url_satuadmin.get( 'api/opendata/dataset_item', {
+      const response = await api_url_satuadmin.get( 'opendata/dataset_item', {
         params: {
           search_satker: keywordpengelolah
         }
@@ -76,7 +76,7 @@ function Infografik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
 
   const getDatasetSearch = async () => {
     try {
-      const response = await api_url_satuadmin.get( 'api/opendata/dataset_info');
+      const response = await api_url_satuadmin.get( 'opendata/dataset_info');
 
       const data = response.data;
 

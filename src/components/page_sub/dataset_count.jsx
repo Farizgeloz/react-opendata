@@ -41,7 +41,7 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
 
   const getStatistik = async () => {
     try {
-      const response = await api_url_satuadmin.get( 'api/open-item/ekosistem-bioinfo');
+      const response = await api_url_satuadmin.get( 'open-item/ekosistem-bioinfo');
       const data = response.data;
       
       setLuas(data.luas);

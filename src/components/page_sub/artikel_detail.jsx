@@ -115,7 +115,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   const getImages = async () => {
     try {
       
-      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'open-item/images_item', {
         params: {
           portal:portal
         }
@@ -137,7 +137,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   const getData = async (page = 1) => {
     try {
       
-      const response_artikel = await api_url_satuadmin.get( 'api/opendata/artikel', {
+      const response_artikel = await api_url_satuadmin.get( 'opendata/artikel', {
         paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' })
       });
 

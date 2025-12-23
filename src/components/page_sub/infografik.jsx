@@ -122,7 +122,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
     
     try {
 
-      const response_infografik = await api_url_satuadmin_create.get('api/opendata/infografik/penyusun');
+      const response_infografik = await api_url_satuadmin_create.get('opendata/infografik/penyusun');
 
       const res = response_infografik.data;
       setPenyusun(res.data_penyusun);
@@ -136,7 +136,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
     
     try {
 
-      const response_infografik = await api_url_satuadmin.get('api/opendata/infografik', {
+      const response_infografik = await api_url_satuadmin.get('opendata/infografik', {
         params: {
           search_kunci: setkunci || '',
           search_dimensi: setdimensi || '',
