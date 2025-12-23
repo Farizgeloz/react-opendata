@@ -5,8 +5,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:3000'
+      '/api': 'http://localhost:3000' // dev proxy ke Hapi
     }
   },
-  base: '/opendata/'
-});
+  base: '/opendata/' // path base React build
+})
