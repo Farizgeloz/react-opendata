@@ -58,7 +58,7 @@ function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
       const response = await api_url_satudata.get("dataset");
       const datasetSearchRaw = response.data;
 
-      const response2 = await api_url_satuadmin.get( `api/opendata/dataset_data_top`);
+      const response2 = await api_url_satuadmin.get( `opendata/dataset_data_top`);
       const dataCountRaw = response2.data;
 
     // Buat map id_dataset → count_dataset (langsung dari API)

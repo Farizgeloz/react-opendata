@@ -96,7 +96,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
       try {
         //console.log("increaseVisitor fire, id =", id_dataset);
         await api_url_satuadmin.post(
-          `api/opendata/infografik_visitor`,
+          `opendata/infografik_visitor`,
           { id_infografik: id_infografik },                           // kirim JSON
           { headers: { "Content-Type": "application/json" } }
         );
@@ -111,7 +111,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
 
   const getDataCount = async () => {
       try {
-        const response = await api_url_satuadmin.get( `api/opendata/infografik_detail_visitor_count/${id_infografik}`);
+        const response = await api_url_satuadmin.get( `opendata/infografik_detail_visitor_count/${id_infografik}`);
         //console.log("Dataset online:", response.data);
         //const data = response.data;
         
@@ -134,7 +134,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
 
   const getDataById = async () => {
     try {
-      const response = await api_url_satuadmin.get(`api/opendata/infografik/detail/${id}`);
+      const response = await api_url_satuadmin.get(`opendata/infografik/detail/${id}`);
 
       if (response?.data) {
         setdataku(response.data); // langsung ambil objek plainItem

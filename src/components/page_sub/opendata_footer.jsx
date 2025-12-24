@@ -71,7 +71,7 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
 
   const getData = async () => {
     try {
-      const response = await api_url_satuadmin.get( `api/open-item/komponen`);
+      const response = await api_url_satuadmin.get( `open-item/komponen`);
       const data = response.data;
       // Cek apakah response.data itu array atau object
       //const payload = Array.isArray(response.data) ? response.data : response.data.datas;

@@ -29,10 +29,10 @@ function Dashboard() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await api_url_satuadmin.post(`api/opendata_visitor/visitor`);
+        await api_url_satuadmin.post(`opendata_visitor/visitor`);
 
         // Ambil total
-        const response = await api_url_satuadmin.get(`api/opendata_visitor/count`);
+        const response = await api_url_satuadmin.get(`opendata_visitor/count`);
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
@@ -51,7 +51,7 @@ function Dashboard() {
   const getImage = async () => {
     try {
 
-      /*const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
+      /*const response_image = await api_url_satuadmin.get( 'open-item/images_item', {
         params: {
           portal:portal
         }
@@ -60,7 +60,7 @@ function Dashboard() {
       setImage1(data_image.presignedUrl1);
       setImage2(data_image.presignedUrl2);*/
 
-      const response_setting = await api_url_satuadmin.get(`api/open-item/site_opendata_setting`);
+      const response_setting = await api_url_satuadmin.get(`open-item/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
 

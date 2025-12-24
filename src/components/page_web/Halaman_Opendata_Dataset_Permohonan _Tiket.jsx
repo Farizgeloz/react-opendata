@@ -41,10 +41,10 @@ function DatasetPengelolah() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await api_url_satuadmin.post(`api/satupeta_visitor/visitor`);
+        await api_url_satuadmin.post(`satupeta_visitor/visitor`);
 
         // Ambil total
-        const response = await api_url_satuadmin.get(`api/satupeta_visitor/count`);
+        const response = await api_url_satuadmin.get(`satupeta_visitor/count`);
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
@@ -69,7 +69,7 @@ function DatasetPengelolah() {
     try {
       
 
-      const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'open-item/images_item', {
         params: {
           portal:portal
         }
@@ -80,7 +80,7 @@ function DatasetPengelolah() {
       setImage1(data_image.presignedUrl3);
       setImage2(data_image2.presignedUrl1);
 
-      const response_setting = await api_url_satuadmin.get(`api/open-item/site_opendata_setting`);
+      const response_setting = await api_url_satuadmin.get(`open-item/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
 

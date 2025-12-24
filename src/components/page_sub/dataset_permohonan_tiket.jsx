@@ -58,7 +58,7 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
 
     const getDataById = async () => {
         try {
-        const response = await api_url_satuadmin.get(`api/opendata/dataset_permohonan/tiket/${id}`);
+        const response = await api_url_satuadmin.get(`opendata/dataset_permohonan/tiket/${id}`);
         //console.log("Dataset online:", response.data);
         //console.log("fileku : "+response.data.file[0].link);
         //const data = response.data;

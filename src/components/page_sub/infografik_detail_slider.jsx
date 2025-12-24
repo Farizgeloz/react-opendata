@@ -113,7 +113,7 @@ export default function ImageSlider({ dataku }) {
 
   const setDownloadvisitor = async () => {
     await api_url_satuadmin.post(
-      `api/opendata/infografik_download`,
+      `opendata/infografik_download`,
       { id_infografik: dataku.id_infografik },                           // kirim JSON
       { headers: { "Content-Type": "application/json" } }
     );

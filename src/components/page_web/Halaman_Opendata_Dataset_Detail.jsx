@@ -258,10 +258,10 @@ function DatasetPengelolah() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await api_url_satuadmin.post(`api/opendata_visitor/visitor`);
+        await api_url_satuadmin.post(`opendata_visitor/visitor`);
 
         // Ambil total
-        const response = await api_url_satuadmin.get(`api/opendata_visitor/count`);
+        const response = await api_url_satuadmin.get(`opendata_visitor/count`);
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
@@ -322,7 +322,7 @@ function DatasetPengelolah() {
         setgrafik_c(response.data.data.grafik_c);
         //setDocument(response.data.data.presignedUrl);
 
-        const response2 = await api_url_satuadmin.get(`api/opendata/dataset_detail_visitor_count/${id_dataset}`);
+        const response2 = await api_url_satuadmin.get(`opendata/dataset_detail_visitor_count/${id_dataset}`);
         setDataCount(response2.data.datacount);
         setDataCountDownload(response.data.datacountdownload);
         //fetchData(response.data.document);
@@ -388,7 +388,7 @@ function DatasetPengelolah() {
       try {
         //console.log("increaseVisitor fire, id =", id_dataset);
         await api_url_satuadmin.post(
-          `api/opendata/dataset_visitor`,
+          `opendata/dataset_visitor`,
           { id_dataset: id_dataset },                           // kirim JSON
           { headers: { "Content-Type": "application/json" } }
         );
@@ -404,7 +404,7 @@ function DatasetPengelolah() {
 
   const setDownloadvisitor = async () => {
     await api_url_satuadmin.post(
-      `api/opendata/dataset_download`,
+      `opendata/dataset_download`,
       { id_dataset: id_dataset },                           // kirim JSON
       { headers: { "Content-Type": "application/json" } }
     );
@@ -415,7 +415,7 @@ function DatasetPengelolah() {
 
   const getDataCount = async () => {
       try {
-        const response = await api_url_satuadmin.get( `api/opendata/dataset_detail_visitor_count/${id_dataset}`);
+        const response = await api_url_satuadmin.get( `opendata/dataset_detail_visitor_count/${id_dataset}`);
         //console.log("Dataset online:", response.data);
         //const data = response.data;
         
@@ -424,7 +424,7 @@ function DatasetPengelolah() {
         setDataCountDownload(response.data.datacountdownload);
         //fetchData(response.data.document);
 
-        const response_image = await api_url_satuadmin.get( 'api/open-item/images_item', {
+        const response_image = await api_url_satuadmin.get( 'open-item/images_item', {
           params: {
             portal:portal
           }
@@ -583,7 +583,7 @@ function DatasetPengelolah() {
 
   const getSetting = async () => {
     try {
-      const response_setting = await api_url_satuadmin.get(`api/open-item/site_opendata_setting`);
+      const response_setting = await api_url_satuadmin.get(`open-item/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
         

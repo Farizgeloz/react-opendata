@@ -95,7 +95,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
 
   const getDataById = async () => {
     try {
-      const response = await api_url_satuadmin.get(`api/opendata/artikel/detail/${id}`);
+      const response = await api_url_satuadmin.get(`opendata/artikel/detail/${id}`);
 
       if (response?.data) {
         setdataku(response.data); // langsung ambil objek plainItem
