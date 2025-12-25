@@ -38,7 +38,7 @@ function Dashboard() {
   const getImage = async () => {
     try {
 
-      /*const response_image = await api_url_satuadmin.get( 'open-item/images_item', {
+      /*const response_image = await api_url_satuadmin.get( 'openitem/images_item', {
         params: {
           portal:portal
         }
@@ -47,7 +47,7 @@ function Dashboard() {
       setImage1(data_image.presignedUrl1);
       setImage2(data_image.presignedUrl2);*/
 
-      const response_setting = await axios.get(`${apiurl}api/open-item/site_opendata_setting`);
+      const response_setting = await axios.get(`${apiurl}openitem/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
 

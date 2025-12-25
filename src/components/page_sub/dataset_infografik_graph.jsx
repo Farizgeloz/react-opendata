@@ -190,7 +190,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
       setRowsKategoridata(data_countkategoridata);
       
 
-      const response_image = await api_url_satuadmin.get( 'open-item/images_item', {
+      const response_image = await api_url_satuadmin.get( 'openitem/images_item', {
         params: {
           portal:portal
         }

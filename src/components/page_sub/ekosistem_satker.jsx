@@ -46,7 +46,7 @@ function AppKategori() {
 
   const getData = async () => {
     try {
-      const response = await api_url_satuadmin.get( `open-item/satker_code`);
+      const response = await api_url_satuadmin.get( `openitem/satker_code`);
       const payload = Array.isArray(response.data) ? response.data : response.data.datas;
       setData(payload.slice(0, 9)); // maksimal 9 item (3 per slide * 3 slide)
     } catch (error) {

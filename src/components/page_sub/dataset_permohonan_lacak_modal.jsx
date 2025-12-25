@@ -36,7 +36,7 @@ const PermohonanLacakModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2
     const getMenu = async () => {
         try {
 
-        const response_image = await api_url_satuadmin.get( 'open-item/images_item', {
+        const response_image = await api_url_satuadmin.get( 'openitem/images_item', {
             params: {
             portal:portal
             }
@@ -93,7 +93,7 @@ const PermohonanLacakModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2
         formData.append("nomor_tiket", nomor_tiket); // pastikan file diset dengan setFile()
         formData.append("email", email);
         try {
-            await axios.post(apiurl + 'open-item/opendata_feedback', formData);
+            await axios.post(apiurl + 'openitem/opendata_feedback', formData);
 
             setShow(false);
             sweetsuccess();
