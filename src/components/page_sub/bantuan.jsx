@@ -125,6 +125,14 @@ function AppKategori({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconten
       link: "https://peraturan.go.id/common/dokumen/ln/2019/permendagri-70-2019.pdf",
     },
   ];
+
+  const scrollToSection = (e, id) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   
 
   return (
@@ -158,13 +166,21 @@ function AppKategori({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconten
                         .filter(datas => datas.kategori === "Opendata")
                         .map((datas, index) => (
                           <li key={index} className="mb-2">
+                            // Di dalam map Anda:
                             <a
+                              href={`#${datas.seksi}`}
+                              onClick={(e) => scrollToSection(e, datas.seksi)} // Tambahkan onClick
+                              className="text-green-a textsize12"
+                            >
+                              {datas.title}
+                            </a>
+                           {/*  <a
                               href={`#${datas.seksi}`}
                               rel="noopener noreferrer"
                               className="text-green-a textsize12"
                             >
                               {datas.title}
-                            </a>
+                            </a> */}
                           </li>
                       ))}
                   </ul>
@@ -182,11 +198,18 @@ function AppKategori({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconten
                           <li key={index} className="mb-2">
                             <a
                               href={`#${datas.seksi}`}
-                              rel="noopener noreferrer"
+                              onClick={(e) => scrollToSection(e, datas.seksi)} // Tambahkan onClick
                               className="text-green-a textsize12"
                             >
                               {datas.title}
                             </a>
+                            {/* <a
+                              href={`#${datas.seksi}`}
+                              rel="noopener noreferrer"
+                              className="text-green-a textsize12"
+                            >
+                              {datas.title}
+                            </a> */}
                           </li>
                       ))}
                   </ul>
