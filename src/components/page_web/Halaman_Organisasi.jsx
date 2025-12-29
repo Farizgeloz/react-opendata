@@ -4,6 +4,7 @@ import '../../components/styles/style_font.css';
 import '../../components/styles/style_bg.css';
 import '../../components/styles/style_button.css';
 import '../../components/styles/style_design.css';
+import { api_url_satuadmin } from '../../api/axiosConfig';
 
 //const portal = "Portal Open Data";
 
@@ -22,10 +23,10 @@ function Dashboard() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await axios.post(`${apiurl}opendata_visitor/visitor`);
+        await api_url_satuadmin.post(`opendata_visitor/visitor`);
 
         // Ambil total
-        const response = await axios.get(`${apiurl}opendata_visitor/count`);
+        const response = await api_url_satuadmin.get(`opendata_visitor/count`);
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
@@ -47,7 +48,7 @@ function Dashboard() {
       setImage1(data_image.presignedUrl1);
       setImage2(data_image.presignedUrl2);*/
 
-      const response_setting = await axios.get(`${apiurl}openitem/site_opendata_setting`);
+      const response_setting = await api_url_satuadmin.post(`openitem/site_opendata_setting`);
       const data_setting = response_setting.data;
       setSetting(data_setting);
 
