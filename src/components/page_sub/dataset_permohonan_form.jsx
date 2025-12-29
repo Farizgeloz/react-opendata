@@ -82,7 +82,7 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
         );
 
         setDatasetSatker(uniqueSatker);
-        console.log("satker:" + uniqueSatker);
+        //console.log("satker:" + uniqueSatker);
         
 
    

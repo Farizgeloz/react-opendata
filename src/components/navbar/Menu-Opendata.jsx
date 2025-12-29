@@ -75,7 +75,7 @@ function MenuItem({title,submenu,linked,bg}){
         });
 
         setMenu2(response.data);
-        console.log(response.data);
+        //console.log(response.data);
         
 
       } catch (error) {
