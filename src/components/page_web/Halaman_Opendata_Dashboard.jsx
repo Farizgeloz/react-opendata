@@ -43,10 +43,10 @@ function DatasetPengelolah() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-         await api_url_satuadmin.post("api/opendata_visitor/visitor");
+         await api_url_satuadmin.post("pendata_visitor/visitor");
 
         // 🔹 2. Ambil total visitor
-        const response = await api_url_satuadmin.get("api/opendata_visitor/count");
+        const response = await api_url_satuadmin.get("opendata_visitor/count");
 
         // 🔹 3. Update state di React
         setTotalVisitors(response.data);

@@ -22,10 +22,10 @@ function Dashboard() {
     const increaseVisitor = async () => {
       try {
         // Increment visitor di backend
-        await axios.post(`${apiurl}api/opendata_visitor/visitor`);
+        await axios.post(`${apiurl}opendata_visitor/visitor`);
 
         // Ambil total
-        const response = await axios.get(`${apiurl}api/opendata_visitor/count`);
+        const response = await axios.get(`${apiurl}opendata_visitor/count`);
         setTotalVisitors(response.data);
       } catch (error) {
         console.error('Gagal ambil data pengunjung:', error);
