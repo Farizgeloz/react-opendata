@@ -57,7 +57,7 @@ const PopupIklan = () => {
         setLinkDownload(item.linked);
         setImages_a(item.presignedUrl);
       } else {
-        console.warn("Data kosong atau bukan array");
+        //console.warn("Data kosong atau bukan array");
       }
     } catch (error) {
       console.error("Failed to fetch data:", error);
