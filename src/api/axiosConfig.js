@@ -10,14 +10,11 @@ const api_url_satudata = axios.create({
 });
 
 const api_url_satuadmin = axios.create({
-  /* baseURL: "http://localhost:3000/api/", */
-  /* baseURL: "https://api-satu.mataprabulinggih.net/", */
-  /* baseURL: "/api/", */
-  baseURL: "https://apisatuadmin.probolinggokab.go.id/",
-  /* baseURL: "/api-external/", */
-headers: {
-    "Content-Type": "application/json",
-  } 
+  baseURL: "https://apisatuadmin.probolinggokab.go.id/api/",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  withCredentials: true
 });
 
 const api_url_satuadmin_create = axios.create({
@@ -26,6 +23,7 @@ const api_url_satuadmin_create = axios.create({
   /* baseURL: "/api/", */
 
   baseURL: "https://apisatuadmin.probolinggokab.go.id/",
+  withCredentials: true
   /* baseURL: "/api-external/", */
 });
 
