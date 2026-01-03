@@ -20,7 +20,6 @@ const api_url_satuadmin = axios.create({
 const api_url_satuadmin_create = axios.create({
   /* baseURL: "http://localhost:3000/api/", */
   /* baseURL: "https://api-satu.mataprabulinggih.net/", */
-  /* baseURL: "/api/", */
 
   baseURL: "https://apisatuadmin.probolinggokab.go.id/",
   withCredentials: true
