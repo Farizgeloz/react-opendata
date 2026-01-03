@@ -341,7 +341,7 @@ function DataSearch({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontent
                     <p className="textsize10  text-body">
                       <span className="font_weight600 text-body">Diperbaharui Tanggal: </span>{convertDate(row.updated_at)}
                     </p>
-                   <Link to={`/Dataset/Detail/${slugify(params.row.nama_dataset)}` } className="btn btn-orangeblue text-white-a">Detail Dataset</Link>
+                   <Link to={`/Dataset/Detail/${params.row.id_dataset}` } className="btn btn-orangeblue text-white-a">Detail Dataset</Link>
                   </div>
                 </Col>
             </Row>
