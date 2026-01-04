@@ -158,6 +158,7 @@ function MenuItem({title,submenu,linked,bg}){
 }
 function Menu({bgku}) {
   const bgkuu=bgku;
+  
   const [menuku, setMenu] = useState([]);
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("");

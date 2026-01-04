@@ -155,11 +155,19 @@ function MenuItem({title,submenu,linked,bg}){
 }
 
 function Menu({bgku}) {
+  const [isMobile, setIsMobile] = useState(false);
   const [menuku, setMenu] = useState([]);
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("");
   const [contents, setContents] = useState("");
   const [title, setTitle] = useState("");
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     getMenu();
