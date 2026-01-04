@@ -1,29 +1,22 @@
 import axios from "axios";
 
+// API Satudata
 const api_url_satudata = axios.create({
-  /* baseURL: "https://apisatudata.probolinggokab.go.id/api/v1/public/", */
   baseURL: "https://apisatudata.probolinggokab.go.id/",
-  /* baseURL: "/api-mataprabu/", */
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
 });
 
+// API SatuAdmin (read)
 const api_url_satuadmin = axios.create({
   baseURL: "https://apisatuadmin.probolinggokab.go.id/api/",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  withCredentials: true
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true, // wajib kalau backend pakai session/cookie
 });
 
+// API SatuAdmin (create/post)
 const api_url_satuadmin_create = axios.create({
-  /* baseURL: "http://localhost:3000/api/", */
-  /* baseURL: "https://api-satu.mataprabulinggih.net/", */
-
-  baseURL: "https://apisatuadmin.probolinggokab.go.id/",
-  withCredentials: true
-  /* baseURL: "/api-external/", */
+  baseURL: "https://apisatuadmin.probolinggokab.go.id/api/",
+  withCredentials: true, // wajib kalau backend pakai session/cookie
 });
 
 export { api_url_satudata, api_url_satuadmin, api_url_satuadmin_create };
