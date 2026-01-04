@@ -111,8 +111,28 @@ function DatasetPengelolah() {
                  <p className='textsize20 text-left font_weight700 mb-1 text-body'>Cari Dataset</p>
                 </Col>
                 <Col md={6} sm={12} sx={12} className=''>
-                  <div className='d-flex justify-content-end gap-2'>
-                    <a href='/Dataset/Permohonan' className='px-3 py-2 btn btn-orangeblue text-white-a font_weight600 bg-border2 mt-2'>Ajukan Permohonan Dataset</a>
+                  <div className='
+                    d-flex 
+                    flex-column flex-md-row 
+                    justify-content-md-end 
+                    align-items-stretch 
+                    gap-2
+                  '>
+                    <a
+                      href='/Dataset/Permohonan'
+                      className='
+                        px-3 py-2 
+                        btn btn-orangeblue 
+                        text-white-a 
+                        font_weight600 
+                        bg-border2 
+                        mt-2
+                        w-100 w-md-auto
+                      '
+                    >
+                      Ajukan Permohonan
+                    </a>
+
                     <PermohonanLacakModal 
                       bgku={settings.bg_header} 
                       bgbodyku={settings.bg_body} 
@@ -125,6 +145,7 @@ function DatasetPengelolah() {
                       colordateku={settings.color_date}
                     />
                   </div>
+
                 </Col>
                
                 

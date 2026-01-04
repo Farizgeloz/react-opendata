@@ -224,11 +224,20 @@ function Menu({bgku}) {
       <Navbar expand="lg" className="w-100">
       
         <Container className="px-0" style={{maxWidth:'95%'}}>
-          <Navbar.Brand href="#home" className='d-flex text-blue margin-logo' style={{width:"35vh"}}>
-            <img src={image2} className='img-header'  style={{width:"35vh",height:"auto"}}  />
-            
+          <Navbar.Brand
+            href="#home"
+            className="d-flex text-blue margin-logo brand-logo"
+          >
+            <img
+              src={image2}
+              className="img-header"
+              alt="Logo"
+            />
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" className="btn-toggle text-white" />
+          <Navbar.Toggle
+            aria-controls="basic-navbar-nav"
+            className="btn-toggle-custom"
+          />
           <Navbar.Collapse
             id="basic-navbar-nav"
             style={{

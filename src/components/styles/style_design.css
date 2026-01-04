@@ -912,3 +912,51 @@ filter: progid:DXImageTransform.Microsoft.gradient(
   justify-content: center;
   font-weight: 600;
 }
+
+.info-meta {
+  justify-content: flex-start; /* DEFAULT: laptop / desktop rata kiri */
+  text-align: left;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  padding: 0 8px;
+  margin: 0 4px;
+  white-space: nowrap;
+}
+
+.meta-icon {
+  margin-right: 4px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .info-meta {
+    justify-content: center; /* mobile center */
+    text-align: center;
+  }
+
+  .meta-item {
+    padding: 0 4px;
+    margin: 2px 2px;
+  }
+
+  .meta-icon {
+    font-size: 18px;
+  }
+}
+
+.btn-toggle-custom {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  padding: 6px 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-toggle-custom:hover {
+  background-color: rgba(255,255,255,0.15);
+  transform: scale(1.05);
+}
+

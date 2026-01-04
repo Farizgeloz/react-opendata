@@ -141,9 +141,17 @@ const PermohonanLacakModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2
     <>
         {/* FAB Rotated */}
          <a href='#' 
-            className='px-5 py-2 btn btn-blueorange text-white-a font_weight600 bg-border2 mt-2 d-flex '
+            className='
+                        px-3 py-2 
+                        btn btn-blueorange 
+                        text-white-a 
+                        font_weight600 
+                        bg-border2 
+                        mt-2
+                        w-100 w-md-auto
+                      '
             onClick={handleShow}
-        ><FcFeedback size={20} /> Lacak Permohonan Dataset</a>
+        ><FcFeedback size={20} /> Lacak Permohonan</a>
        
 
       {/* Modal */}

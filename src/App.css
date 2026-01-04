@@ -1622,10 +1622,10 @@ border-bottom: 1px solid #fff;
   z-index: 11;
   top:0;
 }
-.img-header{
+/*.img-header{
   width: auto;
   height: 45px;
-}
+}*/
 .img-header2{
   width: 40px;
   height: 45px;
@@ -2424,5 +2424,25 @@ div.MuiAutocomplete-popper div { /* To get rid of the rounding applied by Mui-pa
   /* Supaya brand dan collapse bisa berdiri vertikal kalau perlu */
   .navbar > .container > .d-flex {
     flex-wrap: wrap;
+  }
+}
+
+.brand-logo {
+  width: 35vh;
+}
+
+.img-header {
+  width: 35vh;
+  height: auto;
+}
+
+/* Jika mobile */
+@media (max-width: 768px) {
+  .brand-logo {
+    width: 20vh;
+  }
+
+  .img-header {
+    width: 20vh;
   }
 }

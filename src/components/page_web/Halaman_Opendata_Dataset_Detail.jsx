@@ -937,13 +937,13 @@ const downloadxls = ()=>{
 
 
   return (
-    <div className="App bg-body">
+    <div className="App bg-body w-100">
      
         
       <Menu bgku={settings.bg_header} />
       
-      <main className='mx-1 padding-t8 '>
-        <div className=''>
+      <main className='mx-1 padding-t8 w-100 '>
+        <div className='w-100'>
           <Row className='p-2  mb-0'>
             <Col md={12} className="d-flex justify-content-between align-items-center" style={{backgroundColor:"#60728b"}}>
               
@@ -961,7 +961,7 @@ const downloadxls = ()=>{
               </div>
             </Col> */}
           </Row>
-          <Row className='px-5 py-2 bg-body mt-0'>
+          <Row className='justify-content-center py-2 bg-body mt-0'>
             <Col md={3} sm={12} className='d-none d-md-block float-center text-center shaddow4 rad10 px-0'>
               <div className='px-0 py-4 rad10 bg-zebra-170'>
                 <Image className="img-70 mx-auto justify-center  d-block px-5" src={image2} />
@@ -1074,7 +1074,7 @@ const downloadxls = ()=>{
 
               </div>
             </Col>
-            <Col md={9} sm={12} className=''>
+            <Col md={8} sm={12} className=''>
               {loading ? (
                 <Spinner />
               ) : (
@@ -1095,21 +1095,22 @@ const downloadxls = ()=>{
                         {Nama_dataset}
                       </p>
                     </Col>
-                    <Col md={12} sm={12} className=''>
-                      <div className="d-flex text-center">
-                       
-                        <p className="text-body textsize12 capitalizeku text-center font_weight600 px-2 mx-1">
-                          <MdOutlineListAlt  size={25} style={{ marginTop: "-1px" }} /> {Kategori}
+                    <Col md={12} sm={12}>
+                      <div className="d-flex justify-content-left flex-wrap info-meta">
+                        <p className="meta-item text-body textsize12 capitalizeku">
+                          <MdOutlineListAlt className="meta-icon" /> {Kategori}
                         </p>
-                        <p className="text-body textsize12 text-center font_weight600 px-2 mx-1">
-                          <MdOutlineEditCalendar size={25} style={{ marginTop: "-1px" }} /> {TanggalUpdate}
+
+                        <p className="meta-item text-body textsize12 capitalizeku">
+                          <MdOutlineEditCalendar className="meta-icon" /> {TanggalUpdate}
                         </p>
-                        <p className="text-body textsize12 capitalizeku text-center font_weight600 px-2 mx-1">
-                          <FaRecycle size={25} style={{ marginTop: "-1px" }} /> {Periode_dataset}
+
+                        <p className="meta-item text-body textsize12 capitalizeku">
+                          <FaRecycle className="meta-icon" /> {Periode_dataset}
                         </p>
                       </div>
-                      
                     </Col>
+
                     <Col md={12} sm={12} className='d-sm-block d-md-none'>
                       <div className="d-flex justify-content-center align-items-center text-center">
                        
@@ -1171,7 +1172,7 @@ const downloadxls = ()=>{
                     <Tabs
                       defaultActiveKey="metadata"
                       id="uncontrolled-tab-example"
-                      className="mb-3"
+                      className="mb-3 w-100 px-0"
                     >
                       <Tab eventKey="deskripsi" title="Deskripsi">
                         <Row className='p-2 mx-1'>
@@ -1242,7 +1243,7 @@ const downloadxls = ()=>{
                       </Tab>
 
                       <Tab eventKey="metadata" title="Metadata">
-                        <Row className='p-2 mx-1 mt-3'>
+                        <Row className='px-2 mx-1 mt-3 w-100'>
                           <p className='text-white textsize14 text-center btn-grad-blue-4 p-2 mb-0 rad10'>Metadata Info</p>
                           <Col md={12} sm={12} className='mt-0'>
                           {loading ? (
@@ -1340,7 +1341,7 @@ const downloadxls = ()=>{
             viewport={{ once: true }}
           >
             <Row 
-              className='p-2 margin-t5 mx-1 rad10 margin-b10 justify-content-center bg-border2 mb-2'
+              className='px-2 margin-t5 mx-1 rad10 margin-b10 justify-content-center bg-border2 mb-2 w-100'
               style={{background:`linear-gradient(to right, ${settings.bg_content}, ${settings.bg_header})`}}
             >
               <Col md={12} className='text-center'>

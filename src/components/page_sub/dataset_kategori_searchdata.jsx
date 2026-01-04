@@ -516,10 +516,10 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                   transition={{ duration: 0.3 }}
                   viewport={{ once: true }}
                 >
-                  <Row className="  px-5">
+                  <Row className="  px-2">
                     {
                       sektor_idku.map((sektor_idi, index) => (
-                        <Col sm={6} md={4} lg={4} xs={12} key={sektor_idi.id_sektor} className="py-0">
+                        <Col sm={6} md={3} lg={3} xs={12} key={sektor_idi.id_sektor} className="py-0">
                           <div className="portfolio-wrapper">
                             <Link to={`/Dataset/Sektor/${encodeURIComponent(sektor_idi.nama_sektor)}`}>
                               <div 
