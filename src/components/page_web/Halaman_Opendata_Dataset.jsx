@@ -176,22 +176,22 @@ function DatasetPengelolah() {
          
         
       </main>
-      <a href="/Tentang" className="shadow rotated-text-tentang textsize8 d-flex" title="Tentang Opendata">
+      <Link to="/Tentang" className="shadow rotated-text-tentang textsize8 d-flex" title="Tentang Opendata">
         <span className="icon-wrapper">
           <MdInfoOutline size={20} />
         </span>
         <span className="text-wrapper">
           Tentang
         </span>
-      </a>
-      <a href="#Feetback" className="shadow rotated-text-feedback textsize8 d-flex" title="Kirim Feedback">
+      </Link>
+      <Link to="#Feetback" className="shadow rotated-text-feedback textsize8 d-flex" title="Kirim Feedback">
         <span className="icon-wrapper">
           <FcFeedback size={20} />
         </span>
         <span className="text-wrapper">
           Feedback
         </span>
-      </a>
+      </Link>
       <FeedbackModal />
       <footer id="footer">
         <AppFooter 

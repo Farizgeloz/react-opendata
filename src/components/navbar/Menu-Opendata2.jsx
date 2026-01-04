@@ -231,21 +231,15 @@ function Menu({bgku}) {
             <img
               src={image2}
               className="img-header"
-              alt="Logo"
             />
           </Navbar.Brand>
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
             className="btn-toggle-custom"
           />
-          <Navbar.Collapse
+         <Navbar.Collapse
             id="basic-navbar-nav"
-            style={{
-              maxWidth: 'calc(100% - 35vh)', // lebar 100% minus 250px
-              flex: '1 1 auto',
-              whiteSpace: 'nowrap',
-              position: 'relative',
-            }}
+            className={isMobile ? 'collapse-mobile' : 'collapse-desktop'}
           >
             <Nav className="ms-auto">
               {

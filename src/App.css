@@ -2445,4 +2445,8 @@ div.MuiAutocomplete-popper div { /* To get rid of the rounding applied by Mui-pa
   .img-header {
     width: 20vh;
   }
+  .img-header3 {
+    width: 20vh;
+    height: auto;
+  }
 }
