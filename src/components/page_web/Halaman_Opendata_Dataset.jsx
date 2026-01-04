@@ -118,8 +118,7 @@ function DatasetPengelolah() {
                     align-items-stretch 
                     gap-2
                   '>
-                    <a
-                      href='/Dataset/Permohonan'
+                    <Link to="/Dataset/Permohonan" 
                       className='
                         px-3 py-2 
                         btn btn-orangeblue 
@@ -131,7 +130,7 @@ function DatasetPengelolah() {
                       '
                     >
                       Ajukan Permohonan
-                    </a>
+                    </Link>
 
                     <PermohonanLacakModal 
                       bgku={settings.bg_header} 

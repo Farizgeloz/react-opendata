@@ -140,7 +140,7 @@ const PermohonanLacakModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2
   return (
     <>
         {/* FAB Rotated */}
-         <a href='#' 
+         <Link to='#' 
             className='
                         px-3 py-2 
                         btn btn-blueorange 
@@ -151,7 +151,7 @@ const PermohonanLacakModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2
                         w-100 w-md-auto
                       '
             onClick={handleShow}
-        ><FcFeedback size={20} /> Lacak Permohonan</a>
+        ><FcFeedback size={20} /> Lacak Permohonan</Link>
        
 
       {/* Modal */}
