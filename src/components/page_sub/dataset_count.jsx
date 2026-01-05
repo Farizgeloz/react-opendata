@@ -1,6 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import React, { useState, useEffect,useContext } from "react";
 import axios from "axios";
 import { MdAutoAwesomeMotion, MdCategory } from "react-icons/md";
@@ -166,6 +167,14 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                     
                    
                     <Col lg={3} md={3} sm={4} xs={12} className='p-1'>
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip className="tooltip-light">
+                            Jumlah Dataset yang sudah dipublikasikan dan dapat diakses
+                          </Tooltip>
+                        }
+                      >
                         <div className='overlay2 rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh',backgroundColor:bgcontentku}}>
                             <FaDatabase className='align-middle mt-2 mb-2 text-orange' 
                               style={{
@@ -180,9 +189,18 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                             </div>
                             
                         </div>
+
+                      </OverlayTrigger>
                     </Col>
-                    <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
-                       <a href='/Dataset' target="_blank">       
+                    <Col lg={2} md={2} sm={4} xs={6} className='p-1'>   
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip className="tooltip-light">
+                            Jumlah OPD atau Satker pengelola Dataset
+                          </Tooltip>
+                        }
+                      >
                         <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
                             <FaBuildingColumns className='align-middle mt-2 mb-2' 
                               style={{
@@ -199,11 +217,20 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                             </div>
                             
                         </div>
-                      </a> 
+
+                      </OverlayTrigger>        
+                        
                     </Col>
                     
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
-                      <a href='/Dataset' target="_blank">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip className="tooltip-light">
+                            Jumlah sektor atau topik dimensi data
+                          </Tooltip>
+                        }
+                      >
                         <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
                             <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
                               style={{
@@ -220,10 +247,18 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                             </div>
                             
                         </div>
-                      </a> 
+
+                      </OverlayTrigger>
                     </Col>
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
-                      <a href='/Dataset' target="_blank">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip className="tooltip-light">
+                            Unit wilayah cakupan data
+                          </Tooltip>
+                        }
+                      >
                         <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
                             <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
                               style={{
@@ -240,10 +275,18 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                             </div>
                             
                         </div>
-                      </a> 
+
+                      </OverlayTrigger>
                     </Col>
                     <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
-                      <a href='/Dataset' target="_blank">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip className="tooltip-light">
+                            Proide data yang tersedia
+                          </Tooltip>
+                        }
+                      >
                         <div className='overlay2 bg-body rad5 align-middle d-flex flex-column justify-content-center align-items-center' style={{height:'23vh'}}>
                             <MdAutoAwesomeMotion className='align-middle mt-2 mb-2' 
                               style={{
@@ -260,7 +303,8 @@ function AppStatistik({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                             </div>
                             
                         </div>
-                      </a> 
+
+                      </OverlayTrigger>
                     </Col>
                     {/* <Col lg={2} md={2} sm={4} xs={6} className='p-1'>
                       <a href='/Opendata/Dataset' target="_blank">
