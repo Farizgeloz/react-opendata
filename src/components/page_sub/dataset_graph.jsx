@@ -79,6 +79,8 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
 
   const [isDark, setIsDark] = useState(false);
   const { theme } = useContext(ThemeContext);
+
+  const isMobile = window.innerWidth < 768
   
 
   
@@ -240,7 +242,9 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                           type: "bar",
                           name:"coba",
                           backgroundColor: `${theme === "dark" ? '#212529' : '#ffffff'}`,
-                          borderRadius:"5%"
+                          borderRadius:"5%",
+                          marginLeft: isMobile ? 195 : 500,   // ⬅️ AUTO
+                          height: isMobile ? 800 : null
                         },
                         title: {
                           text: `<span style="color:${theme === "dark" ? '#fff' : '#000'}">Grafik Jumlah </span>
@@ -252,40 +256,89 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                             fontWeight: '800'
                           }
                         },
-                        
                         xAxis: {
-                            type: 'category',
-                            labels: {
-                              autoRotation: [-45, -90],
-                              style: {
-                                fontSize: '110%',
-                                fontFamily: 'Roboto, sans-serif',
-                                fontWeight: 'bold', // atau angka seperti '600'
-                                color:`${theme === "dark" ? '#fff' : '#000'}`
-                              },
-                            }
-                        },
-                        yAxis: {
-                            min: 0,
-                            title: {
-                                text: 'Banyak Data',
-                                style: {
-                                fontSize: '110%',
-                                fontFamily: 'Roboto, sans-serif',
-                                fontWeight: 'bold', // atau angka seperti '600'
-                                color:`${theme === "dark" ? '#fff' : '#000'}`
-                              }
+                          type: 'category',
+                          labels: {
+                            style: {
+                              width: isMobile ? 180 : 460,
+                              whiteSpace: 'normal',
+                              fontSize: isMobile ? '70%' : '90%',
+                              fontWeight: 'bold',
+                              color: theme === "dark" ? '#fff' : '#000'
                             },
-                            labels: {
-                                autoRotation: [-45, -90],
-                                style: {
-                                    fontSize: '100%',
-                                    fontFamily: "Roboto, sans-serif",
-                                    color:`${theme === "dark" ? '#fff' : '#000'}`
-                                }
-                                
+                            formatter: function () {
+                              const text = this.value;
+                              const maxChar = isMobile ? 12 : 22;
+
+                              if (text.length <= maxChar) return text;
+
+                              // 🔹 cari spasi TERAKHIR sebelum maxChar
+                              let cutIndex = text.lastIndexOf(' ', maxChar);
+
+                              // fallback kalau tidak ada spasi
+                              if (cutIndex === -1) cutIndex = maxChar;
+
+                              const firstLine = text.substring(0, cutIndex);
+                              const secondLine = text.substring(cutIndex + 1);
+
+                              return firstLine + '\n' + secondLine;
                             }
+                          }
                         },
+
+                        /* xAxis: {
+                          type: 'category',
+                          labels: {
+                            style: {
+                              width: 460,
+                              whiteSpace: 'normal',
+                              fontSize: '90%',
+                              fontFamily: 'Roboto, sans-serif',
+                              fontWeight: 'bold',
+                              color: theme === "dark" ? '#fff' : '#000'
+                            },
+                            formatter: function () {
+                              const text = this.value;
+                              const maxChar = 22; // target baris pertama
+
+                              if (text.length <= maxChar) return text;
+
+                              // 🔹 cari spasi TERAKHIR sebelum maxChar
+                              let cutIndex = text.lastIndexOf(' ', maxChar);
+
+                              // fallback kalau tidak ada spasi
+                              if (cutIndex === -1) cutIndex = maxChar;
+
+                              const firstLine = text.substring(0, cutIndex);
+                              const secondLine = text.substring(cutIndex + 1);
+
+                              return firstLine + '\n' + secondLine;
+                            }
+                          }
+                        }, */
+
+
+
+
+
+                        yAxis: {
+                          min: 0,
+                          title: {
+                            text: 'Banyak Data',
+                            style: {
+                              fontSize: isMobile ? '85%' : '110%',
+                              fontWeight: 'bold',
+                              color: theme === "dark" ? '#fff' : '#000'
+                            }
+                          },
+                          labels: {
+                            style: {
+                              fontSize: isMobile ? '75%' : '100%',
+                              color: theme === "dark" ? '#fff' : '#000'
+                            }
+                          }
+                        },
+
                         tooltip: {
                           useHTML: true,
                           headerFormat: '<div>',
@@ -367,7 +420,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                       }      
                         
                     }
-                    containerProps={{ style: { height: "80vh" } }}
+                    containerProps={{ style: { height: "100vh" } }}
                   />
                 </div>
             </motion.div>
@@ -460,7 +513,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                           }
                         }
                       }}
-                      containerProps={{ style: { height: "100%", width: "100%" } }}
+                      containerProps={{ style: { height: isMobile ? '100%' : '80vh', width: "100%" } }}
                     />
                   </div>
                 </Col>

@@ -158,7 +158,7 @@ console.log("datasetSorted", datasetSorted.map(d => ({
                           <Col md={12} xs={12} className="cekkk rad10" key={index}>
                             <Row className="m-1 w-100">
                               <Col md={10} xs={10}>
-                                <Link to={`/Dataset/Detail/${slugify(datas.nama_dataset)}`}>
+                                <Link to={`/Dataset/Detail/${datas.id_dataset}`}>
                                   <p
                                     className="textsize12 font_weight600 text-white-a mb-0 shaddow3 rad15 px-3 py-2"
                                     style={{ backgroundColor: bgcontentku }}
