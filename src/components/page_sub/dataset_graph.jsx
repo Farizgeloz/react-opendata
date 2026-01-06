@@ -220,9 +220,9 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
   return (
     <>
      
-      <Row className=" py-2 mx-4 ">
+      <Row className=" py-2 mx-4">
          
-        <Col  lg={12} md={12} sm={12} xs={12} className="drop-shadow-lg max-height2 margin-t5">
+        <Col  lg={12} md={12} sm={12} xs={12} className="drop-shadow-lg max-height2 margin-t5 mb-5">
           {loading ? (
             <Spinner />
           ) : (
@@ -429,7 +429,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
             
       </Row>
 
-      <Row className="mx-4 my-5">
+      <Row className="mx-4 my-5 ">
         {/* Chart - Muncul dulu di mobile, pindah kiri di desktop */}
         <Col lg={12} md={12} sm={12} xs={12} className="drop-shadow-lg order-1 order-xs-last">
           {loading ? (
@@ -442,7 +442,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
               viewport={{ once: true }}
             >
               <Row className="">
-                <Col md={6} sm={6} xs={12} className="py-5 px-2">
+                <Col md={6} sm={6} xs={12} className="py-5 px-2   mt-5">
                   <div className="bg-body  rad15 shaddow4 p-5">
                     <HighchartsReact
                       highcharts={Highcharts}
@@ -513,11 +513,11 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                           }
                         }
                       }}
-                      containerProps={{ style: { height: isMobile ? '100%' : '80vh', width: "100%" } }}
+                      containerProps={{ style: { height: isMobile ? '100%' : '70vh', width: "100%" } }}
                     />
                   </div>
                 </Col>
-                <Col md={6} sm={6} xs={12} className="py-5 px-2">
+                <Col md={6} sm={6} xs={12} className="py-5 px-2   mt-5">
                  <div className="bg-body  rad15 shaddow4 p-5">
                     <HighchartsReact
                       highcharts={Highcharts}
@@ -588,7 +588,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                       }],
                         legend: { enabled: false }
                     }}
-                      containerProps={{ style: { height: "100%" } }}
+                      containerProps={{ style: { height: isMobile ? '100%' : '70vh', width: "100%" } }}
                     />
                  </div>
                 </Col>

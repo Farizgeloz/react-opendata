@@ -204,7 +204,7 @@ function AppFooter({ bgfooterku, visitor_today, visitor_month, visitor_year, vis
       </Row>  
       <Row>
         <Col sm={8} xs={8}  className="bg-blue-dark2">
-          <div className="copyright float-start text-white px-5 py-2">&copy; 2025 Open Data Kab. Probolinggo</div>
+          <div className="copyright float-start text-white px-5 py-2">&copy; 2026 Open Data Kab. Probolinggo</div>
         </Col>
          <Col  sm={4} xs={4}className="bg-blue-dark2" >
           <div className="copyright float-end  text-white px-5 italicku textsize8 py-2">V 1.0.1</div>
