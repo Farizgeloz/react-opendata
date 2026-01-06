@@ -242,6 +242,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
   };
 
   const slugify = (text) => {
+    if (!text) return ""; // ⬅️ KUNCI UTAMA
     return text
       .toString()
       .toLowerCase()
@@ -441,7 +442,7 @@ function AppTeams({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcontentku
                 <div className="d-flex mx-2 py-2 align-items-center justify-content-center rad10" style={{backgroundColor:"#60728b"}}>
                   <div className="px-3 d-flex rad10" 
                       style={{paddingBottom:"5px",marginTop:"-10px",width:"fit-content"}}>
-                    <ShareButtons url={`/Artikel/${dataku.id_artikel}`} title={dataku.title} />
+                    <ShareButtons url={`/Artikel/${slugify(dataku.title)}`} title={dataku.title} />
                   </div>
                 </div>
               </Col>
