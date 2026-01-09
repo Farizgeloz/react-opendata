@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { FcFeedback } from "react-icons/fc";
 import { useNavigate,Link, NavLink, useParams } from "react-router-dom";
 
@@ -348,7 +350,14 @@ const handleSubmit = async (e) => {
                                 {/* Avatar Admin */}
                                 {!isPemohon && (
                                     <div className="me-2">
-                                    <div className="avatar-circle bg-primary text-white">A</div>
+                                    <OverlayTrigger
+                                    placement="top"
+                                    overlay={<Tooltip id="tooltip-avatar">Admin</Tooltip>}
+                                    >
+                                    <div className="avatar-circle bg-primary text-white">
+                                        A
+                                    </div>
+                                    </OverlayTrigger>
                                     </div>
                                 )}
 
@@ -363,7 +372,7 @@ const handleSubmit = async (e) => {
                                     }}
                                 >
                                     <div className="d-flex justify-content-between textsize10 font_weight600 mb-1">
-                                    <span className=" font_weight800">{isPemohon ? "Anda:" : "Admin:"}</span>
+                                    {/* <span className=" font_weight800">{isPemohon ? "Anda:" : "Admin:"}</span> */}
                                     <span className="px-2 italicku text-silver">{convertDate(message.updated_at)}</span>
                                     </div>
 
@@ -391,7 +400,15 @@ const handleSubmit = async (e) => {
                                 {/* Avatar Anda */}
                                 {isPemohon && (
                                     <div className="ms-2">
-                                        <div className="avatar-circle bg-success text-white">U</div>
+                                       {/*  <div className="avatar-circle bg-success text-white">U</div> */}
+                                        <OverlayTrigger
+                                        placement="top"
+                                        overlay={<Tooltip id="tooltip-avatar">Admin</Tooltip>}
+                                        >
+                                        <div className="avatar-circle bg-success text-white">
+                                            U
+                                        </div>
+                                        </OverlayTrigger>
                                     </div>
                                 )}
                                 </div>
