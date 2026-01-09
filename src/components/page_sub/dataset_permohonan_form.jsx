@@ -97,7 +97,7 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
     // 🔹 Fungsi cek ke database apakah tiket sudah ada
     const checkTicketExists = async (ticket) => {
         try {
-            const res = await axios.get(`/api/cek-tiket/${ticket}`);
+            const res = await axios.get(`cek-tiket/${ticket}`);
             return res.data.exists; // true jika sudah ada
         } catch (err) {
             console.error("Error checking ticket:", err);
@@ -274,7 +274,7 @@ const FeedbackModal = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgcont
         penghasil, opd: Number(opdId), deskripsi, tujuan, dihubungi,
         };
 
-        await api_url_satuadmin.post("api/opendata/dataset_permohonan", payload);
+        await api_url_satuadmin.post("opendata/dataset_permohonan", payload);
         sweetsuccess();
     } catch (error) {
         sweeterror(error.response?.data?.msg || "Gagal menambah data");
