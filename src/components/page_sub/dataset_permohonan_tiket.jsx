@@ -140,8 +140,10 @@ const handleSubmit = async (e) => {
       nomor_tiket:id, pesan:pesanform,status:"Proses"
     };
 
-    await api_url_satuadmin.post("api/opendata/dataset_permohonan/tiket", payload);
+    await api_url_satuadmin.post("opendata/dataset_permohonan/tiket", payload);
     sweetsuccess();
+    setPesanForm("");
+
     //console.log("pesannya" + response.data.msg);
     
   } catch (error) {
