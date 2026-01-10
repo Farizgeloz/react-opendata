@@ -206,7 +206,7 @@ const handleSubmit = async (e) => {
         const menit = String(selectedDate.getMinutes()).padStart(2, "0");
         const detik = String(selectedDate.getSeconds()).padStart(2, "0");
 
-        return `${day} ${monthName} ${year} Waktu : ${jam}:${menit}:${detik} WIB`;
+        return `${day} ${monthName} ${year} , ${jam}:${menit}:${detik} WIB`;
     }
     
 
@@ -403,7 +403,7 @@ const handleSubmit = async (e) => {
                                        {/*  <div className="avatar-circle bg-success text-white">U</div> */}
                                         <OverlayTrigger
                                         placement="top"
-                                        overlay={<Tooltip id="tooltip-avatar">Admin</Tooltip>}
+                                        overlay={<Tooltip id="tooltip-avatar">Anda</Tooltip>}
                                         >
                                         <div className="avatar-circle bg-success text-white">
                                             U
