@@ -266,7 +266,7 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                               fontWeight: 'bold',
                               color: theme === "dark" ? '#fff' : '#000'
                             },
-                            formatter: function () {
+                            /* formatter: function () {
                               const text = this.value;
                               const maxChar = isMobile ? 12 : 22;
 
@@ -282,7 +282,33 @@ const DatasetGraph = ({ bgku,bgbodyku,bgtitleku,bgcontentku,bgcontentku2,bgconte
                               const secondLine = text.substring(cutIndex + 1);
 
                               return firstLine + '\n' + secondLine;
+                            } */
+                           formatter: function () {
+                              // 🔹 Capitalize Each Word
+                              const capitalizeEachWord = (str) =>
+                                str
+                                  .toLowerCase()
+                                  .replace(/\b\w/g, char => char.toUpperCase());
+
+                              const rawText = this.value;
+                              const text = capitalizeEachWord(rawText);
+
+                              const maxChar = isMobile ? 12 : 22;
+
+                              if (text.length <= maxChar) return text;
+
+                              // 🔹 cari spasi TERAKHIR sebelum maxChar
+                              let cutIndex = text.lastIndexOf(' ', maxChar);
+
+                              // fallback kalau tidak ada spasi
+                              if (cutIndex === -1) cutIndex = maxChar;
+
+                              const firstLine = text.substring(0, cutIndex);
+                              const secondLine = text.substring(cutIndex + 1);
+
+                              return firstLine + '\n' + secondLine;
                             }
+
                           }
                         },
 
